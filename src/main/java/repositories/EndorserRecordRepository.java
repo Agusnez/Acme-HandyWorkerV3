@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import domain.EndorserRecord;
 
 @Repository
-public interface EndorserRecordReposiroty extends JpaRepository<EndorserRecord, Integer> {
+public interface EndorserRecordRepository extends JpaRepository<EndorserRecord, Integer> {
 
 }
