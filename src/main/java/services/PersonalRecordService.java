@@ -25,6 +25,15 @@ public class PersonalRecordService {
 
 	//Simple CRUD methods
 
+	public PersonalRecord create() {
+
+		PersonalRecord result;
+
+		result = new PersonalRecord();
+
+		return result;
+	}
+
 	public Collection<PersonalRecord> findAll() {
 
 		final Collection<PersonalRecord> personalRecords = this.personalRecordRepository.findAll();
@@ -44,6 +53,9 @@ public class PersonalRecordService {
 	}
 
 	public void delete(final PersonalRecord personalRecord) {
+
+		Assert.notNull(personalRecord);
+		Assert.isTrue(this.personalRecordRepository.exists(personalRecord.getId()));
 
 		this.personalRecordRepository.delete(personalRecord);
 	}
