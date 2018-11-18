@@ -32,4 +32,12 @@ public class ConfigurationService {
 		return configuration;
 	}
 
+	public Configuration find(final int configurationId) {
+
+		final Configuration configuration = this.configurationRepository.findOne(configurationId);
+
+		Assert.notNull(configuration);
+
+		return configuration;
+	}
 }
