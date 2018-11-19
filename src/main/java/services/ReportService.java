@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import repositories.ReportRepository;
 import domain.Report;
@@ -27,30 +28,44 @@ public class ReportService {
 
 	public Report create() {
 
-		return null;
+		final Report result = new Report();
+
+		return result;
 
 	}
 
 	public Collection<Report> findAll() {
 
-		return null;
+		final Collection<Report> reports = this.reportRepository.findAll();
+
+		Assert.notNull(reports);
+
+		return reports;
+	}
+
+	public Report findOne(final int reportsID) {
+
+		final Report report = this.reportRepository.findOne(reportsID);
+
+		Assert.notNull(report);
+
+		return report;
 
 	}
 
-	public Report findOne(final int reportID) {
+	public Report save(final Report s) {
 
-		return null;
+		final Report report = this.reportRepository.save(s);
 
-	}
+		Assert.notNull(report);
 
-	public Report save(final Report report) {
-
-		return null;
+		return report;
 
 	}
 
 	public void delete(final Report report) {
 
+		this.reportRepository.delete(report);
 	}
 
 	// Other business methods
