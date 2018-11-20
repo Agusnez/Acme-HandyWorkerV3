@@ -32,7 +32,7 @@ public class ConfigurationService {
 		return configuration;
 	}
 
-	public Configuration findOne(final int configurationId) {
+	public Configuration find(final int configurationId) {
 
 		final Configuration configuration = this.configurationRepository.findOne(configurationId);
 

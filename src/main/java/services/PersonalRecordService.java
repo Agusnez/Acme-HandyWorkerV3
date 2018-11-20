@@ -55,7 +55,7 @@ public class PersonalRecordService {
 	public void delete(final PersonalRecord personalRecord) {
 
 		Assert.notNull(personalRecord);
-		Assert.isTrue(personalRecord.getId() != 0);
+		Assert.isTrue(this.personalRecordRepository.exists(personalRecord.getId()));
 
 		this.personalRecordRepository.delete(personalRecord);
 	}
