@@ -64,7 +64,7 @@ public class SponsorshipService {
 	public void delete(final Sponsorship sponsorship) {
 
 		Assert.notNull(sponsorship);
-		Assert.isTrue(this.sponsorshipRepository.exists(sponsorship.getId()));
+		Assert.isTrue(sponsorship.getId() != 0);
 
 		this.sponsorshipRepository.delete(sponsorship);
 	}
