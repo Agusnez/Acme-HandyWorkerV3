@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import repositories.HandyWorkerRepository;
 import repositories.MiscellaneousRecordRepository;
+import domain.HandyWorker;
 import domain.MiscellaneousRecord;
 
 @Service
@@ -22,7 +22,7 @@ public class MiscellaneousRecordService {
 	
 	// Suporting services ------------------------
 	
-	private HandyWorkerRepository handyWorkerRepository;
+	private HandyWorkerService handyWorkerService;
 	
 	// Simple CRUD methods -----------------------
 	
@@ -61,7 +61,7 @@ public class MiscellaneousRecordService {
 	
 	public void delete(MiscellaneousRecord miscellaneousRecord){
 		
-		HandyWorker handyWorker = HandyWorkerService.findB
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
 		
 	}
 	
