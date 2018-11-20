@@ -28,19 +28,21 @@ public class TutorialService {
 
 	// Simple CRUD methods -----------------------
 	
-	public Tutorial create(Collection<Section> sections){
+	public Tutorial create(){
 		/*TODO: hacer que los haga solo el HandyWorker*/
 		Tutorial t;
 		
-		Assert.notNull(sections);
-		Assert.isTrue(sections.isEmpty());
-		
-		Date moment = new Date(System.currentTimeMillis());
+//		Assert.notNull(sections);
+//		Assert.isTrue(sections.isEmpty());
+//		
+//		Date moment = new Date(System.currentTimeMillis());
+//		
+//		t = new Tutorial();
+//		/*TODO: ordenar el collection*/
+//		t.setSections(sections);
+//		t.setMoment(moment);
 		
 		t = new Tutorial();
-		/*TODO: ordenar el collection*/
-		t.setSections(sections);
-		t.setMoment(moment);
 		
 		return t;
 	}
@@ -58,7 +60,7 @@ public class TutorialService {
 	public Tutorial findOne(int tutorialId){
 		Tutorial t;
 		
-		Assert.isTrue(tutorialId!=0);
+		// delete Assert.isTrue(tutorialId!=0);
 		t = tutorialRepository.findOne(tutorialId);
 		Assert.notNull(t);
 		

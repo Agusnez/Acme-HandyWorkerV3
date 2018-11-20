@@ -6,10 +6,11 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import domain.MiscellaneousRecord;
-
+import repositories.HandyWorkerRepository;
 import repositories.MiscellaneousRecordRepository;
+import domain.MiscellaneousRecord;
 
 @Service
 @Transactional
@@ -21,25 +22,46 @@ public class MiscellaneousRecordService {
 	
 	// Suporting services ------------------------
 	
+	private HandyWorkerRepository handyWorkerRepository;
+	
 	// Simple CRUD methods -----------------------
 	
 	public MiscellaneousRecord create(){
-		return null;
+		MiscellaneousRecord m;
+		
+		m = new MiscellaneousRecord();
+		
+		return m;
 	}
 	
 	public Collection<MiscellaneousRecord> findAll(){
-		return null;
+		Collection<MiscellaneousRecord> res;
+		
+		res = miscellaneousRecordRepository.findAll();
+		
+		return res;
 	}
 	
 	public MiscellaneousRecord findOne(int miscellaneousRecordId){
-		return null;
+		
+		MiscellaneousRecord m; 
+		
+		m = miscellaneousRecordRepository.findOne(miscellaneousRecordId);
+		Assert.notNull(m);
+		
+		return m;
+		
+		
 	}
 	
 	public MiscellaneousRecord save(MiscellaneousRecord miscellaneousRecord){
 		return null;
+		//duda
 	}
 	
 	public void delete(MiscellaneousRecord miscellaneousRecord){
+		
+		HandyWorker handyWorker = HandyWorkerService.findB
 		
 	}
 	

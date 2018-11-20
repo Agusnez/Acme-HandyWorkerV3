@@ -6,10 +6,12 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import repositories.ActorRepository;
 import repositories.BoxRepository;
 import repositories.CustomerRepository;
+import repositories.FixUpTaskRepository;
 import domain.Customer;
 
 @Service
@@ -23,21 +25,36 @@ public class CustomerService {
 	// Suporting services ------------------------
 	
 	ActorRepository actorRepository;
-	BoxRepository boxRepository;
+	
 	
 	
 	// Simple CRUD methods -----------------------
 	
 	public Customer create(){
-		return null;
+		Customer c;
+		
+		c = new Customer();
+		
+		return c;
 	}
 	
 	public Collection<Customer> findAll(){
-		return null;
+		Collection<Customer> res;
+	
+		res = customerRepository.findAll();
+		Assert.notNull(res);
+	
+		return res;
 	}
 	
 	public Customer findOne(int customerId){
-		return null;
+		Customer c;
+		
+		c = customerRepository.findOne(customerId);
+		
+		return c;
+		
+		
 	}
 	
 	public Customer save(Customer customer){

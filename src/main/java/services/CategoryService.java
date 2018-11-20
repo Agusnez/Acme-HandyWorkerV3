@@ -24,33 +24,37 @@ public class CategoryService {
 
 	// Simple CRUD methods -----------------------
 
-	/*Dado que al crear la raíz "CATEGORY" no se especifica el padre*/
-	public Category createRoot() {
-		Collection<Category> categories = findAll();
-		
-		/*comprobamos que no haya ninguna categoría todavía*/
-		Assert.isTrue(categories.isEmpty());
-		Category c = new Category();
-		
-		/*la raíz debe tener por nombre "CATEGORY"*/
-		c.setName("CATEGORY");
-		
-		return c;
-	}
+//	/*Dado que al crear la raíz "CATEGORY" no se especifica el padre*/
+//	public Category createRoot() {
+//		Collection<Category> categories = findAll();
+//		
+//		/*comprobamos que no haya ninguna categoría todavía*/
+//		Assert.isTrue(categories.isEmpty());
+//		Category c = new Category();
+//		
+//		/*la raíz debe tener por nombre "CATEGORY"*/
+//		c.setName("CATEGORY");
+//		
+//		return c;
+//	}
 	
 	/*para las demás categorias que se creen se ha de especificar el padre*/
-	public Category create(String name, Category parent){
+	public Category create(){
 		Category c;
 		
-		Assert.notNull(parent);
-		/*comprobamos que el padre este guardado como categoría*/
-		Assert.isTrue(categoryRepository.exists(parent.getId()));
-		Assert.isTrue(!name.isEmpty());
+//		Assert.notNull(parent);
+//		/*comprobamos que el padre este guardado como categoría*/
+//		Assert.isTrue(categoryRepository.exists(parent.getId()));
+//		Assert.isTrue(!name.isEmpty());
+//		
+//		c = new Category();
+//		Assert.isTrue(!name.isEmpty());
+//		c.setName(name);
+//		c.setParent(parent);
+//		
+//		return c;
 		
 		c = new Category();
-		Assert.isTrue(!name.isEmpty());
-		c.setName(name);
-		c.setParent(parent);
 		
 		return c;
 		
@@ -73,7 +77,7 @@ public class CategoryService {
 		Category c;
 
 		/*Agustín pone este Assert*/
-		Assert.isTrue(categoryId!=0);
+		// para delete Assert.isTrue(categoryId!=0);
 		c = categoryRepository.findOne(categoryId);
 		Assert.notNull(c);
 
@@ -85,7 +89,7 @@ public class CategoryService {
 
 		Assert.notNull(category);
 		/* compruebo que sea único */
-		Assert.isTrue(!categoryRepository.exists(category.getId()));
+		// unico el nombre Assert.isTrue(!categoryRepository.exists(category.getId()));
 		c = categoryRepository.save(category);
 
 		return c;
