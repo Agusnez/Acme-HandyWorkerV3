@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import repositories.ActorRepository;
+import repositories.BoxRepository;
 import repositories.CustomerRepository;
 import domain.Customer;
 
@@ -19,6 +21,10 @@ public class CustomerService {
 	private CustomerRepository customerRepository;
 	
 	// Suporting services ------------------------
+	
+	ActorRepository actorRepository;
+	BoxRepository boxRepository;
+	
 	
 	// Simple CRUD methods -----------------------
 	

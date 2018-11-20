@@ -24,10 +24,36 @@ public class CategoryService {
 
 	// Simple CRUD methods -----------------------
 
-	public Category create() {
+	/*Dado que al crear la raíz "CATEGORY" no se especifica el padre*/
+	public Category createRoot() {
+		Collection<Category> categories = findAll();
+		
+		/*comprobamos que no haya ninguna categoría todavía*/
+		Assert.isTrue(categories.isEmpty());
 		Category c = new Category();
-
+		
+		/*la raíz debe tener por nombre "CATEGORY"*/
+		c.setName("CATEGORY");
+		
 		return c;
+	}
+	
+	/*para las demás categorias que se creen se ha de especificar el padre*/
+	public Category create(String name, Category parent){
+		Category c;
+		
+		Assert.notNull(parent);
+		/*comprobamos que el padre este guardado como categoría*/
+		Assert.isTrue(categoryRepository.exists(parent.getId()));
+		Assert.isTrue(!name.isEmpty());
+		
+		c = new Category();
+		Assert.isTrue(!name.isEmpty());
+		c.setName(name);
+		c.setParent(parent);
+		
+		return c;
+		
 	}
 
 	/* no sé si es necesario este método porque no nos aporta nada en principio */
@@ -46,6 +72,8 @@ public class CategoryService {
 	public Category findOne(int categoryId) {
 		Category c;
 
+		/*Agustín pone este Assert*/
+		Assert.isTrue(categoryId!=0);
 		c = categoryRepository.findOne(categoryId);
 		Assert.notNull(c);
 
@@ -55,6 +83,7 @@ public class CategoryService {
 	public Category save(Category category) {
 		Category c;
 
+		Assert.notNull(category);
 		/* compruebo que sea único */
 		Assert.isTrue(!categoryRepository.exists(category.getId()));
 		c = categoryRepository.save(category);
@@ -86,5 +115,7 @@ public class CategoryService {
 
 		return res;
 	}
+	
+	
 
 }

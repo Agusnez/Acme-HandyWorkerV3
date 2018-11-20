@@ -1,15 +1,18 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
-import domain.Tutorial;
-
+import repositories.SectionRepository;
 import repositories.TutorialRepository;
+import domain.Section;
+import domain.Tutorial;
 
 @Service
 @Transactional
@@ -20,26 +23,63 @@ public class TutorialService {
 	private TutorialRepository tutorialRepository;
 	
 	// Suporting services ------------------------
+	
+	SectionRepository sectionRepository;
 
 	// Simple CRUD methods -----------------------
 	
-	public Tutorial create(){
-		return null;
+	public Tutorial create(Collection<Section> sections){
+		/*TODO: hacer que los haga solo el HandyWorker*/
+		Tutorial t;
+		
+		Assert.notNull(sections);
+		Assert.isTrue(sections.isEmpty());
+		
+		Date moment = new Date(System.currentTimeMillis());
+		
+		t = new Tutorial();
+		/*TODO: ordenar el collection*/
+		t.setSections(sections);
+		t.setMoment(moment);
+		
+		return t;
 	}
 	
 	public Collection<Tutorial> findAll(){
-		return null;
+		Collection<Tutorial> res;
+		
+		Assert.notNull(tutorialRepository);
+		res = tutorialRepository.findAll();
+		Assert.notNull(res);
+		
+		return res;
 	}
 	
 	public Tutorial findOne(int tutorialId){
-		return null;
+		Tutorial t;
+		
+		Assert.isTrue(tutorialId!=0);
+		t = tutorialRepository.findOne(tutorialId);
+		Assert.notNull(t);
+		
+		return t;
 	}
 	
 	public Tutorial save(Tutorial tutorial){
-		return null;
+		Tutorial t;
+		
+		Assert.notNull(tutorial);
+		t = tutorialRepository.save(tutorial);
+		
+		return t;
+		
 	}
 	
-	public void delete(Tutorial tutorial){
+	public void delete(Tutorial tutorial){	
+		Assert.isTrue(tutorialRepository.exists(tutorial.getId()));
+		Assert.isTrue(tutorial.getSections().isEmpty());
+		
+		tutorialRepository.delete(tutorial);
 		
 	}
 	
