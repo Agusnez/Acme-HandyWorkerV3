@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import repositories.BoxRepository;
 import domain.Box;
@@ -26,29 +27,45 @@ public class BoxService {
 
 	public Box create() {
 
-		return null;
+		final Box result = new Box();
+
+		return result;
 
 	}
 
 	public Collection<Box> findAll() {
 
-		return null;
+		final Collection<Box> boxes = this.boxRepository.findAll();
+
+		Assert.notNull(boxes);
+
+		return boxes;
 
 	}
 
 	public Box findOne(final int boxID) {
 
-		return null;
+		final Box box = this.boxRepository.findOne(boxID);
+
+		Assert.notNull(box);
+
+		return box;
 
 	}
 
-	public Box save(final Box box) {
+	public Box save(final Box s) {
 
-		return null;
+		final Box box = this.boxRepository.save(s);
+
+		Assert.notNull(box);
+
+		return box;
 
 	}
 
 	public void delete(final Box box) {
+
+		this.boxRepository.delete(box);
 
 	}
 

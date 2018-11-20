@@ -5,9 +5,9 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import repositories.EndorsementRepository;
-import domain.Complaint;
 import domain.Endorsement;
 
 @Service
@@ -24,30 +24,40 @@ public class EndorsementService {
 		
 		public Endorsement create() {
 
-			return null;
+			return new Endorsement();
 
 		}
 
 		public Collection<Endorsement> findAll() {
-
-			return null;
+			Assert.notNull(this.endorsementRepository);
+			Collection<Endorsement> result = this.endorsementRepository.findAll();
+			Assert.notNull(result);
+			return result;
 
 		}
 
 		public Endorsement findOne(final int endorsementId) {
-
-			return null;
+			Assert.isTrue(endorsementId != 0);
+			Endorsement result = this.endorsementRepository.findOne(endorsementId);
+			Assert.notNull(result);
+			return result;
 
 		}
 
 		public Endorsement save(final Endorsement endorsement) {
-
-			return null;
+			Assert.notNull(endorsement);
+			
+			return this.endorsementRepository.save(endorsement);
 
 		}
 
 		public void delete(final Endorsement endorsement) {
-
+			Assert.notNull(endorsement);
+			Assert.isTrue(endorsement.getId() != 0);
+			Assert.isTrue(this.endorsementRepository.exists(endorsement.getId()));
+			
+			this.endorsementRepository.delete(endorsement);
+			
 		}
 		
 		// Other business methods -----------------------------------------
