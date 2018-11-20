@@ -1535,18 +1535,21 @@
 		<property name="title" value="war1" />
 		<property name="terms" value="temrs1" />
 		<property name="law" value="law1" />
+		<property name="finalMode" value="True" />
 	</bean>
 	
 	<bean id="warranty2" class="domain.Warranty">
 		<property name="title" value="war2" />
 		<property name="terms" value="temrs2" />
 		<property name="law" value="law2" />
+		<property name="finalMode" value="True" />
 	</bean>
 	
 	<bean id="warranty3" class="domain.Warranty">
 		<property name="title" value="war3" />
 		<property name="terms" value="temrs3" />
 		<property name="law" value="law3" />
+		<property name="finalMode" value="True" />
 	</bean>
 	
 	<!-- Sections -->
