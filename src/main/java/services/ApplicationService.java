@@ -38,7 +38,7 @@ public class ApplicationService {
 		return null;
 	}
 
-	public void delete(final Application application) {
+	public void delete(final Application application) {//Borrar antes de hanydyworker  y de fixup tasks
 
 	}
 

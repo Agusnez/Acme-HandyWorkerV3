@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.PhaseRepository;
+import domain.FixUpTask;
 import domain.Phase;
 
 @Service
@@ -23,7 +24,7 @@ public class PhaseService {
 	//Suporting services---------------------------------
 
 	//Simple CRUD methods--------------------------------
-	public Phase create() {//restricciones en el create?
+	public Phase create() {
 		Phase phase;
 		phase = new Phase();
 		return phase;
@@ -32,7 +33,7 @@ public class PhaseService {
 	public Collection<Phase> findAll() {
 		Collection<Phase> result;
 		result = this.phaseRepository.findAll();
-		Assert.notNull(result); //Hay que ponerlo?
+		Assert.notNull(result);
 		return result;
 	}
 
@@ -57,12 +58,18 @@ public class PhaseService {
 		return result;
 	}
 
-	public void delete(final Phase phase) {//Que pasa si es la unica phase de una fix-up task?
-		Assert.notNull(phase);			   //una fix-up taks tiene una o muchas, no puede tener 0
+	public void delete(final Phase phase) {
+		Assert.notNull(phase);
 		Assert.isTrue(phase.getId() != 0);
-
+		//Restriccion: No borrar la última phase de una FixUpTask
+		final FixUpTask task = phase.getFixUpTask();
+		final Collection<Phase> phases = this.findPhasesByFixUpTaskId(task.getId());
+		Assert.isTrue(phases.size() > 1);
 		this.phaseRepository.delete(phase);
 	}
 
 	//Other business methods----------------------------
+	public Collection<Phase> findPhasesByFixUpTaskId(final int phaseId) {
+		return null;
+	}
 }

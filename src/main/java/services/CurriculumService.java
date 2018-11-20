@@ -24,6 +24,8 @@ public class CurriculumService {
 
 	//Simple CRUD methods--------------------------------
 	public Curriculum create() {
+		//Hay que crear todos los records
+		//Comprobar que el que lo crea es el Handy Worker
 		Curriculum c;
 		c = new Curriculum();
 		return c;
@@ -45,6 +47,8 @@ public class CurriculumService {
 
 	public Curriculum save(final Curriculum curriculum) {
 		Assert.notNull(curriculum);
+		//Comprobar autoridad 
+		//Guardar tambien los records
 		Curriculum c;
 		c = this.curriculumRepository.save(curriculum);
 		return c;
@@ -53,10 +57,14 @@ public class CurriculumService {
 	public void delete(final Curriculum curriculum) {
 		Assert.notNull(curriculum);
 		Assert.isTrue(curriculum.getId() != 0);
-		//Faltan cosas con respecto a los RECORDS
+		//Comprobar autoridad
 		this.curriculumRepository.delete(curriculum);
 	}
 
 	//Other business methods----------------------------
+
+	public Curriculum findByHandyWorkerId(final int handyWorkerId) {
+		return null;
+	}
 
 }
