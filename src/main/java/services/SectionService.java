@@ -6,8 +6,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import domain.Section;
+import domain.Tutorial;
 
 import repositories.SectionRepository;
 
@@ -21,22 +23,44 @@ public class SectionService {
 	
 	// Suporting services ------------------------
 	
+	
+	
 	// Simple CRUD methods -----------------------
 	
 	public Section create(){
-		return null;
+		Section s;
+		
+		s = new Section();
+		
+		return s;
 	}
 	
 	public Collection<Section> findAll(){
-		return null;
+		Collection<Section> sections;
+		
+		Assert.notNull(sectionRepository);
+		sections = sectionRepository.findAll();
+		Assert.notNull(sections);
+		
+		return sections;
 	}
 	
 	public Section findOne(int sectionId){
-		return null;
+		Section s;
+		
+		Assert.isTrue(sectionId!=0);
+		s = sectionRepository.findOne(sectionId);
+		Assert.notNull(s);
+		
+		return s;
 	}
 	
 	public Section save(Section section){
-		return null;
+		Section s;
+		
+		s = sectionRepository.save(section);
+		
+		return s;
 	}
 	
 	public void delete(Section section){
