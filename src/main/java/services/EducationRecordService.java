@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import repositories.EducationRecordReposiroty;
 import domain.EducationRecord;
@@ -26,30 +27,45 @@ public class EducationRecordService {
 
 	public EducationRecord create() {
 
-		return null;
+		final EducationRecord result = new EducationRecord();
+
+		return result;
 
 	}
 
 	public Collection<EducationRecord> findAll() {
 
-		return null;
+		final Collection<EducationRecord> educationRecords = this.educationRecordRepository.findAll();
+
+		Assert.notNull(educationRecords);
+
+		return educationRecords;
 
 	}
 
 	public EducationRecord findOne(final int educationRecordID) {
 
-		return null;
+		final EducationRecord educationRecord = this.educationRecordRepository.findOne(educationRecordID);
+
+		Assert.notNull(educationRecord);
+
+		return educationRecord;
 
 	}
 
-	public EducationRecord save(final EducationRecord educationRecord) {
+	public EducationRecord save(final EducationRecord s) {
 
-		return null;
+		final EducationRecord educationRecord = this.educationRecordRepository.save(s);
+
+		Assert.notNull(educationRecord);
+
+		return educationRecord;
 
 	}
 
 	public void delete(final EducationRecord educationRecord) {
 
+		this.educationRecordRepository.delete(educationRecord);
 	}
 
 	// Other business methods

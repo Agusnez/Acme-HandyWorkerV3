@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import repositories.SocialProfileRepository;
 import domain.SocialProfile;
@@ -27,30 +28,44 @@ public class SocialProfileService {
 
 	public SocialProfile create() {
 
-		return null;
+		final SocialProfile result = new SocialProfile();
+
+		return result;
 
 	}
 
 	public Collection<SocialProfile> findAll() {
 
-		return null;
+		final Collection<SocialProfile> socialProfiles = this.socialProfileRepository.findAll();
 
+		Assert.notNull(socialProfiles);
+
+		return socialProfiles;
 	}
 
 	public SocialProfile findOne(final int socialProfileID) {
 
-		return null;
+		final SocialProfile socialProfile = this.socialProfileRepository.findOne(socialProfileID);
+
+		Assert.notNull(socialProfile);
+
+		return socialProfile;
 
 	}
 
-	public SocialProfile save(final SocialProfile socialProfile) {
+	public SocialProfile save(final SocialProfile s) {
 
-		return null;
+		final SocialProfile socialProfile = this.socialProfileRepository.save(s);
+
+		Assert.notNull(socialProfile);
+
+		return socialProfile;
 
 	}
 
 	public void delete(final SocialProfile socialProfile) {
 
+		this.socialProfileRepository.delete(socialProfile);
 	}
 
 	// Other business methods	
