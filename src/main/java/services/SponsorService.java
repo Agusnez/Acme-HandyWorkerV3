@@ -23,20 +23,20 @@ public class SponsorService {
 	//Suporting services---------------------------------
 
 	//Simple CRUD methods--------------------------------
-	public Sponsor create() { //Debe no estar autenticado?
+	public Sponsor create() { //Debe no estar autenticado?   y lo de las 4 boxes
 		Sponsor result;
 		result = new Sponsor();
 		return result;
 	}
 
-	public Collection<Sponsor> findAll() { //No dice nada en los requisitos
+	public Collection<Sponsor> findAll() {
 		Collection<Sponsor> result;
 		result = this.sponsorRepository.findAll();
-		Assert.notNull(result); //Hay que ponerlo?
+		Assert.notNull(result);
 		return result;
 	}
 
-	public Sponsor findOne(final int sponsorId) { //No dice nada en los requisitos
+	public Sponsor findOne(final int sponsorId) {
 		Sponsor sponsor;
 		sponsor = this.sponsorRepository.findOne(sponsorId);
 		Assert.notNull(sponsor);
@@ -53,10 +53,12 @@ public class SponsorService {
 	public void delete(final Sponsor sponsor) {
 		Assert.notNull(sponsor);
 		Assert.isTrue(sponsor.getId() != 0);
-		//tengo que borrar antes los sponsorships?
+		//tengo que borrar antes los sponsorships de este sponsor
 		this.sponsorRepository.delete(sponsor);
 	}
 
 	//Other business methods----------------------------
+
+	//el findByPrincipal
 
 }

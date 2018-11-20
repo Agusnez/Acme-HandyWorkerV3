@@ -65,6 +65,8 @@ public class EducationRecordService {
 
 	public void delete(final EducationRecord educationRecord) {
 
+		Assert.notNull(educationRecord);
+		Assert.isTrue(educationRecord.getId() != 0);
 		this.educationRecordRepository.delete(educationRecord);
 	}
 

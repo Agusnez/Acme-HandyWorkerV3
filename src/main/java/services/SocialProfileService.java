@@ -65,6 +65,8 @@ public class SocialProfileService {
 
 	public void delete(final SocialProfile socialProfile) {
 
+		Assert.notNull(socialProfile);
+		Assert.isTrue(socialProfile.getId() != 0);
 		this.socialProfileRepository.delete(socialProfile);
 	}
 

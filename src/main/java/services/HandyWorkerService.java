@@ -25,7 +25,7 @@ public class HandyWorkerService {
 	//Suporting services---------------------------------
 
 	//Simple CRUD methods--------------------------------
-	public HandyWorker create() {
+	public HandyWorker create() { //Lo de los 4 Boxes   y crear finder
 		HandyWorker hw;
 		hw = new HandyWorker();
 		return hw;
@@ -34,7 +34,7 @@ public class HandyWorkerService {
 	public Collection<HandyWorker> findAll() {
 		Collection<HandyWorker> result;
 		result = this.handyWorkerRepository.findAll();
-		Assert.notNull(result); //Hay que ponerlo?
+		Assert.notNull(result);
 		return result;
 	}
 
