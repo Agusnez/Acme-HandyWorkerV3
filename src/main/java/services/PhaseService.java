@@ -63,13 +63,15 @@ public class PhaseService {
 		Assert.isTrue(phase.getId() != 0);
 		//Restriccion: No borrar la última phase de una FixUpTask
 		final FixUpTask task = phase.getFixUpTask();
-		final Collection<Phase> phases = this.findPhasesByFixUpTaskId(task.getId());
-		Assert.isTrue(phases.size() > 1);
+		final Integer numPhases = this.findPhasesByFixUpTaskId(task.getId());
+		Assert.isTrue(numPhases > 1);
 		this.phaseRepository.delete(phase);
 	}
 
 	//Other business methods----------------------------
-	public Collection<Phase> findPhasesByFixUpTaskId(final int phaseId) {
-		return null;
+	public Integer findPhasesByFixUpTaskId(final int fixUpTaskId) {
+		final Integer result = this.phaseRepository.findPhasesByFixUpTaskId(fixUpTaskId);
+		Assert.notNull(result);
+		return result;
 	}
 }
