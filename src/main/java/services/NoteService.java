@@ -60,14 +60,5 @@ public class NoteService {
 		return result;
 	}
 
-	public void delete(final Note note) {
-
-		Assert.notNull(note);
-		Assert.isTrue(note.getId() != 0);
-
-		this.noteRepository.delete(note);
-
-	}
-
 	// Other business methods -----------------------
 }
