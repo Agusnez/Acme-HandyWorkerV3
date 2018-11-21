@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import repositories.ApplicationRepository;
 import domain.Application;
@@ -23,22 +24,30 @@ public class ApplicationService {
 
 	//Simple CRUD methods--------------------------------
 	public Application create() {
-		return null;
+		Application result;
+		result = new Application();
+		return result;
 	}
 
 	public Collection<Application> findAll() {
-		return null;
+		Collection<Application> result;
+		result = this.applicationRepository.findAll();
+		Assert.notNull(result);
+		return result;
 	}
 
 	public Application findOne(final int applicationId) {
-		return null;
+		Application application;
+		application = this.applicationRepository.findOne(applicationId);
+		Assert.notNull(application);
+		return application;
 	}
 
 	public Application save(final Application application) {
 		return null;
 	}
 
-	public void delete(final Application application) {//Borrar antes de hanydyworker  y de fixup tasks
+	public void delete(final Application application) { //Borrar antes de hanydyworker  y de fixup tasks
 
 	}
 
