@@ -65,6 +65,8 @@ public class FixUpTaskService {
 
 	public void delete(final FixUpTask fixUpTask) {
 
+		Assert.notNull(fixUpTask);
+		Assert.isTrue(fixUpTask.getId() != 0);
 		this.fixUpTaskRepository.delete(fixUpTask);
 	}
 

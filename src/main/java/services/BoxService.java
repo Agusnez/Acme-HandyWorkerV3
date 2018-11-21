@@ -65,10 +65,11 @@ public class BoxService {
 
 	public void delete(final Box box) {
 
+		Assert.notNull(box);
+		Assert.isTrue(box.getId() != 0);
 		this.boxRepository.delete(box);
 
 	}
-
 	// Other business methods
 
 }

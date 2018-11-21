@@ -65,6 +65,8 @@ public class ReportService {
 
 	public void delete(final Report report) {
 
+		Assert.notNull(report);
+		Assert.isTrue(report.getId() != 0);
 		this.reportRepository.delete(report);
 	}
 
