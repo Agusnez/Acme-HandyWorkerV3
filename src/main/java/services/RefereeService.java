@@ -1,3 +1,4 @@
+
 package services;
 
 import java.util.Collection;
@@ -8,54 +9,86 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.RefereeRepository;
+import domain.Box;
 import domain.Referee;
 
 @Service
 @Transactional
 public class RefereeService {
+
 	// Managed repository -------------------------------------------
 
 	@Autowired
-	private RefereeRepository refereeRepository;
+	private RefereeRepository	refereeRepository;
 
 	// Supporting services ------------------------------------------
+
+	@Autowired
+	private BoxService			boxService;
+
 
 	// Simple CRUD methods ------------------------------------------
 
 	public Referee create() {
 
-		return new Referee();
+		Referee result;
+		result = new Referee();
+
+		Box inBox, outBox, trashBox, spamBox;
+
+		inBox = this.boxService.create();
+		outBox = this.boxService.create();
+		trashBox = this.boxService.create();
+		spamBox = this.boxService.create();
+
+		inBox.setName("inBox");
+		outBox.setName("outBox");
+		trashBox.setName("trashBox");
+		spamBox.setName("spamBox");
+
+		inBox.setByDefault(true);
+		outBox.setByDefault(true);
+		trashBox.setByDefault(true);
+		spamBox.setByDefault(true);
+
+		inBox.setActor(result);
+		outBox.setActor(result);
+		trashBox.setActor(result);
+		spamBox.setActor(result);
+
+		inBox = this.boxService.save(inBox);
+		outBox = this.boxService.save(outBox);
+		trashBox = this.boxService.save(trashBox);
+		spamBox = this.boxService.save(spamBox);
+
+		return result;
 
 	}
 
 	public Collection<Referee> findAll() {
-		Assert.notNull(this.refereeRepository);
-		Collection<Referee> result = this.refereeRepository.findAll();
+
+		final Collection<Referee> result = this.refereeRepository.findAll();
 		Assert.notNull(result);
 		return result;
 
 	}
 
 	public Referee findOne(final int refereeId) {
-		Assert.isTrue(refereeId != 0);
-		Referee result = this.refereeRepository.findOne(refereeId);
+
+		final Referee result = this.refereeRepository.findOne(refereeId);
 		Assert.notNull(result);
 		return result;
 
 	}
 
 	public Referee save(final Referee referee) {
+
 		Assert.notNull(referee);
 
-		return this.refereeRepository.save(referee);
+		final Referee result = this.refereeRepository.save(referee);
 
-	}
+		return result;
 
-	public void delete(final Referee referee) {
-		Assert.notNull(referee);
-		Assert.isTrue(referee.getId() != 0);
-		Assert.isTrue(this.refereeRepository.exists(referee.getId()));
-		this.refereeRepository.delete(referee);
 	}
 
 	// Other business methods -----------------------------------------

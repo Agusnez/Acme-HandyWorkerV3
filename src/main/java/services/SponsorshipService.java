@@ -52,21 +52,13 @@ public class SponsorshipService {
 		return sponsorship;
 	}
 
-	public Sponsorship save(final Sponsorship s) {
-
-		final Sponsorship sponsorship = this.sponsorshipRepository.save(s);
+	public Sponsorship save(final Sponsorship sponsorship) {
 
 		Assert.notNull(sponsorship);
 
-		return sponsorship;
-	}
+		final Sponsorship result = this.sponsorshipRepository.save(sponsorship);
 
-	public void delete(final Sponsorship sponsorship) {
-
-		Assert.notNull(sponsorship);
-		Assert.isTrue(sponsorship.getId() != 0);
-
-		this.sponsorshipRepository.delete(sponsorship);
+		return result;
 	}
 
 }

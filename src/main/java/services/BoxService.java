@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.BoxRepository;
+import domain.Actor;
 import domain.Box;
 
 @Service
@@ -20,14 +21,26 @@ public class BoxService {
 	@Autowired
 	private BoxRepository	boxRepository;
 
-
 	// Suporting services
+
+	@Autowired
+	private ActorService	actorService;
+
 
 	// Simple CRUD methods
 
 	public Box create() {
 
-		final Box result = new Box();
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		Box result;
+
+		result = new Box();
+
+		result.setActor(actor);
+
+		result = this.save(result);
 
 		return result;
 
@@ -53,13 +66,13 @@ public class BoxService {
 
 	}
 
-	public Box save(final Box s) {
-
-		final Box box = this.boxRepository.save(s);
+	public Box save(final Box box) {
 
 		Assert.notNull(box);
 
-		return box;
+		final Box result = this.boxRepository.save(box);
+
+		return result;
 
 	}
 
@@ -67,6 +80,7 @@ public class BoxService {
 
 		Assert.notNull(box);
 		Assert.isTrue(box.getId() != 0);
+		Assert.isTrue(box.getByDefault() == true);
 		this.boxRepository.delete(box);
 
 	}

@@ -53,13 +53,13 @@ public class FixUpTaskService {
 
 	}
 
-	public FixUpTask save(final FixUpTask s) {
-
-		final FixUpTask fixUpTask = this.fixUpTaskRepository.save(s);
+	public FixUpTask save(final FixUpTask fixUpTask) {
 
 		Assert.notNull(fixUpTask);
 
-		return fixUpTask;
+		final FixUpTask result = this.fixUpTaskRepository.save(fixUpTask);
+
+		return result;
 
 	}
 

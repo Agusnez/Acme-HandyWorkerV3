@@ -1,3 +1,4 @@
+
 package services;
 
 import java.util.Collection;
@@ -8,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import repositories.ActorRepository;
-import repositories.BoxRepository;
 import repositories.CustomerRepository;
-import repositories.FixUpTaskRepository;
+import domain.Box;
 import domain.Customer;
 
 @Service
@@ -20,50 +19,74 @@ public class CustomerService {
 
 	// Managed Repository ------------------------
 	@Autowired
-	private CustomerRepository customerRepository;
-	
+	private CustomerRepository	customerRepository;
+
 	// Suporting services ------------------------
-	
-	ActorRepository actorRepository;
-	
-	
-	
+
+	@Autowired
+	private BoxService			boxService;
+
+
 	// Simple CRUD methods -----------------------
-	
-	public Customer create(){
-		Customer c;
-		
-		c = new Customer();
-		
-		return c;
+
+	public Customer create() {
+		Customer result;
+		result = new Customer();
+
+		Box inBox, outBox, trashBox, spamBox;
+
+		inBox = this.boxService.create();
+		outBox = this.boxService.create();
+		trashBox = this.boxService.create();
+		spamBox = this.boxService.create();
+
+		inBox.setName("inBox");
+		outBox.setName("outBox");
+		trashBox.setName("trashBox");
+		spamBox.setName("spamBox");
+
+		inBox.setByDefault(true);
+		outBox.setByDefault(true);
+		trashBox.setByDefault(true);
+		spamBox.setByDefault(true);
+
+		inBox.setActor(result);
+		outBox.setActor(result);
+		trashBox.setActor(result);
+		spamBox.setActor(result);
+
+		inBox = this.boxService.save(inBox);
+		outBox = this.boxService.save(outBox);
+		trashBox = this.boxService.save(trashBox);
+		spamBox = this.boxService.save(spamBox);
+
+		return result;
+
 	}
-	
-	public Collection<Customer> findAll(){
-		Collection<Customer> res;
-	
-		res = customerRepository.findAll();
-		Assert.notNull(res);
-	
-		return res;
+
+	public Collection<Customer> findAll() {
+
+		Collection<Customer> result;
+		result = this.customerRepository.findAll();
+		Assert.notNull(result);
+		return result;
 	}
-	
-	public Customer findOne(int customerId){
-		Customer c;
-		
-		c = customerRepository.findOne(customerId);
-		
-		return c;
-		
-		
+
+	public Customer findOne(final int customerId) {
+
+		Assert.notNull(customerId);
+		Customer result;
+		result = this.customerRepository.findOne(customerId);
+		return result;
 	}
-	
-	public Customer save(Customer customer){
-		return null;
+
+	public Customer save(final Customer customer) {
+
+		Assert.notNull(customer);
+		Customer result;
+		result = this.customerRepository.save(customer);
+		return result;
 	}
-	
-	public void delete(Customer customer){
-		
-	}
-	
+
 	// Other business methods -----------------------
 }
