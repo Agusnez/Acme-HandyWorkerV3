@@ -1,7 +1,9 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,8 +99,13 @@ public class HandyWorkerService {
 
 	public Collection<HandyWorker> topThreeHandyWorkersComplaints() {
 
-		final Collection<HandyWorker> result = this.handyWorkerRepository.topThreeHandyWorkersComplaints();
-		Assert.notNull(result);
+		final Collection<HandyWorker> handyWorkers = this.handyWorkerRepository.rankingHandyWorkersComplaints();
+		Assert.notNull(handyWorkers);
+
+		final List<HandyWorker> ranking = new ArrayList<HandyWorker>();
+		ranking.addAll(handyWorkers);
+		final Collection<HandyWorker> result = ranking.subList(0, 3);
+
 		return result;
 
 	}

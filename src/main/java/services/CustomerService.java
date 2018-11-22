@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -120,14 +121,11 @@ public class CustomerService {
 		final Collection<Customer> customers = this.customerRepository.rankingCustomersComplaints();
 		Assert.notNull(customers);
 
-		//		List<Customer> lista = new ArrayList<Customer>();
-		//		lista.addAll(customers);
-		//		Collection<Customer> result;
-		//		result.add(lista.get(0));
-		//		result.add(lista.get(1));
-		//		result.add(lista.get(2));
+		final List<Customer> ranking = new ArrayList<Customer>();
+		ranking.addAll(customers);
+		final Collection<Customer> result = ranking.subList(0, 3);
 
-		return customers;
+		return result;
 
 	}
 }
