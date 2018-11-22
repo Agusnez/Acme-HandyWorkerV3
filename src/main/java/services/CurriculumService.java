@@ -86,4 +86,11 @@ public class CurriculumService {
 
 	//Other business methods----------------------------
 
+	public Curriculum findByHandyWorkerId(final int handyWorkerId) {
+
+		final Curriculum result = this.curriculumRepository.findByHandyWorkerId(handyWorkerId);
+
+		return result;
+	}
+
 }
