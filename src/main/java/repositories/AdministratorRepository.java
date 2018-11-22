@@ -54,9 +54,9 @@ public interface AdministratorRepository extends JpaRepository<Administrator, In
 	Double ratioOfFixUpTasksWithComplaint();
 
 	@Query("select c.name, c.complaints.size from Customer c order by c.complaints.size desc")
-	Collection<Customer> topThreeCustomersComplaints();
+	Collection<Customer> rankingCustomersComplaints();
 
 	@Query("select distinct h.name, count(c) from HandyWorker h join h.applications a join a.fixUpTask f join f.complaints c where a.status='ACCEPTED' group by h order by count(c) desc")
-	Collection<HandyWorker> topThreeHandyWorkersComplaints();
+	Collection<HandyWorker> rankingHandyWorkersComplaints();
 
 }

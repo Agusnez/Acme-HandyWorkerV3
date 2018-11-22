@@ -201,15 +201,23 @@ public class AdministratorService {
 
 	public Collection<Customer> topThreeCustomersComplaints() {
 
-		final Collection<Customer> result = this.administratorRepository.topThreeCustomersComplaints();
-		Assert.notNull(result);
-		return result;
+		final Collection<Customer> customers = this.administratorRepository.rankingCustomersComplaints();
+		Assert.notNull(customers);
+
+		//		List<Customer> lista = new ArrayList<Customer>();
+		//		lista.addAll(customers);
+		//		Collection<Customer> result;
+		//		result.add(lista.get(0));
+		//		result.add(lista.get(1));
+		//		result.add(lista.get(2));
+
+		return customers;
 
 	}
 
 	public Collection<HandyWorker> topThreeHandyWorkersComplaints() {
 
-		final Collection<HandyWorker> result = this.administratorRepository.topThreeHandyWorkersComplaints();
+		final Collection<HandyWorker> result = this.administratorRepository.rankingHandyWorkersComplaints();
 		Assert.notNull(result);
 		return result;
 
