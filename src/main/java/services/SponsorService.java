@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.util.Assert;
 import repositories.SponsorRepository;
 import security.LoginService;
 import security.UserAccount;
+import domain.Box;
 import domain.Sponsor;
 
 @Service
@@ -20,6 +22,9 @@ public class SponsorService {
 	//Managed repository---------------------------------
 	@Autowired
 	private SponsorRepository	sponsorRepository;
+
+	@Autowired
+	private BoxService			boxService;
 
 
 	//Suporting services---------------------------------
@@ -49,6 +54,42 @@ public class SponsorService {
 		Assert.notNull(sponsor);
 		Sponsor result;
 		result = this.sponsorRepository.save(sponsor);
+
+		if (sponsor.getId() == 0) {
+			Box inBox, outBox, trashBox, spamBox;
+
+			inBox = this.boxService.create();
+			outBox = this.boxService.create();
+			trashBox = this.boxService.create();
+			spamBox = this.boxService.create();
+
+			inBox.setName("inBox");
+			outBox.setName("outBox");
+			trashBox.setName("trashBox");
+			spamBox.setName("spamBox");
+
+			inBox.setByDefault(true);
+			outBox.setByDefault(true);
+			trashBox.setByDefault(true);
+			spamBox.setByDefault(true);
+
+			inBox.setActor(result);
+			outBox.setActor(result);
+			trashBox.setActor(result);
+			spamBox.setActor(result);
+
+			final Collection<Box> boxes = new ArrayList<>();
+			boxes.add(spamBox);
+			boxes.add(trashBox);
+			boxes.add(inBox);
+			boxes.add(outBox);
+
+			inBox = this.boxService.saveNewActor(inBox);
+			outBox = this.boxService.saveNewActor(outBox);
+			trashBox = this.boxService.saveNewActor(trashBox);
+			spamBox = this.boxService.saveNewActor(spamBox);
+
+		}
 		return result;
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import repositories.HandyWorkerRepository;
 import security.LoginService;
 import security.UserAccount;
+import domain.Box;
 import domain.Finder;
 import domain.HandyWorker;
 
@@ -25,7 +26,11 @@ public class HandyWorkerService {
 	private HandyWorkerRepository	handyWorkerRepository;
 
 	//Suporting services---------------------------------
+	@Autowired
 	private FinderService			finderService;
+
+	@Autowired
+	private BoxService				boxService;
 
 
 	//Simple CRUD methods--------------------------------
@@ -62,6 +67,42 @@ public class HandyWorkerService {
 		Assert.notNull(handyWorker);
 		HandyWorker hw;
 		hw = this.handyWorkerRepository.save(handyWorker);
+
+		if (handyWorker.getId() == 0) {
+			Box inBox, outBox, trashBox, spamBox;
+
+			inBox = this.boxService.create();
+			outBox = this.boxService.create();
+			trashBox = this.boxService.create();
+			spamBox = this.boxService.create();
+
+			inBox.setName("inBox");
+			outBox.setName("outBox");
+			trashBox.setName("trashBox");
+			spamBox.setName("spamBox");
+
+			inBox.setByDefault(true);
+			outBox.setByDefault(true);
+			trashBox.setByDefault(true);
+			spamBox.setByDefault(true);
+
+			inBox.setActor(hw);
+			outBox.setActor(hw);
+			trashBox.setActor(hw);
+			spamBox.setActor(hw);
+
+			final Collection<Box> boxes = new ArrayList<>();
+			boxes.add(spamBox);
+			boxes.add(trashBox);
+			boxes.add(inBox);
+			boxes.add(outBox);
+
+			inBox = this.boxService.saveNewActor(inBox);
+			outBox = this.boxService.saveNewActor(outBox);
+			trashBox = this.boxService.saveNewActor(trashBox);
+			spamBox = this.boxService.saveNewActor(spamBox);
+
+		}
 		return hw;
 	}
 
