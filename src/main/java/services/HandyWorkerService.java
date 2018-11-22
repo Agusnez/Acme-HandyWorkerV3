@@ -83,6 +83,22 @@ public class HandyWorkerService {
 		return result;
 	}
 
+	public Collection<HandyWorker> handyWorkersTenPerCentMore() {
+
+		final Collection<HandyWorker> result = this.handyWorkerRepository.handyWorkersTenPerCentMore();
+		Assert.notNull(result);
+		return result;
+
+	}
+
+	public Collection<HandyWorker> topThreeHandyWorkersComplaints() {
+
+		final Collection<HandyWorker> result = this.handyWorkerRepository.rankingHandyWorkersComplaints();
+		Assert.notNull(result);
+		return result;
+
+	}
+
 	//MIRAR LOS DOS ULTIMOS DE CUSTOMER DE CERITIFICATION
 
 }

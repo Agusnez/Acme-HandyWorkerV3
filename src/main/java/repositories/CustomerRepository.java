@@ -19,6 +19,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	Collection<Customer> customersTenPerCentMore();
 
 	@Query("select c.name, c.complaints.size from Customer c order by c.complaints.size desc")
-	Collection<Customer> topThreeCustomersComplaints();
+	Collection<Customer> rankingCustomersComplaints();
 
 }

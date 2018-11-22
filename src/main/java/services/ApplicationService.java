@@ -53,4 +53,39 @@ public class ApplicationService {
 
 	//Other business methods----------------------------
 
+	public Collection<Double> statsOfOfferedPricePerApplication() {
+
+		final Collection<Double> result = this.applicationRepository.statsOfOfferedPricePerApplication();
+		Assert.notNull(result);
+		return result;
+	}
+
+	public Double ratioOfApplicationsPending() {
+
+		final Double result = this.applicationRepository.ratioOfApplicationsPending();
+		Assert.notNull(result);
+		return result;
+	}
+
+	public Double ratioOfApplicationsAccepted() {
+
+		final Double result = this.applicationRepository.ratioOfApplicationsAccepted();
+		Assert.notNull(result);
+		return result;
+	}
+
+	public Double ratioOfApplicationsRejected() {
+
+		final Double result = this.applicationRepository.ratioOfApplicationsRejected();
+		Assert.notNull(result);
+		return result;
+	}
+
+	public Double ratioOfApplicationsPendingElapsedPeriod() {
+
+		final Double result = this.applicationRepository.ratioOfApplicationsPendingElapsedPeriod();
+		Assert.notNull(result);
+		return result;
+	}
+
 }
