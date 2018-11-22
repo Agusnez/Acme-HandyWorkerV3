@@ -72,4 +72,12 @@ public class ReportService {
 
 	// Other business methods
 
+	public Collection<Double> statsOfNotesPerReport() {
+
+		final Collection<Double> result = this.reportRepository.statsOfNotesPerReport();
+		Assert.notNull(result);
+		return result;
+
+	}
+
 }

@@ -72,4 +72,34 @@ public class FixUpTaskService {
 
 	// Other business methods
 
+	public Collection<Double> statsOfApplicationsPerFixUpTask() {
+
+		final Collection<Double> result = this.fixUpTaskRepository.statsOfApplicationsPerFixUpTask();
+		Assert.notNull(result);
+		return result;
+
+	}
+
+	public Collection<Double> statsOfMaximumPricePerFixUpTask() {
+
+		final Collection<Double> result = this.fixUpTaskRepository.statsOfMaximumPricePerFixUpTask();
+		Assert.notNull(result);
+		return result;
+	}
+
+	public Collection<Double> statsOfComplaintsPerFixUpTask() {
+
+		final Collection<Double> result = this.fixUpTaskRepository.statsOfComplaintsPerFixUpTask();
+		Assert.notNull(result);
+		return result;
+
+	}
+
+	public Double ratioOfFixUpTasksWithComplaint() {
+
+		final Double result = this.fixUpTaskRepository.ratioOfFixUpTasksWithComplaint();
+		Assert.notNull(result);
+		return result;
+
+	}
 }

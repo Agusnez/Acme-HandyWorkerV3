@@ -89,4 +89,35 @@ public class CustomerService {
 	}
 
 	// Other business methods -----------------------
+
+	public Collection<Double> statsOfFixUpTasksPerCustomer() {
+
+		final Collection<Double> result = this.customerRepository.statsOfFixUpTasksPerCustomer();
+		Assert.notNull(result);
+		return result;
+
+	}
+
+	public Collection<Customer> customersTenPerCentMore() {
+
+		final Collection<Customer> result = this.customerRepository.customersTenPerCentMore();
+		Assert.notNull(result);
+		return result;
+	}
+
+	public Collection<Customer> topThreeCustomersComplaints() {
+
+		final Collection<Customer> customers = this.customerRepository.rankingCustomersComplaints();
+		Assert.notNull(customers);
+
+		//		List<Customer> lista = new ArrayList<Customer>();
+		//		lista.addAll(customers);
+		//		Collection<Customer> result;
+		//		result.add(lista.get(0));
+		//		result.add(lista.get(1));
+		//		result.add(lista.get(2));
+
+		return customers;
+
+	}
 }
