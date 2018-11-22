@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.SectionRepository;
+import domain.HandyWorker;
 import domain.Section;
 
 @Service
@@ -21,11 +22,14 @@ public class SectionService {
 	
 	// Suporting services ------------------------
 	
-	private TutorialService tutorialService;
+	private HandyWorkerService handyWorkerService;
 	
 	// Simple CRUD methods -----------------------
 	
 	public Section create(){
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Section s;
 		
 		s = new Section();
@@ -34,6 +38,9 @@ public class SectionService {
 	}
 	
 	public Collection<Section> findAll(){
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Collection<Section> sections;
 		
 		Assert.notNull(sectionRepository);
@@ -44,8 +51,12 @@ public class SectionService {
 	}
 	
 	public Section findOne(int sectionId){
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Section s;
 		
+		Assert.isTrue(sectionId!=0);
 		s = sectionRepository.findOne(sectionId);
 		Assert.notNull(s);
 		
@@ -53,10 +64,10 @@ public class SectionService {
 	}
 	
 	public Section save(Section section){
-		Section s;
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
 		
-		/*entiendo que una section se puede repetir por
-		 tanto no compruebo lo contrario*/
+		Section s;
 		
 		s = sectionRepository.save(section);
 		
@@ -64,6 +75,10 @@ public class SectionService {
 	}
 	
 	public void delete(Section section){
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
+		sectionRepository.delete(section);
 		
 	}
 	

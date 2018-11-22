@@ -22,12 +22,12 @@ public class TutorialService {
 	
 	// Suporting services ------------------------
 	
-	private HandyWorkerService handyWorkerService;
+	
+	private HandyWorkerService handyWorkerService; 
 
 	// Simple CRUD methods -----------------------
 	
 	public Tutorial create(){
-		/*Compruebo que lo haga un HandyWorker*/
 		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
 		Assert.notNull(handyWorker);
 		
@@ -39,10 +39,6 @@ public class TutorialService {
 	}
 	
 	public Collection<Tutorial> findAll(){
-		/*Compruebo que lo haga un HandyWorker*/
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
-		
 		Collection<Tutorial> res;
 		
 		Assert.notNull(tutorialRepository);
@@ -53,10 +49,6 @@ public class TutorialService {
 	}
 	
 	public Tutorial findOne(int tutorialId){
-		/*Compruebo que lo haga un HandyWorker*/
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
-		
 		Tutorial t;
 		
 		// delete Assert.isTrue(tutorialId!=0);
@@ -67,10 +59,6 @@ public class TutorialService {
 	}
 	
 	public Tutorial save(Tutorial tutorial){
-		/*Compruebo que lo haga un HandyWorker*/
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
-		
 		Tutorial t;
 		
 		Assert.notNull(tutorial);
@@ -80,13 +68,9 @@ public class TutorialService {
 		
 	}
 	
-	public void delete(Tutorial tutorial){
-		/*Compruebo que lo haga un HandyWorker*/
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
-		
-		Assert.isTrue(tutorialRepository.exists(tutorial.getId()));
-		Assert.isTrue(tutorial.getSections().isEmpty());
+	public void delete(Tutorial tutorial){	
+		Assert.notNull(tutorial);	
+		Assert.isTrue(tutorial.getId()!=0);
 		
 		tutorialRepository.delete(tutorial);
 		
@@ -94,14 +78,13 @@ public class TutorialService {
 	
 	// Other business methods -----------------------
 	
-	/*Requisito 49.1*/
-	public Collection<Tutorial> tutorialForHW(HandyWorker hw){
-		/*Compruebo que lo haga un HandyWorker*/
+	public Collection<Tutorial> findTutorialForHW(){
 		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
 		Assert.notNull(handyWorker);
 		
-		Collection<Tutorial> tutorials = 
-				tutorialRepository.tutorialForHW(handyWorker);
+		Collection<Tutorial> tutorials;
+		
+		tutorials = tutorialRepository.findTutorialForHW(handyWorker);
 		Assert.notNull(tutorials);
 		
 		return tutorials;

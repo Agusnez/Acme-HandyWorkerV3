@@ -12,7 +12,8 @@ import domain.Tutorial;
 
 @Repository
 public interface TutorialRepository extends JpaRepository<Tutorial, Integer> {
+	
+	@Query("select t from Tutorial t where t.handyWorker = ?1")
+	Collection<Tutorial> findTutorialForHW(HandyWorker handyWorker);
 
-	@Query("select t from Tutorial where t.handyWorker = ?1")
-	public Collection<Tutorial> tutorialForHW(HandyWorker h);
 }
