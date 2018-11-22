@@ -10,6 +10,11 @@ import org.springframework.util.Assert;
 
 import repositories.CurriculumRepository;
 import domain.Curriculum;
+import domain.EducationRecord;
+import domain.EndorserRecord;
+import domain.MiscellaneousRecord;
+import domain.PersonalRecord;
+import domain.ProfessionalRecord;
 
 @Service
 @Transactional
@@ -19,15 +24,41 @@ public class CurriculumService {
 	@Autowired
 	private CurriculumRepository	curriculumRepository;
 
-
 	//Suporting services---------------------------------
+	PersonalRecordService			personalRecordService;
+	EducationRecordService			educationRecordService;
+	ProfessionalRecordService		professionalRecordService;
+	EndorserRecordService			endorserRecordService;
+	MiscellaneousRecordService		miscellaneousRecordService;
+
 
 	//Simple CRUD methods--------------------------------
 	public Curriculum create() {
-		//Hay que crear todos los records
 		//Comprobar que el que lo crea es el Handy Worker
 		Curriculum c;
 		c = new Curriculum();
+
+		final PersonalRecord pr = this.personalRecordService.create();
+		final EducationRecord er = this.educationRecordService.create();
+		final ProfessionalRecord pr1 = this.professionalRecordService.create();
+		final EndorserRecord er1 = this.endorserRecordService.create();
+		final MiscellaneousRecord mr = this.miscellaneousRecordService.create();
+
+		final Collection<EducationRecord> c1 = c.getEducationRecords();
+		c1.add(er);
+		final Collection<ProfessionalRecord> c2 = c.getProfessionalRecords();
+		c2.add(pr1);
+		final Collection<EndorserRecord> c3 = c.getEndorserRecords();
+		c3.add(er1);
+		final Collection<MiscellaneousRecord> c4 = c.getMiscellaneousRecords();
+		c4.add(mr);
+
+		c.setEducationRecords(c1);
+		c.setEndorserRecords(c3);
+		c.setMiscellaneousRecords(c4);
+		c.setPersonalRecord(pr);
+		c.setProfessionalRecords(c2);
+
 		return c;
 	}
 
@@ -48,23 +79,11 @@ public class CurriculumService {
 	public Curriculum save(final Curriculum curriculum) {
 		Assert.notNull(curriculum);
 		//Comprobar autoridad 
-		//Guardar tambien los records
 		Curriculum c;
 		c = this.curriculumRepository.save(curriculum);
 		return c;
 	}
 
-	public void delete(final Curriculum curriculum) {
-		Assert.notNull(curriculum);
-		Assert.isTrue(curriculum.getId() != 0);
-		//Comprobar autoridad
-		this.curriculumRepository.delete(curriculum);
-	}
-
 	//Other business methods----------------------------
-
-	public Curriculum findByHandyWorkerId(final int handyWorkerId) {
-		return null;
-	}
 
 }
