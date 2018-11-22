@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import domain.Section;
-import domain.Tutorial;
-
 import repositories.SectionRepository;
+import domain.Section;
 
 @Service
 @Transactional
@@ -23,7 +21,7 @@ public class SectionService {
 	
 	// Suporting services ------------------------
 	
-	
+	private TutorialService tutorialService;
 	
 	// Simple CRUD methods -----------------------
 	
@@ -48,7 +46,6 @@ public class SectionService {
 	public Section findOne(int sectionId){
 		Section s;
 		
-		Assert.isTrue(sectionId!=0);
 		s = sectionRepository.findOne(sectionId);
 		Assert.notNull(s);
 		
@@ -57,6 +54,9 @@ public class SectionService {
 	
 	public Section save(Section section){
 		Section s;
+		
+		/*entiendo que una section se puede repetir por
+		 tanto no compruebo lo contrario*/
 		
 		s = sectionRepository.save(section);
 		

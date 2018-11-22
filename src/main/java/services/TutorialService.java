@@ -1,7 +1,6 @@
 package services;
 
 import java.util.Collection;
-import java.util.Date;
 
 import javax.transaction.Transactional;
 
@@ -9,9 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import repositories.SectionRepository;
 import repositories.TutorialRepository;
-import domain.Section;
+import domain.HandyWorker;
 import domain.Tutorial;
 
 @Service
@@ -24,23 +22,16 @@ public class TutorialService {
 	
 	// Suporting services ------------------------
 	
-	SectionRepository sectionRepository;
+	private HandyWorkerService handyWorkerService;
 
 	// Simple CRUD methods -----------------------
 	
 	public Tutorial create(){
-		/*TODO: hacer que los haga solo el HandyWorker*/
-		Tutorial t;
+		/*Compruebo que lo haga un HandyWorker*/
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
 		
-//		Assert.notNull(sections);
-//		Assert.isTrue(sections.isEmpty());
-//		
-//		Date moment = new Date(System.currentTimeMillis());
-//		
-//		t = new Tutorial();
-//		/*TODO: ordenar el collection*/
-//		t.setSections(sections);
-//		t.setMoment(moment);
+		Tutorial t;
 		
 		t = new Tutorial();
 		
@@ -48,6 +39,10 @@ public class TutorialService {
 	}
 	
 	public Collection<Tutorial> findAll(){
+		/*Compruebo que lo haga un HandyWorker*/
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Collection<Tutorial> res;
 		
 		Assert.notNull(tutorialRepository);
@@ -58,6 +53,10 @@ public class TutorialService {
 	}
 	
 	public Tutorial findOne(int tutorialId){
+		/*Compruebo que lo haga un HandyWorker*/
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Tutorial t;
 		
 		// delete Assert.isTrue(tutorialId!=0);
@@ -68,6 +67,10 @@ public class TutorialService {
 	}
 	
 	public Tutorial save(Tutorial tutorial){
+		/*Compruebo que lo haga un HandyWorker*/
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Tutorial t;
 		
 		Assert.notNull(tutorial);
@@ -77,7 +80,11 @@ public class TutorialService {
 		
 	}
 	
-	public void delete(Tutorial tutorial){	
+	public void delete(Tutorial tutorial){
+		/*Compruebo que lo haga un HandyWorker*/
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Assert.isTrue(tutorialRepository.exists(tutorial.getId()));
 		Assert.isTrue(tutorial.getSections().isEmpty());
 		
@@ -86,4 +93,18 @@ public class TutorialService {
 	}
 	
 	// Other business methods -----------------------
+	
+	/*Requisito 49.1*/
+	public Collection<Tutorial> tutorialForHW(HandyWorker hw){
+		/*Compruebo que lo haga un HandyWorker*/
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
+		Collection<Tutorial> tutorials = 
+				tutorialRepository.tutorialForHW(handyWorker);
+		Assert.notNull(tutorials);
+		
+		return tutorials;
+		
+	}
 }
