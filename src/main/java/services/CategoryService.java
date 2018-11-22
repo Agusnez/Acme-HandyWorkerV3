@@ -1,3 +1,4 @@
+
 package services;
 
 import java.util.Collection;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.CategoryRepository;
+import repositories.FixUpTaskRepository;
 import domain.Category;
+import domain.FixUpTask;
 
 @Service
 @Transactional
@@ -18,108 +21,109 @@ public class CategoryService {
 	// Managed Repository ------------------------
 
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private CategoryRepository	categoryRepository;
 
 	// Suporting services ------------------------
 
+	@Autowired
+	private FixUpTaskRepository	fixUpTaskRepository;
+
+
 	// Simple CRUD methods -----------------------
 
-//	/*Dado que al crear la raíz "CATEGORY" no se especifica el padre*/
-//	public Category createRoot() {
-//		Collection<Category> categories = findAll();
-//		
-//		/*comprobamos que no haya ninguna categoría todavía*/
-//		Assert.isTrue(categories.isEmpty());
-//		Category c = new Category();
-//		
-//		/*la raíz debe tener por nombre "CATEGORY"*/
-//		c.setName("CATEGORY");
-//		
-//		return c;
-//	}
-	
-	/*para las demás categorias que se creen se ha de especificar el padre*/
-	public Category create(){
-		Category c;
-		
-//		Assert.notNull(parent);
-//		/*comprobamos que el padre este guardado como categoría*/
-//		Assert.isTrue(categoryRepository.exists(parent.getId()));
-//		Assert.isTrue(!name.isEmpty());
-//		
-//		c = new Category();
-//		Assert.isTrue(!name.isEmpty());
-//		c.setName(name);
-//		c.setParent(parent);
-//		
-//		return c;
-		
-		c = new Category();
-		
-		return c;
-		
+	public Category create() {
+
+		Category result;
+
+		final Category root = this.findRoot("CATEGORY");
+
+		result = new Category();
+
+		result.setParent(root);
+
+		return result;
+
 	}
 
-	/* no sé si es necesario este método porque no nos aporta nada en principio */
 	public Collection<Category> findAll() {
-		Collection<Category> res;
 
-		/* he visto este Assert en Acme-Certificacion (AnnouncementService) */
 		Assert.notNull(this.categoryRepository);
-		res = categoryRepository.findAll();
+
+		final Collection<Category> res = this.categoryRepository.findAll();
+
 		Assert.notNull(res);
 
 		return res;
 
 	}
 
-	public Category findOne(int categoryId) {
-		Category c;
+	public Category findOne(final int categoryId) {
 
-		/*Agustín pone este Assert*/
-		// para delete Assert.isTrue(categoryId!=0);
-		c = categoryRepository.findOne(categoryId);
-		Assert.notNull(c);
+		Assert.isTrue(categoryId != 0);
 
-		return c;
+		Assert.notNull(this.categoryRepository);
+
+		final Category result = this.categoryRepository.findOne(categoryId);
+
+		Assert.notNull(result);
+
+		return result;
 	}
 
-	public Category save(Category category) {
-		Category c;
+	public Category save(final Category category) {
 
+		Assert.isTrue(category.getId() != 0);
+		Assert.isTrue(!(category.getName().equals("CATEGORY")));
 		Assert.notNull(category);
-		/* compruebo que sea único */
-		// unico el nombre Assert.isTrue(!categoryRepository.exists(category.getId()));
-		c = categoryRepository.save(category);
 
-		return c;
+		final Category result = this.categoryRepository.save(category);
+
+		return result;
 	}
 
-	public void delete(Category category) {
-		/* compruebo que exista */
-		Assert.isTrue(categoryRepository.exists(category.getId()));
+	public void delete(final Category category) {
+		//compruebo que exista
+		Assert.isTrue(category.getId() != 0);
+		//compruebo que no es la categoria "CATEGORY" 
+		Assert.isTrue(!(category.getName().equals("CATEGORY")));
 
-		/* compruebo que no tenga hijos (hojas) */
-		Collection<Category> children = categoryRepository
-				.findChildren(category.getId());
-		Assert.isTrue(children.isEmpty());
+		final Collection<Category> children = this.categoryRepository.findChildren(category.getId());
+		final Collection<FixUpTask> fixUp = this.fixUpTaskRepository.findFixUpTaskPerCategory(category.getId());
 
-		categoryRepository.delete(category);
+		if (children != null || !(children.isEmpty()))
+			for (final Category c : children) {
+				final Category cparent = category.getParent();
+				c.setParent(cparent);
+				this.save(c);
+			}
+
+		if (fixUp != null || !(fixUp.isEmpty()))
+			for (final FixUpTask f : fixUp) {
+				final Category cfix = category.getParent();
+				f.setCategory(cfix);
+				this.fixUpTaskRepository.save(f);
+			}
+
+		this.categoryRepository.delete(category);
 
 	}
-
 	// Other business methods -----------------------
 
-	/* me hace falta para el delete y considero además que es necesario */
-	public Collection<Category> findChildren(int categoryId) {
-		Collection<Category> res;
+	public Collection<Category> findChildren(final int categoryId) {
 
-		res = categoryRepository.findChildren(categoryId);
-		Assert.notNull(res);
+		final Collection<Category> result = this.categoryRepository.findChildren(categoryId);
 
-		return res;
+		Assert.notNull(result);
+
+		return result;
 	}
-	
-	
 
+	public Category findRoot(final String categoryName) {
+
+		final Category result = this.categoryRepository.findRoot(categoryName);
+
+		Assert.notNull(result);
+
+		return result;
+	}
 }

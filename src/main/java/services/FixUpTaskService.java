@@ -72,4 +72,25 @@ public class FixUpTaskService {
 
 	// Other business methods
 
+	public Collection<FixUpTask> findFixUpTaskPerCategory(final int categoryId) {
+
+		final Collection<FixUpTask> result;
+
+		result = this.fixUpTaskRepository.findFixUpTaskPerCategory(categoryId);
+
+		Assert.notNull(result);
+
+		return result;
+	}
+
+	public FixUpTask findFixUpTaskPerComplaint(final int complaintId) {
+
+		FixUpTask result;
+
+		result = this.fixUpTaskRepository.findFixUpTaskPerComplaint(complaintId);
+
+		Assert.notNull(result);
+
+		return result;
+	}
 }
