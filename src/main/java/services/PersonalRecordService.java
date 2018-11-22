@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.PersonalRecordRepository;
+import domain.Curriculum;
+import domain.HandyWorker;
 import domain.PersonalRecord;
 
 @Service
@@ -20,8 +22,14 @@ public class PersonalRecordService {
 	@Autowired
 	private PersonalRecordRepository	personalRecordRepository;
 
-
 	//Supporting services
+
+	@Autowired
+	private CurriculumService			curriculumService;
+
+	@Autowired
+	private HandyWorkerService			handyWorkerService;
+
 
 	//Simple CRUD methods
 
@@ -52,11 +60,21 @@ public class PersonalRecordService {
 		return personalRecords;
 	}
 
-	public void delete(final PersonalRecord personalRecord) {
+	public PersonalRecord save(final PersonalRecord personalRecord) {
 
 		Assert.notNull(personalRecord);
-		Assert.isTrue(personalRecord.getId() != 0);
+		PersonalRecord result;
 
-		this.personalRecordRepository.delete(personalRecord);
+		result = this.personalRecordRepository.save(personalRecord);
+
+		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+
+		final Curriculum curriculum = this.curriculumService.findByHandyWorkerId(handyWorker.getId());
+		Assert.notNull(curriculum);
+		curriculum.setPersonalRecord(personalRecord);
+		this.curriculumService.save(curriculum);
+
+		return result;
 	}
 }

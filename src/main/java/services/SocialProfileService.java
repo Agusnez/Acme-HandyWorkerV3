@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.SocialProfileRepository;
+import domain.Actor;
 import domain.SocialProfile;
 
 @Service
@@ -21,14 +22,26 @@ public class SocialProfileService {
 	@Autowired
 	private SocialProfileRepository	socialProfileRepository;
 
-
 	// Suporting services
+
+	@Autowired
+	private ActorService			actorService;
+
 
 	// Simple CRUD methods
 
 	public SocialProfile create() {
 
-		final SocialProfile result = new SocialProfile();
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		SocialProfile result;
+
+		result = new SocialProfile();
+
+		result.setActor(actor);
+
+		result = this.save(result);
 
 		return result;
 
@@ -53,21 +66,14 @@ public class SocialProfileService {
 
 	}
 
-	public SocialProfile save(final SocialProfile s) {
-
-		final SocialProfile socialProfile = this.socialProfileRepository.save(s);
+	public SocialProfile save(final SocialProfile socialProfile) {
 
 		Assert.notNull(socialProfile);
 
-		return socialProfile;
+		final SocialProfile result = this.socialProfileRepository.save(socialProfile);
 
-	}
+		return result;
 
-	public void delete(final SocialProfile socialProfile) {
-
-		Assert.notNull(socialProfile);
-		Assert.isTrue(socialProfile.getId() != 0);
-		this.socialProfileRepository.delete(socialProfile);
 	}
 
 	// Other business methods	

@@ -1,3 +1,4 @@
+
 package services;
 
 import java.util.Collection;
@@ -7,60 +8,59 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-
 import repositories.FinderRepository;
 import domain.Finder;
 
 @Service
 @Transactional
 public class FinderService {
-	
+
 	// Managed repository -------------------------------------------
-	
-		@Autowired
-		private FinderRepository finderRepository;
-		
-		// Supporting services ------------------------------------------
-		
-		// Simple CRUD methods ------------------------------------------
-		
-		public Finder create() {
-			return new Finder();
 
-		}
+	@Autowired
+	private FinderRepository	finderRepository;
 
-		public Collection<Finder> findAll() {
-			Assert.notNull(this.finderRepository);
-			Collection<Finder> result = this.finderRepository.findAll();
-			Assert.notNull(result);
-			return result;
 
-		}
+	// Supporting services ------------------------------------------
 
-		public Finder findOne(final int finderId) {
-			Assert.isTrue(finderId != 0);
-			Finder result = this.finderRepository.findOne(finderId);
-			Assert.notNull(result);
-			return result;
+	// Simple CRUD methods ------------------------------------------
 
-		}
+	public Finder create() {
 
-		public Finder save(final Finder finder) {
-			Assert.notNull(finder);
-			
-			return this.finderRepository.save(finder);
+		Finder result;
 
-		}
+		result = new Finder();
 
-		public void delete(final Finder finder) {
-			Assert.notNull(finder);
-			Assert.isTrue(finder.getId() != 0);
-			Assert.isTrue(this.finderRepository.exists(finder.getId()));
-			this.finderRepository.delete(finder);
-		}
-		
-		// Other business methods -----------------------------------------
-		
+		return result;
+
+	}
+
+	public Collection<Finder> findAll() {
+
+		final Collection<Finder> result = this.finderRepository.findAll();
+		Assert.notNull(result);
+		return result;
+
+	}
+
+	public Finder findOne(final int finderId) {
+
+		final Finder result = this.finderRepository.findOne(finderId);
+		Assert.notNull(result);
+		return result;
+
+	}
+
+	public Finder save(final Finder finder) {
+
+		Assert.notNull(finder);
+
+		final Finder result = this.finderRepository.save(finder);
+
+		return result;
+
+	}
+
+	// Other business methods -----------------------------------------
+
 }
-
-

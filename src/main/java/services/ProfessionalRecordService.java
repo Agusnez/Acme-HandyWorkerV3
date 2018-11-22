@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.ProfessionalRecordRepository;
+import domain.Curriculum;
+import domain.HandyWorker;
 import domain.ProfessionalRecord;
 
 @Service
@@ -20,14 +22,14 @@ public class ProfessionalRecordService {
 	@Autowired
 	private ProfessionalRecordRepository	professionalRecordRepository;
 
-
 	// Suporting services ------------------------
 
-	//	@Autowired
-	//	private CurriculumService			curriculumService;
+	@Autowired
+	private CurriculumService				curriculumService;
 
-	//	@Autowired
-	//	private HandyWorkerService				handyWorkerService;
+	@Autowired
+	private HandyWorkerService				handyWorkerService;
+
 
 	// Simple CRUD methods -----------------------
 
@@ -68,30 +70,15 @@ public class ProfessionalRecordService {
 
 		result = this.professionalRecordRepository.save(professionalRecord);
 
-		//		final HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		//		Assert.notNull(handyWorker);
-		//		Assert.notNull(handyWorker.getCurriculum());
-		//
-		//		final Curriculum curriculum = handyWorker.getCurriculum(); QUERY
-		//		curriculum.getEndorserRecords().remove(endorserRecord);
+		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+
+		final Curriculum curriculum = this.curriculumService.findByHandyWorkerId(handyWorker.getId());
+		Assert.notNull(curriculum);
+		curriculum.getProfessionalRecords().add(result);
+		this.curriculumService.save(curriculum);
 
 		return result;
-	}
-
-	public void delete(final ProfessionalRecord professionalRecord) {
-
-		Assert.notNull(professionalRecord);
-		Assert.isTrue(professionalRecord.getId() != 0);
-
-		//		final HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		//		Assert.notNull(handyWorker);
-		//		Assert.notNull(handyWorker.getCurriculum());
-		//
-		//		final Curriculum curriculum = handyWorker.getCurriculum();
-		//		curriculum.getProfessionalRecords().remove(professionalRecord);
-
-		this.professionalRecordRepository.delete(professionalRecord);
-
 	}
 
 	// Other business methods -----------------------

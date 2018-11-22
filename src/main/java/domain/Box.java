@@ -29,10 +29,10 @@ public class Box extends DomainEntity {
 		this.name = name;
 	}
 
-	public boolean getByDefault() {
+	public Boolean getByDefault() {
 		return this.byDefault;
 	}
-	public void setByDefault(final boolean byDefault) {
+	public void setByDefault(final Boolean byDefault) {
 		this.byDefault = byDefault;
 	}
 
