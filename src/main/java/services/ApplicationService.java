@@ -23,7 +23,7 @@ public class ApplicationService {
 	//Suporting services---------------------------------
 
 	//Simple CRUD methods--------------------------------
-	public Application create() {
+	public Application create() {//Comprobar que es el handy worker o el customer
 		Application result;
 		result = new Application();
 		return result;
@@ -43,16 +43,14 @@ public class ApplicationService {
 		return application;
 	}
 
-	public Application save(final Application application) {
-		return null;
-	}
-
-	public void delete(final Application application) { //Borrar antes de hanydyworker  y de fixup tasks
-
+	public Application save(final Application application) {//Comprobar que es el handy worker o el customer
+		Assert.notNull(application);
+		Application app;
+		app = this.applicationRepository.save(application);
+		return app;
 	}
 
 	//Other business methods----------------------------
-
 	public Collection<Double> statsOfOfferedPricePerApplication() {
 
 		final Collection<Double> result = this.applicationRepository.statsOfOfferedPricePerApplication();
@@ -67,8 +65,13 @@ public class ApplicationService {
 		return result;
 	}
 
-	public Double ratioOfApplicationsAccepted() {
+	public Collection<Double> statsOfOfferedPricePerApplication() {
+		final Collection<Double> result = this.applicationRepository.statsOfOfferedPricePerApplication();
+		Assert.notNull(result);
+		return result;
+	}
 
+	public Double ratioOfApplicationsAccepted() {
 		final Double result = this.applicationRepository.ratioOfApplicationsAccepted();
 		Assert.notNull(result);
 		return result;
@@ -81,11 +84,27 @@ public class ApplicationService {
 		return result;
 	}
 
+
 	public Double ratioOfApplicationsPendingElapsedPeriod() {
 
 		final Double result = this.applicationRepository.ratioOfApplicationsPendingElapsedPeriod();
 		Assert.notNull(result);
 		return result;
+	}
+
+	public Collection<Application> findApplicationsByCustomer(final int customerId) {
+		final Collection<Application> result = this.applicationRepository.findApplicationsByCustomer(customerId);
+		Assert.notNull(result);
+		return result;
+
+	}
+
+	//applications dado un handyWorker 
+	public Collection<Application> findApplicationsByHandyWorker(final int handyWorkerId) {
+		final Collection<Application> result = this.applicationRepository.findApplicationsByCustomer(handyWorkerId);
+		Assert.notNull(result);
+		return result;
+
 	}
 
 }

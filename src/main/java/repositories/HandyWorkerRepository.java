@@ -19,5 +19,5 @@ public interface HandyWorkerRepository extends JpaRepository<HandyWorker, Intege
 	Collection<HandyWorker> handyWorkersTenPerCentMore();
 
 	@Query("select distinct h.name, count(c) from HandyWorker h join h.applications a join a.fixUpTask f join f.complaints c where a.status='ACCEPTED' group by h order by count(c) desc")
-	Collection<HandyWorker> rankingHandyWorkersComplaints();
+	Collection<HandyWorker> topThreeHandyWorkersComplaints();
 }

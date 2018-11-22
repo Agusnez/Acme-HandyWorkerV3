@@ -87,10 +87,10 @@ public abstract class Actor extends DomainEntity {
 		this.address = address;
 	}
 
-	public boolean getSuspicious() {
+	public Boolean getSuspicious() {
 		return this.suspicious;
 	}
-	public void setSuspicious(final boolean suspicious) {
+	public void setSuspicious(final Boolean suspicious) {
 		this.suspicious = suspicious;
 	}
 

@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.SponsorRepository;
+import security.LoginService;
+import security.UserAccount;
 import domain.Sponsor;
 
 @Service
@@ -23,7 +25,7 @@ public class SponsorService {
 	//Suporting services---------------------------------
 
 	//Simple CRUD methods--------------------------------
-	public Sponsor create() { //Debe no estar autenticado?   y lo de las 4 boxes
+	public Sponsor create() { //Debe no estar autenticado?  
 		Sponsor result;
 		result = new Sponsor();
 		return result;
@@ -50,15 +52,27 @@ public class SponsorService {
 		return result;
 	}
 
-	public void delete(final Sponsor sponsor) {
-		Assert.notNull(sponsor);
-		Assert.isTrue(sponsor.getId() != 0);
-		//tengo que borrar antes los sponsorships de este sponsor
-		this.sponsorRepository.delete(sponsor);
-	}
-
 	//Other business methods----------------------------
 
-	//el findByPrincipal
+	public Sponsor findByPrincipal() {
+		Sponsor s;
+		UserAccount userAccount;
 
+		userAccount = LoginService.getPrincipal();
+		Assert.notNull(userAccount);
+		s = this.findByUserAccount(userAccount);
+		Assert.notNull(s);
+
+		return s;
+	}
+
+	public Sponsor findByUserAccount(final UserAccount userAccount) {
+		Assert.notNull(userAccount);
+
+		Sponsor result;
+
+		result = this.sponsorRepository.findByUserAccountId(userAccount.getId());
+
+		return result;
+	}
 }

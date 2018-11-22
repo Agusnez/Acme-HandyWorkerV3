@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 import repositories.HandyWorkerRepository;
 import security.LoginService;
 import security.UserAccount;
+import domain.Finder;
 import domain.HandyWorker;
 
 @Service
@@ -21,13 +22,20 @@ public class HandyWorkerService {
 	@Autowired
 	private HandyWorkerRepository	handyWorkerRepository;
 
-
 	//Suporting services---------------------------------
+	private FinderService			finderService;
+
 
 	//Simple CRUD methods--------------------------------
-	public HandyWorker create() { //Lo de los 4 Boxes   y crear finder
+	public HandyWorker create() {
 		HandyWorker hw;
+		Finder find;
+
+		find = this.finderService.create();
 		hw = new HandyWorker();
+
+		find.setHandyWorker(hw);
+		hw.setMake(hw.getName() + hw.getMiddleName() + hw.getSurname());
 		return hw;
 	}
 
@@ -46,17 +54,13 @@ public class HandyWorkerService {
 	}
 
 	public HandyWorker save(final HandyWorker handyWorker) {
+
+		//Seguridad(Sacacr el principal y comprobar que es el mismo que el que estoy metiendo) Comprobar el ID para que puedas registrarte 
+		LoginService.getPrincipal();
 		Assert.notNull(handyWorker);
 		HandyWorker hw;
 		hw = this.handyWorkerRepository.save(handyWorker);
 		return hw;
-	}
-
-	public void delete(final HandyWorker handyWorker) {
-		Assert.notNull(handyWorker);
-		Assert.isTrue(handyWorker.getId() != 0);
-		//Faltan cosas con respecto a las aplication y todo lo demas
-		this.handyWorkerRepository.delete(handyWorker);
 	}
 
 	//Other business methods----------------------------
@@ -93,12 +97,10 @@ public class HandyWorkerService {
 
 	public Collection<HandyWorker> topThreeHandyWorkersComplaints() {
 
-		final Collection<HandyWorker> result = this.handyWorkerRepository.rankingHandyWorkersComplaints();
+		final Collection<HandyWorker> result = this.handyWorkerRepository.topThreeHandyWorkersComplaints();
 		Assert.notNull(result);
 		return result;
 
 	}
-
-	//MIRAR LOS DOS ULTIMOS DE CUSTOMER DE CERITIFICATION
 
 }
