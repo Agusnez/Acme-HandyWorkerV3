@@ -31,16 +31,9 @@ public class BoxService {
 
 	public Box create() {
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-
 		Box result;
 
 		result = new Box();
-
-		result.setActor(actor);
-
-		result = this.save(result);
 
 		return result;
 
@@ -67,6 +60,21 @@ public class BoxService {
 	}
 
 	public Box save(final Box box) {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		Assert.isTrue(!box.getByDefault());
+
+		Assert.notNull(box);
+
+		final Box result = this.boxRepository.save(box);
+
+		return result;
+
+	}
+
+	public Box saveNewActor(final Box box) {
 
 		Assert.notNull(box);
 

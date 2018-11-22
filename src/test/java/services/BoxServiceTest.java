@@ -33,12 +33,61 @@ public class BoxServiceTest extends AbstractTest {
 
 	@Autowired
 	private CustomerService	customerservice;
+	
+	@Autowired
+	private ActorService actorservice;
 
 
 	//Tests -------------------------------------------------------
 
 	@Test
 	public void testSaveBox() {
+
+		/*
+		 * final Authority authority = new Authority();
+		 * authority.setAuthority(Authority.CUSTOMER);
+		 * final List<Authority> list = new ArrayList<Authority>();
+		 * list.add(authority);
+		 * 
+		 * final UserAccount userAccount = new UserAccount();
+		 * userAccount.setAuthorities(list);
+		 * userAccount.setUsername("Gustavito");
+		 * userAccount.setPassword("123123");
+		 * 
+		 * Customer customer, saved1;
+		 * Collection<Customer> customers;
+		 * 
+		 * customer = this.customerservice.create();
+		 * customer.setName("González");
+		 * customer.setMiddleName("Adolfo");
+		 * customer.setSurname("Gustavo");
+		 * customer.setAddress("Calle Almoralejo");
+		 * customer.setUserAccount(userAccount);
+		 * 
+		 * saved1 = this.customerservice.save(customer);
+		 * customers = this.customerservice.findAll();
+		 * Assert.isTrue(customers.contains(saved1));
+		 */
+		super.authenticate("customer1");
+
+		Box box, saved;
+		Collection<Box> boxes;
+
+		box = this.boxservice.create();
+		box.setName("prueba 1");
+		box.setByDefault(false);
+		box.setActor(this.actorservice.findByPrincipal());
+
+		saved = this.boxservice.save(box);
+		boxes = this.boxservice.findAll();
+		Assert.isTrue(boxes.contains(saved));
+
+		super.authenticate(null);
+
+	}
+
+	@Test
+	public void testSaveBoxNewActor() {
 
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
@@ -60,13 +109,11 @@ public class BoxServiceTest extends AbstractTest {
 		customer.setAddress("Calle Almoralejo");
 		customer.setUserAccount(userAccount);
 
-		super.authenticate("test");
-
 		saved1 = this.customerservice.save(customer);
 		customers = this.customerservice.findAll();
 		Assert.isTrue(customers.contains(saved1));
 
-		super.authenticate(saved1.getUserAccount().getUsername());
+		super.authenticate("customer1");
 
 		Box box, saved;
 		Collection<Box> boxes;
@@ -74,7 +121,7 @@ public class BoxServiceTest extends AbstractTest {
 		box = this.boxservice.create();
 		box.setName("prueba 1");
 		box.setByDefault(false);
-		box.setActor(customer);
+		box.setActor(this.actorservice.findByPrincipal());
 
 		saved = this.boxservice.save(box);
 		boxes = this.boxservice.findAll();
