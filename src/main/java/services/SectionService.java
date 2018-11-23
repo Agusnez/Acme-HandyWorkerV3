@@ -1,6 +1,8 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -33,6 +35,8 @@ public class SectionService {
 		Section s;
 		
 		s = new Section();
+		int size = findAll().size();
+		s.setNumero(size+1);
 		
 		return s;
 	}
@@ -44,7 +48,7 @@ public class SectionService {
 		Collection<Section> sections;
 		
 		Assert.notNull(sectionRepository);
-		sections = sectionRepository.findAll();
+		sections = sectionRepository.findSectionsOrdered();
 		Assert.notNull(sections);
 		
 		return sections;
@@ -78,6 +82,15 @@ public class SectionService {
 		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
 		Assert.notNull(handyWorker);
 		
+		Collection<Section> sections = findAll();
+		
+		/*reordeno las secciones reasignando el valor correcto de 'numero'*/
+		for(Section s : sections){
+			
+			if(s.getNumero()>section.getNumero()){
+				s.setNumero(s.getNumero()-1);
+			}
+		}
 		sectionRepository.delete(section);
 		
 	}

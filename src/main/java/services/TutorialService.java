@@ -59,6 +59,9 @@ public class TutorialService {
 	}
 	
 	public Tutorial save(Tutorial tutorial){
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Tutorial t;
 		
 		Assert.notNull(tutorial);
@@ -69,8 +72,16 @@ public class TutorialService {
 	}
 	
 	public void delete(Tutorial tutorial){	
+		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		
 		Assert.notNull(tutorial);	
 		Assert.isTrue(tutorial.getId()!=0);
+		
+		/*Comprobamos que el tutorial sea del HandyWorker logeado
+		  es este momento*/
+		Collection<Tutorial> tutorials = findTutorialForHW();
+		Assert.isTrue(tutorials.contains(tutorial));
 		
 		tutorialRepository.delete(tutorial);
 		
