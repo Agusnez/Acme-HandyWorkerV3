@@ -15,4 +15,10 @@ public interface BoxRepository extends JpaRepository<Box, Integer> {
 
 	@Query("select b from Box b where b.name='inBox' and b.actor.id=?1")
 	Box findInBoxByActorId(int actorId);
+
+	@Query("select b from Box b where b.name='outBox' and b.actor.id=?1")
+	Box findOutBoxByActorId(int actorId);
+
+	@Query("select b from Box b where b.name='spamBox' and b.actor.id=?1")
+	Box findSpamBoxByActorId(int actorId);
 }

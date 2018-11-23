@@ -88,7 +88,7 @@ public class BoxService {
 
 		Assert.notNull(box);
 		Assert.isTrue(box.getId() != 0);
-		Assert.isTrue(box.getByDefault() == true);
+		Assert.isTrue(box.getByDefault() == false);
 		this.boxRepository.delete(box);
 
 	}
@@ -103,6 +103,18 @@ public class BoxService {
 	public Box findInBoxByActorId(final int actorId) {
 		Box result;
 		result = this.boxRepository.findInBoxByActorId(actorId);
+		return result;
+	}
+
+	public Box findOutBoxByActorId(final int actorId) {
+		Box result;
+		result = this.boxRepository.findOutBoxByActorId(actorId);
+		return result;
+	}
+
+	public Box findSpamBoxByActorId(final int actorId) {
+		Box result;
+		result = this.boxRepository.findSpamBoxByActorId(actorId);
 		return result;
 	}
 
