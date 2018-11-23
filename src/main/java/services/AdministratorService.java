@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.AdministratorRepository;
+import security.Authority;
 import domain.Actor;
 import domain.Administrator;
 import domain.Box;
@@ -37,37 +39,12 @@ public class AdministratorService {
 
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().toString().contains("ADMIN")));
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Administrator result;
 		result = new Administrator();
-
-		Box inBox, outBox, trashBox, spamBox;
-
-		inBox = this.boxService.create();
-		outBox = this.boxService.create();
-		trashBox = this.boxService.create();
-		spamBox = this.boxService.create();
-
-		inBox.setName("inBox");
-		outBox.setName("outBox");
-		trashBox.setName("trashBox");
-		spamBox.setName("spamBox");
-
-		inBox.setByDefault(true);
-		outBox.setByDefault(true);
-		trashBox.setByDefault(true);
-		spamBox.setByDefault(true);
-
-		inBox.setActor(result);
-		outBox.setActor(result);
-		trashBox.setActor(result);
-		spamBox.setActor(result);
-
-		inBox = this.boxService.save(inBox);
-		outBox = this.boxService.save(outBox);
-		trashBox = this.boxService.save(trashBox);
-		spamBox = this.boxService.save(spamBox);
 
 		return result;
 
@@ -95,6 +72,42 @@ public class AdministratorService {
 		Assert.notNull(administrator);
 		Administrator result;
 		result = this.administratorRepository.save(administrator);
+
+		if (administrator.getId() == 0) {
+			Box inBox, outBox, trashBox, spamBox;
+
+			inBox = this.boxService.create();
+			outBox = this.boxService.create();
+			trashBox = this.boxService.create();
+			spamBox = this.boxService.create();
+
+			inBox.setName("inBox");
+			outBox.setName("outBox");
+			trashBox.setName("trashBox");
+			spamBox.setName("spamBox");
+
+			inBox.setByDefault(true);
+			outBox.setByDefault(true);
+			trashBox.setByDefault(true);
+			spamBox.setByDefault(true);
+
+			inBox.setActor(result);
+			outBox.setActor(result);
+			trashBox.setActor(result);
+			spamBox.setActor(result);
+
+			final Collection<Box> boxes = new ArrayList<>();
+			boxes.add(spamBox);
+			boxes.add(trashBox);
+			boxes.add(inBox);
+			boxes.add(outBox);
+
+			inBox = this.boxService.saveNewActor(inBox);
+			outBox = this.boxService.saveNewActor(outBox);
+			trashBox = this.boxService.saveNewActor(trashBox);
+			spamBox = this.boxService.saveNewActor(spamBox);
+
+		}
 		return result;
 	}
 

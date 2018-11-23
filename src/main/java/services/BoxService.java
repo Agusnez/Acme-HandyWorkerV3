@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,10 +89,40 @@ public class BoxService {
 
 		Assert.notNull(box);
 		Assert.isTrue(box.getId() != 0);
-		Assert.isTrue(box.getByDefault() == true);
+		Assert.isTrue(box.getByDefault() == false);
 		this.boxRepository.delete(box);
 
 	}
 	// Other business methods
+
+	public Box findTrashBoxByActorId(final int actorId) {
+		Box result;
+		result = this.boxRepository.findTrashBoxByActorId(actorId);
+		return result;
+	}
+
+	public Box findInBoxByActorId(final int actorId) {
+		Box result;
+		result = this.boxRepository.findInBoxByActorId(actorId);
+		return result;
+	}
+
+	public Box findOutBoxByActorId(final int actorId) {
+		Box result;
+		result = this.boxRepository.findOutBoxByActorId(actorId);
+		return result;
+	}
+
+	public Box findSpamBoxByActorId(final int actorId) {
+		Box result;
+		result = this.boxRepository.findSpamBoxByActorId(actorId);
+		return result;
+	}
+
+	public Collection<Box> findAllBoxByActor(final int actorId) {
+		Collection<Box> boxes = new ArrayList<Box>();
+		boxes = this.boxRepository.findAllBoxByActorId(actorId);
+		return boxes;
+	}
 
 }
