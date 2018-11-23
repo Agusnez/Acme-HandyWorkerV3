@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 import repositories.SponsorRepository;
 import security.LoginService;
 import security.UserAccount;
+import domain.Actor;
 import domain.Box;
 import domain.Sponsor;
 
@@ -23,11 +24,14 @@ public class SponsorService {
 	@Autowired
 	private SponsorRepository	sponsorRepository;
 
+	//Suporting services---------------------------------
+
 	@Autowired
 	private BoxService			boxService;
 
+	@Autowired
+	private ActorService		actorService;
 
-	//Suporting services---------------------------------
 
 	//Simple CRUD methods--------------------------------
 	public Sponsor create() { //Debe no estar autenticado?  
@@ -52,6 +56,12 @@ public class SponsorService {
 
 	public Sponsor save(final Sponsor sponsor) {
 		Assert.notNull(sponsor);
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		Assert.isTrue(actor.getId() == sponsor.getId());
+
 		Sponsor result;
 		result = this.sponsorRepository.save(sponsor);
 

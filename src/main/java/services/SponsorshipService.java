@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.SponsorshipRepository;
+import security.Authority;
+import domain.Actor;
+import domain.Sponsor;
 import domain.Sponsorship;
 
 @Service
@@ -20,12 +23,21 @@ public class SponsorshipService {
 	@Autowired
 	private SponsorshipRepository	sponsorshipRepository;
 
-
 	//Supporting services
+
+	@Autowired
+	private ActorService			actorService;
+
 
 	//Simple CRUD methods
 
 	public Sponsorship create() {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.SPONSOR);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		final Sponsorship result;
 
@@ -55,6 +67,11 @@ public class SponsorshipService {
 	public Sponsorship save(final Sponsorship sponsorship) {
 
 		Assert.notNull(sponsorship);
+		final Sponsor owner = sponsorship.getSponsor();
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		Assert.isTrue(actor.getId() == owner.getId());
 
 		final Sponsorship result = this.sponsorshipRepository.save(sponsorship);
 

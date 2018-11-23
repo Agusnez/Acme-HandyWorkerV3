@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.MiscellaneousRecordRepository;
+import security.Authority;
+import domain.Actor;
 import domain.Curriculum;
 import domain.HandyWorker;
 import domain.MiscellaneousRecord;
@@ -30,10 +32,19 @@ public class MiscellaneousRecordService {
 	@Autowired
 	private HandyWorkerService				handyWorkerService;
 
+	@Autowired
+	private ActorService					actorService;
+
 
 	// Simple CRUD methods -----------------------
 
 	public MiscellaneousRecord create() {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		final MiscellaneousRecord result;
 

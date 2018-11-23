@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ConfigurationRepository;
+import security.Authority;
 import domain.Actor;
 import domain.Configuration;
 
@@ -31,7 +32,9 @@ public class ConfigurationService {
 
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().toString().contains("ADMIN")));
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		final Configuration configuration = this.configurationRepository.save(c);
 

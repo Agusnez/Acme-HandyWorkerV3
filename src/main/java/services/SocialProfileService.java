@@ -70,6 +70,13 @@ public class SocialProfileService {
 
 		Assert.notNull(socialProfile);
 
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		final Actor owner = socialProfile.getActor();
+
+		Assert.isTrue(actor.getId() == owner.getId());
+
 		final SocialProfile result = this.socialProfileRepository.save(socialProfile);
 
 		return result;

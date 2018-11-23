@@ -70,6 +70,11 @@ public class AdministratorService {
 	public Administrator save(final Administrator administrator) {
 
 		Assert.notNull(administrator);
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		Assert.isTrue(actor.getId() == administrator.getId());
+
 		Administrator result;
 		result = this.administratorRepository.save(administrator);
 

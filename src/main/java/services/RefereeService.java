@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.RefereeRepository;
+import security.Authority;
+import domain.Actor;
 import domain.Box;
 import domain.Referee;
 
@@ -27,10 +29,19 @@ public class RefereeService {
 	@Autowired
 	private BoxService			boxService;
 
+	@Autowired
+	private ActorService		actorService;
+
 
 	// Simple CRUD methods ------------------------------------------
 
 	public Referee create() {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Referee result;
 		result = new Referee();
@@ -57,6 +68,10 @@ public class RefereeService {
 	public Referee save(final Referee referee) {
 
 		Assert.notNull(referee);
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		Assert.isTrue(actor.getId() == referee.getId());
 
 		final Referee result = this.refereeRepository.save(referee);
 

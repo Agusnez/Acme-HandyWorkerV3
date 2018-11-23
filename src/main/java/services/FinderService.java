@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.FinderRepository;
+import domain.Actor;
 import domain.Finder;
+import domain.HandyWorker;
 
 @Service
 @Transactional
@@ -20,8 +22,11 @@ public class FinderService {
 	@Autowired
 	private FinderRepository	finderRepository;
 
-
 	// Supporting services ------------------------------------------
+
+	@Autowired
+	private ActorService		actorService;
+
 
 	// Simple CRUD methods ------------------------------------------
 
@@ -54,6 +59,11 @@ public class FinderService {
 	public Finder save(final Finder finder) {
 
 		Assert.notNull(finder);
+		final Actor handyWorker = this.actorService.findByPrincipal();
+		Assert.notNull(handyWorker);
+		final HandyWorker owner = finder.getHandyWorker();
+		Assert.notNull(owner);
+		Assert.isTrue(handyWorker.getId() == owner.getId());
 
 		final Finder result = this.finderRepository.save(finder);
 

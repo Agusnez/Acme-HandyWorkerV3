@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.CategoryRepository;
-import repositories.FixUpTaskRepository;
+import security.Authority;
+import domain.Actor;
 import domain.Category;
 import domain.FixUpTask;
 
@@ -26,12 +27,21 @@ public class CategoryService {
 	// Suporting services ------------------------
 
 	@Autowired
-	private FixUpTaskRepository	fixUpTaskRepository;
+	private FixUpTaskService	fixUpTaskService;
+
+	@Autowired
+	private ActorService		actorService;
 
 
 	// Simple CRUD methods -----------------------
 
 	public Category create() {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Category result;
 
@@ -72,6 +82,12 @@ public class CategoryService {
 
 	public Category save(final Category category) {
 
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+
 		Assert.isTrue(category.getId() != 0);
 		Assert.isTrue(!(category.getName().equals("CATEGORY")));
 		Assert.notNull(category);
@@ -82,13 +98,20 @@ public class CategoryService {
 	}
 
 	public void delete(final Category category) {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+
 		//compruebo que exista
 		Assert.isTrue(category.getId() != 0);
 		//compruebo que no es la categoria "CATEGORY" 
 		Assert.isTrue(!(category.getName().equals("CATEGORY")));
 
 		final Collection<Category> children = this.categoryRepository.findChildren(category.getId());
-		final Collection<FixUpTask> fixUp = this.fixUpTaskRepository.findFixUpTaskPerCategory(category.getId());
+		final Collection<FixUpTask> fixUp = this.fixUpTaskService.findFixUpTaskPerCategory(category.getId());
 
 		if (children != null || !(children.isEmpty()))
 			for (final Category c : children) {
@@ -101,7 +124,7 @@ public class CategoryService {
 			for (final FixUpTask f : fixUp) {
 				final Category cfix = category.getParent();
 				f.setCategory(cfix);
-				this.fixUpTaskRepository.save(f);
+				this.fixUpTaskService.save(f);
 			}
 
 		this.categoryRepository.delete(category);
