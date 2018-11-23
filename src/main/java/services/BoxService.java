@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +117,12 @@ public class BoxService {
 		Box result;
 		result = this.boxRepository.findSpamBoxByActorId(actorId);
 		return result;
+	}
+
+	public Collection<Box> findAllBoxByActor(final int actorId) {
+		Collection<Box> boxes = new ArrayList<Box>();
+		boxes = this.boxRepository.findAllBoxByActorId(actorId);
+		return boxes;
 	}
 
 }
