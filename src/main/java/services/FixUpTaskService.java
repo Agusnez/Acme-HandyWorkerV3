@@ -72,7 +72,6 @@ public class FixUpTaskService {
 
 	// Other business methods
 
-
 	public Collection<Double> statsOfApplicationsPerFixUpTask() {
 
 		final Collection<Double> result = this.fixUpTaskRepository.statsOfApplicationsPerFixUpTask();
@@ -102,6 +101,7 @@ public class FixUpTaskService {
 		Assert.notNull(result);
 		return result;
 
+	}
 
 	public Collection<FixUpTask> findFixUpTaskPerCategory(final int categoryId) {
 

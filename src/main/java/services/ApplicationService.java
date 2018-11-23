@@ -65,12 +65,6 @@ public class ApplicationService {
 		return result;
 	}
 
-	public Collection<Double> statsOfOfferedPricePerApplication() {
-		final Collection<Double> result = this.applicationRepository.statsOfOfferedPricePerApplication();
-		Assert.notNull(result);
-		return result;
-	}
-
 	public Double ratioOfApplicationsAccepted() {
 		final Double result = this.applicationRepository.ratioOfApplicationsAccepted();
 		Assert.notNull(result);
@@ -83,7 +77,6 @@ public class ApplicationService {
 		Assert.notNull(result);
 		return result;
 	}
-
 
 	public Double ratioOfApplicationsPendingElapsedPeriod() {
 
