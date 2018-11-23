@@ -68,6 +68,23 @@ public class MessageService {
 		return message;
 	}
 
+	public Message save(final Message message) {
+
+		if (message.getId() != 0)
+			Assert.isTrue((message.getSender() == this.actorService.findByPrincipal()) || message.getRecipient() == this.actorService.findByPrincipal());
+
+		Assert.notNull(message);
+
+		Message result;
+		Date momentSent;
+		momentSent = new Date();
+		Assert.isTrue(message.getMoment().before(momentSent));
+
+		result = this.messageRepository.save(message);
+
+		return result;
+	}
+
 	public void delete(final Message message) {
 
 		Assert.notNull(message);
