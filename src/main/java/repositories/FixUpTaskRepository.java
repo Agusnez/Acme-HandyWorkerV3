@@ -12,6 +12,7 @@ import domain.FixUpTask;
 @Repository
 public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 
+
 	@Query("select avg(f.applications.size), min(f.applications.size), max(f.applications.size), stddev(f.applications.size) from FixUpTask f")
 	Collection<Double> statsOfApplicationsPerFixUpTask();
 
@@ -23,4 +24,11 @@ public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 
 	@Query("select (select count(f1) from FixUpTask f1 where f1.complaints.size > 0)/count(f2)*1.0 from FixUpTask f2")
 	Double ratioOfFixUpTasksWithComplaint();
+
+	@Query("select f from FixUpTask f join f.category c where c.id=?1")
+	Collection<FixUpTask> findFixUpTaskPerCategory(int categoryId);
+
+	@Query("select f from FixUpTask f join f.complaints c where c.id=?1")
+	FixUpTask findFixUpTaskPerComplaint(int complaintId);
+
 }
