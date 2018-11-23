@@ -94,4 +94,16 @@ public class BoxService {
 	}
 	// Other business methods
 
+	public Box findTrashBoxByActorId(final int actorId) {
+		Box result;
+		result = this.boxRepository.findTrashBoxByActorId(actorId);
+		return result;
+	}
+
+	public Box findInBoxByActorId(final int actorId) {
+		Box result;
+		result = this.boxRepository.findInBoxByActorId(actorId);
+		return result;
+	}
+
 }

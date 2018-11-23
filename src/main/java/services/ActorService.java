@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ActorRepository;
+import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
@@ -82,7 +83,9 @@ public class ActorService {
 
 		final Actor actor = this.findByPrincipal();
 		Assert.notNull(actor);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().toString().contains("ADMIN")));
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Collection<Actor> result;
 
