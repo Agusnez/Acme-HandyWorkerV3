@@ -63,10 +63,13 @@ public class CustomerService {
 
 		Assert.notNull(customer);
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
+		if (customer.getId() != 0) {
 
-		Assert.isTrue(actor.getId() == customer.getId());
+			final Actor actor = this.actorService.findByPrincipal();
+			Assert.notNull(actor);
+
+			Assert.isTrue(actor.getId() == customer.getId());
+		}
 
 		Customer result;
 		result = this.customerRepository.save(customer);
