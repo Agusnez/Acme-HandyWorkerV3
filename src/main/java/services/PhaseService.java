@@ -104,12 +104,6 @@ public class PhaseService {
 		a.setStatus("ACCEPTED");
 		Assert.isTrue(hw.getApplications().contains(a));
 
-		//Restriccion: No borrar la última phase de una FixUpTask //SI CAMBIO LA CARDINALIDAD, QUITAR ESTO
-		final FixUpTask task = phase.getFixUpTask();
-		final Collection<Phase> phases = this.findPhasesByFixUpTaskId(task.getId());
-		final int numPhases = phases.size();
-		Assert.isTrue(numPhases > 1);
-		this.phaseRepository.delete(phase);
 	}
 
 	//Other business methods----------------------------
