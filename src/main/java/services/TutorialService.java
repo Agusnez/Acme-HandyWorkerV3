@@ -22,7 +22,7 @@ public class TutorialService {
 	
 	// Suporting services ------------------------
 	
-	
+	@Autowired
 	private HandyWorkerService handyWorkerService; 
 
 	// Simple CRUD methods -----------------------
