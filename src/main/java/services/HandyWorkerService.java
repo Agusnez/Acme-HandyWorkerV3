@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import repositories.HandyWorkerRepository;
 import security.LoginService;
 import security.UserAccount;
+import domain.Actor;
 import domain.Box;
 import domain.Finder;
 import domain.HandyWorker;
@@ -32,6 +33,9 @@ public class HandyWorkerService {
 	@Autowired
 	private BoxService				boxService;
 
+	@Autowired
+	private ActorService			actorService;
+
 
 	//Simple CRUD methods--------------------------------
 	public HandyWorker create() {
@@ -42,7 +46,6 @@ public class HandyWorkerService {
 		hw = new HandyWorker();
 
 		find.setHandyWorker(hw);
-		hw.setMake(hw.getName() + hw.getMiddleName() + hw.getSurname());
 		return hw;
 	}
 
@@ -62,9 +65,16 @@ public class HandyWorkerService {
 
 	public HandyWorker save(final HandyWorker handyWorker) {
 
-		//Seguridad(Sacacr el principal y comprobar que es el mismo que el que estoy metiendo) Comprobar el ID para que puedas registrarte 
-		LoginService.getPrincipal();
 		Assert.notNull(handyWorker);
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		Assert.isTrue(actor.getId() == handyWorker.getId());
+
+		//Seguridad(Sacacr el principal y comprobar que es el mismo que el que estoy metiendo) Comprobar el ID para que puedas registrarte 
+		//LoginService.getPrincipal();
+		//Assert.notNull(handyWorker);
 		HandyWorker hw;
 		hw = this.handyWorkerRepository.save(handyWorker);
 
