@@ -31,20 +31,20 @@ public class EducationRecordService {
 
 	@Autowired
 	private HandyWorkerService			handyWorkerService;
-	
+
 	@Autowired
-	private ActorService			actorService;
+	private ActorService				actorService;
 
 
 	// Simple CRUD methods
 
 	public EducationRecord create() {
-		
+
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		final EducationRecord result;
 

@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,25 +53,20 @@ public class CurriculumService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		Curriculum c;
 		c = new Curriculum();
 
 		final PersonalRecord pr = this.personalRecordService.create();
-		final EducationRecord er = this.educationRecordService.create();
-		final ProfessionalRecord pr1 = this.professionalRecordService.create();
-		final EndorserRecord er1 = this.endorserRecordService.create();
-		final MiscellaneousRecord mr = this.miscellaneousRecordService.create();
 
-		final Collection<EducationRecord> c1 = c.getEducationRecords();
-		c1.add(er);
-		final Collection<ProfessionalRecord> c2 = c.getProfessionalRecords();
-		c2.add(pr1);
-		final Collection<EndorserRecord> c3 = c.getEndorserRecords();
-		c3.add(er1);
-		final Collection<MiscellaneousRecord> c4 = c.getMiscellaneousRecords();
-		c4.add(mr);
+		final Collection<EducationRecord> c1 = new HashSet<>();
+
+		final Collection<ProfessionalRecord> c2 = new HashSet<>();
+
+		final Collection<EndorserRecord> c3 = new HashSet<>();
+
+		final Collection<MiscellaneousRecord> c4 = new HashSet<>();
 
 		c.setEducationRecords(c1);
 		c.setEndorserRecords(c3);
