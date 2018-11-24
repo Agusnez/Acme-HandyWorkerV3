@@ -1555,6 +1555,7 @@
 	<!-- Sections -->
 
 	<bean id="section1" class="domain.Section">
+		<property name="numero" value="1" />
 		<property name="title" value="sec1" />
 		<property name="text" value="temrs1" />
 		<property name="pictures">

@@ -1,7 +1,9 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,21 +14,30 @@ import repositories.ActorRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import security.UserAccountService;
 import domain.Actor;
+import domain.Box;
+import domain.Message;
 
 @Service
 @Transactional
 public class ActorService {
 
-	//Managed Repository
-
+	//Managed Repository ---------------------------------------------------
 	@Autowired
 	private ActorRepository	actorRepository;
 
+	//Supporting services --------------------------------------------------
+	@Autowired
+	private UserAccountService userAccountService;
+	
+	@Autowired
+	private BoxService boxService;
+	
+	@Autowired
+	private MessageService messageService;
 
-	//Supporting services
-
-	//Simple CRUD methods
+	//Simple CRUD methods --------------------------------------------------
 
 	public Collection<Actor> findAll() {
 
@@ -37,7 +48,7 @@ public class ActorService {
 		return actors;
 	}
 
-	public Actor finOne(final int ActorId) {
+	public Actor findOne(final int ActorId) {
 
 		final Actor actor = this.actorRepository.findOne(ActorId);
 
@@ -54,6 +65,13 @@ public class ActorService {
 
 		return actor;
 	}
+	
+	public void delete(Actor actor) {
+		Assert.notNull(actor);
+		Assert.isTrue(actor.getId() != 0);
+		Assert.isTrue(actorRepository.exists(actor.getId()));
+		this.actorRepository.delete(actor);
+	}
 
 	//Other business methods----------------------------
 
@@ -68,15 +86,51 @@ public class ActorService {
 
 		return a;
 	}
-
-	public Actor findByUserAccount(final UserAccount userAccount) {
+	
+	public Actor findByUserAccount(UserAccount userAccount) {
 		Assert.notNull(userAccount);
-
 		Actor result;
-
 		result = this.actorRepository.findByUserAccountId(userAccount.getId());
-
 		return result;
+	}
+
+	public UserAccount findUserAccount(Actor actor) {
+		Assert.notNull(actor);
+		UserAccount result;
+		result = this.userAccountService.findByActor(actor);
+		return result;
+	}
+	
+	public Actor editPersonalData(Actor actor) {
+		Assert.notNull(actor);
+		UserAccount userAccount;
+		
+		userAccount = LoginService.getPrincipal();
+		Assert.isTrue(actor.getUserAccount().equals(userAccount));
+		Actor result = this.save(actor);
+		
+		return result;
+	}
+	
+	public void sendMessage(Message message) {
+		Assert.notNull(message);
+		
+		UserAccount userAccount;
+		
+		userAccount = LoginService.getPrincipal();
+		Assert.notNull(userAccount);
+		
+		Assert.isTrue(message.getSender().getUserAccount().equals(userAccount));
+		
+		message.setMoment(new Date());
+		 
+		Box inBoxReceiver = this.boxService.findInBoxByActorId(message.getRecipient().getId());
+		Box outBoxSender = this.boxService.findInBoxByActorId(message.getSender().getId());
+		Collection<Box> c = new ArrayList<Box>(message.getBoxes());
+		c.add(outBoxSender);
+		c.add(inBoxReceiver);
+		message.setBoxes(c);
+	
 	}
 
 	public Collection<Actor> suspiciousActors() {
