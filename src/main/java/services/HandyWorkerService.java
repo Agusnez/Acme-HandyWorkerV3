@@ -13,7 +13,6 @@ import org.springframework.util.Assert;
 import repositories.HandyWorkerRepository;
 import security.LoginService;
 import security.UserAccount;
-import domain.Actor;
 import domain.Box;
 import domain.Finder;
 import domain.HandyWorker;
@@ -50,7 +49,6 @@ public class HandyWorkerService {
 
 		hw.setUserAccount(user);
 
-
 		return hw;
 	}
 
@@ -70,11 +68,14 @@ public class HandyWorkerService {
 
 	public HandyWorker save(final HandyWorker handyWorker) {
 
-
-		final int id = LoginService.getPrincipal().getId();
-
-		Assert.isTrue(id == handyWorker.getId());
 		Assert.notNull(handyWorker);
+
+		if (handyWorker.getId() != 0) {
+
+			final int id = LoginService.getPrincipal().getId();
+
+			Assert.isTrue(id == handyWorker.getId());
+		}
 
 		HandyWorker hw;
 		hw = this.handyWorkerRepository.save(handyWorker);

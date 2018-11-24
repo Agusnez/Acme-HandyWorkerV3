@@ -29,28 +29,10 @@ public class CurriculumServiceTest extends AbstractTest {
 	//Service under test ------------------------------------------
 
 	@Autowired
-	private CurriculumService			curriculumService;
+	private CurriculumService	curriculumService;
 
 	@Autowired
-	private ProfessionalRecordService	professionalRecordService;
-
-	@Autowired
-	private EducationRecordService		educationRecordService;
-
-	@Autowired
-	private PersonalRecordService		personalRecordService;
-
-	@Autowired
-	private EndorserRecordService		endorserRecordService;
-
-	@Autowired
-	private MiscellaneousRecordService	miscellaneousRecordService;
-
-	@Autowired
-	private HandyWorkerService			handyWorkerService;
-
-	@Autowired
-	private ActorService				actorService;
+	private HandyWorkerService	handyWorkerService;
 
 
 	//Tests -------------------------------------------------------
