@@ -32,6 +32,9 @@ public class HandyWorkerService {
 	@Autowired
 	private BoxService				boxService;
 
+	@Autowired
+	private ActorService			actorService;
+
 
 	//Simple CRUD methods--------------------------------
 	public HandyWorker create() {
@@ -43,7 +46,7 @@ public class HandyWorkerService {
 		final UserAccount user = new UserAccount();
 
 		find.setHandyWorker(hw);
-		hw.setMake(hw.getName() + hw.getMiddleName() + hw.getSurname());
+
 		hw.setUserAccount(user);
 
 		return hw;
@@ -65,10 +68,14 @@ public class HandyWorkerService {
 
 	public HandyWorker save(final HandyWorker handyWorker) {
 
-		final int id = LoginService.getPrincipal().getId();
-
-		Assert.isTrue(id == handyWorker.getId());
 		Assert.notNull(handyWorker);
+
+		if (handyWorker.getId() != 0) {
+
+			final int id = LoginService.getPrincipal().getId();
+
+			Assert.isTrue(id == handyWorker.getId());
+		}
 
 		HandyWorker hw;
 		hw = this.handyWorkerRepository.save(handyWorker);
