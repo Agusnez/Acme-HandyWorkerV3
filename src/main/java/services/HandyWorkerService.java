@@ -40,9 +40,12 @@ public class HandyWorkerService {
 
 		find = this.finderService.create();
 		hw = new HandyWorker();
+		final UserAccount user = new UserAccount();
 
 		find.setHandyWorker(hw);
 		hw.setMake(hw.getName() + hw.getMiddleName() + hw.getSurname());
+		hw.setUserAccount(user);
+
 		return hw;
 	}
 
@@ -62,9 +65,11 @@ public class HandyWorkerService {
 
 	public HandyWorker save(final HandyWorker handyWorker) {
 
-		//Seguridad(Sacacr el principal y comprobar que es el mismo que el que estoy metiendo) Comprobar el ID para que puedas registrarte 
-		LoginService.getPrincipal();
+		final int id = LoginService.getPrincipal().getId();
+
+		Assert.isTrue(id == handyWorker.getId());
 		Assert.notNull(handyWorker);
+
 		HandyWorker hw;
 		hw = this.handyWorkerRepository.save(handyWorker);
 
