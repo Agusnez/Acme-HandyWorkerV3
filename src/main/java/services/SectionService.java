@@ -23,7 +23,7 @@ public class SectionService {
 	private SectionRepository sectionRepository;
 	
 	// Suporting services ------------------------
-	
+	@Autowired
 	private HandyWorkerService handyWorkerService;
 	
 	// Simple CRUD methods -----------------------
