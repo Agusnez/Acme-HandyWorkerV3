@@ -44,8 +44,13 @@ public class HandyWorkerService {
 
 		find = this.finderService.create();
 		hw = new HandyWorker();
+		final UserAccount user = new UserAccount();
 
 		find.setHandyWorker(hw);
+
+		hw.setUserAccount(user);
+
+
 		return hw;
 	}
 
@@ -65,16 +70,12 @@ public class HandyWorkerService {
 
 	public HandyWorker save(final HandyWorker handyWorker) {
 
+
+		final int id = LoginService.getPrincipal().getId();
+
+		Assert.isTrue(id == handyWorker.getId());
 		Assert.notNull(handyWorker);
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-
-		Assert.isTrue(actor.getId() == handyWorker.getId());
-
-		//Seguridad(Sacacr el principal y comprobar que es el mismo que el que estoy metiendo) Comprobar el ID para que puedas registrarte 
-		//LoginService.getPrincipal();
-		//Assert.notNull(handyWorker);
 		HandyWorker hw;
 		hw = this.handyWorkerRepository.save(handyWorker);
 

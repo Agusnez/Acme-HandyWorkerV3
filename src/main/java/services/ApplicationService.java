@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ApplicationRepository;
+import security.LoginService;
 import domain.Application;
 
 @Service
@@ -84,19 +85,40 @@ public class ApplicationService {
 		Assert.notNull(result);
 		return result;
 	}
-
+	//Devuelve las applications dado un Customer
 	public Collection<Application> findApplicationsByCustomer(final int customerId) {
 		final Collection<Application> result = this.applicationRepository.findApplicationsByCustomer(customerId);
 		Assert.notNull(result);
 		return result;
 
 	}
-
-	//applications dado un handyWorker 
+	//Devuelve las applications dado un HandyWorker
 	public Collection<Application> findApplicationsByHandyWorker(final int handyWorkerId) {
-		final Collection<Application> result = this.applicationRepository.findApplicationsByCustomer(handyWorkerId);
+		final Collection<Application> result = this.applicationRepository.findApplicationsByHandyWorker(handyWorkerId);
 		Assert.notNull(result);
 		return result;
+
+	}
+
+	//Un customer actualiza una Application
+	public Application customerUpdate(final Application application) {
+
+		Assert.notNull(application);
+		Assert.isTrue(application.getStatus() == "PENDING");
+		Assert.isTrue(this.applicationRepository.exists(application.getId()));
+		//Assert.isTrue(application.getStatus() != "ACCEPTED" || application.getCreditCard() !=null); //FALTA EL CREDIT CARD
+		final int id = LoginService.getPrincipal().getId();
+		//int customerId = application.getFixUpTask().getCustomer().getId();
+		//Assert.isTrue(id==customerId);
+
+		final Collection<Application> c = application.getFixUpTask().getApplications();
+		c.remove(application);
+		if (application.getStatus() == "ACCEPTED")
+			for (final Application application2 : c) {
+				application2.setStatus("REJECTED");
+				this.applicationRepository.save(application2);
+			}
+		return this.applicationRepository.save(application);
 
 	}
 

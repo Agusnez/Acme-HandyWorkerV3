@@ -95,6 +95,26 @@ public class BoxServiceTest extends AbstractTest {
 	}
 
 	@Test
+	public void test4DefaultBoxesNewActor() {
+
+		this.createNewActorAndLogIn();
+
+		Collection<Box> boxes;
+
+		final int actorId = this.actorservice.findByPrincipal().getId();
+
+		boxes = this.boxservice.findAllBoxByActor(actorId);
+		Assert.isTrue(boxes.size() == 4);
+		Assert.isTrue(boxes.contains(this.boxservice.findInBoxByActorId(actorId)));
+		Assert.isTrue(boxes.contains(this.boxservice.findOutBoxByActorId(actorId)));
+		Assert.isTrue(boxes.contains(this.boxservice.findTrashBoxByActorId(actorId)));
+		Assert.isTrue(boxes.contains(this.boxservice.findSpamBoxByActorId(actorId)));
+
+		super.authenticate(null);
+
+	}
+
+	@Test
 	public void testDeleteBox() {
 
 		super.authenticate("customer1");
