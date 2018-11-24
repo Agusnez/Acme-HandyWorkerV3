@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.FixUpTaskRepository;
+import security.Authority;
+import domain.Actor;
+import domain.Customer;
 import domain.FixUpTask;
 
 @Service
@@ -21,12 +24,24 @@ public class FixUpTaskService {
 	@Autowired
 	private FixUpTaskRepository	fixUpTaskRepository;
 
-
 	// Suporting services
+
+	@Autowired
+	private ActorService		actorService;
+
+	@Autowired
+	private CustomerService		customerService;
+
 
 	// Simple CRUD methods
 
 	public FixUpTask create() {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		final FixUpTask result = new FixUpTask();
 
@@ -67,6 +82,20 @@ public class FixUpTaskService {
 
 		Assert.notNull(fixUpTask);
 		Assert.isTrue(fixUpTask.getId() != 0);
+
+		final Actor customer = this.actorService.findByPrincipal();
+		Assert.notNull(customer);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(!(customer.getUserAccount().getAuthorities().contains(authority)));
+		final Customer c = (Customer) customer;
+		Assert.isTrue(c.getFixUpTasks().contains(fixUpTask));
+		Assert.isTrue(!(fixUpTask.getApplications().isEmpty()));
+
+		final Collection<FixUpTask> f = c.getFixUpTasks();
+		f.remove(fixUpTask);
+		c.setFixUpTasks(f);
+		this.customerService.save(c);
 		this.fixUpTaskRepository.delete(fixUpTask);
 	}
 
@@ -125,4 +154,16 @@ public class FixUpTaskService {
 		return result;
 
 	}
+
+	public Integer countFixUpTaskByWarrantyId(final int warrantyId) {
+
+		Integer result;
+
+		result = this.fixUpTaskRepository.countFixUpTaskByWarrantyId(warrantyId);
+
+		Assert.notNull(result);
+
+		return result;
+	}
+
 }

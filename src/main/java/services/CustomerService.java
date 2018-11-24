@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.CustomerRepository;
+import domain.Actor;
 import domain.Box;
 import domain.Customer;
 
@@ -27,6 +28,9 @@ public class CustomerService {
 
 	@Autowired
 	private BoxService			boxService;
+
+	@Autowired
+	private ActorService		actorService;
 
 
 	// Simple CRUD methods -----------------------
@@ -58,6 +62,12 @@ public class CustomerService {
 	public Customer save(final Customer customer) {
 
 		Assert.notNull(customer);
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		Assert.isTrue(actor.getId() == customer.getId());
+
 		Customer result;
 		result = this.customerRepository.save(customer);
 

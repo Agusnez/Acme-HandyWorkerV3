@@ -32,16 +32,9 @@ public class SocialProfileService {
 
 	public SocialProfile create() {
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-
 		SocialProfile result;
 
 		result = new SocialProfile();
-
-		result.setActor(actor);
-
-		result = this.save(result);
 
 		return result;
 
@@ -68,7 +61,14 @@ public class SocialProfileService {
 
 	public SocialProfile save(final SocialProfile socialProfile) {
 
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
 		Assert.notNull(socialProfile);
+
+		final Actor owner = socialProfile.getActor();
+
+		Assert.isTrue(actor.getId() == owner.getId());
 
 		final SocialProfile result = this.socialProfileRepository.save(socialProfile);
 

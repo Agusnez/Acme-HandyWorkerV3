@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.CurriculumRepository;
+import security.Authority;
+import domain.Actor;
 import domain.Curriculum;
 import domain.EducationRecord;
 import domain.EndorserRecord;
@@ -22,19 +24,36 @@ public class CurriculumService {
 
 	//Managed repository---------------------------------
 	@Autowired
-	private CurriculumRepository	curriculumRepository;
+	private CurriculumRepository		curriculumRepository;
 
 	//Suporting services---------------------------------
-	PersonalRecordService			personalRecordService;
-	EducationRecordService			educationRecordService;
-	ProfessionalRecordService		professionalRecordService;
-	EndorserRecordService			endorserRecordService;
-	MiscellaneousRecordService		miscellaneousRecordService;
+	@Autowired
+	private PersonalRecordService		personalRecordService;
+
+	@Autowired
+	private EducationRecordService		educationRecordService;
+
+	@Autowired
+	private ProfessionalRecordService	professionalRecordService;
+
+	@Autowired
+	private EndorserRecordService		endorserRecordService;
+
+	@Autowired
+	private MiscellaneousRecordService	miscellaneousRecordService;
+
+	@Autowired
+	private ActorService				actorService;
 
 
 	//Simple CRUD methods--------------------------------
 	public Curriculum create() {
-		//Comprobar que el que lo crea es el Handy Worker
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+
 		Curriculum c;
 		c = new Curriculum();
 
@@ -78,7 +97,14 @@ public class CurriculumService {
 
 	public Curriculum save(final Curriculum curriculum) {
 		Assert.notNull(curriculum);
-		//Comprobar autoridad 
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		final Actor owner = curriculum.getHandyWorker();
+
+		Assert.isTrue(actor.getId() == owner.getId());
+
 		Curriculum c;
 		c = this.curriculumRepository.save(curriculum);
 		return c;

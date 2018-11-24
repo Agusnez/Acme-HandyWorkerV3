@@ -14,10 +14,21 @@ import org.hibernate.validator.constraints.NotBlank;
 @Access(AccessType.PROPERTY)
 public class Section extends DomainEntity {
 
+	private int 				numero;
 	private String				title;
 	private String				text;
 	private Collection<String>	pictures;
 
+
+	
+	
+	public int getNumero() {
+		return numero;
+	}
+
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
 
 	@NotBlank
 	public String getTitle() {

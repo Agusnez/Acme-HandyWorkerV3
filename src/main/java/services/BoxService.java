@@ -65,6 +65,10 @@ public class BoxService {
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 
+		final Actor owner = box.getActor();
+
+		Assert.isTrue(actor.getId() == owner.getId());
+
 		Assert.isTrue(!box.getByDefault());
 
 		Assert.notNull(box);
@@ -86,6 +90,13 @@ public class BoxService {
 	}
 
 	public void delete(final Box box) {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+
+		final Actor owner = box.getActor();
+
+		Assert.isTrue(actor.getId() == owner.getId());
 
 		Assert.notNull(box);
 		Assert.isTrue(box.getId() != 0);
