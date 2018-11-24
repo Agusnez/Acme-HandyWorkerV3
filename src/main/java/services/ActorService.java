@@ -1,7 +1,9 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,25 +16,28 @@ import security.LoginService;
 import security.UserAccount;
 import security.UserAccountService;
 import domain.Actor;
+import domain.Box;
 import domain.Message;
 
 @Service
 @Transactional
 public class ActorService {
 
-	//Managed Repository
-
+	//Managed Repository ---------------------------------------------------
 	@Autowired
 	private ActorRepository	actorRepository;
 
-	//Supporting services
+	//Supporting services --------------------------------------------------
 	@Autowired
 	private UserAccountService userAccountService;
 	
 	@Autowired
+	private BoxService boxService;
+	
+	@Autowired
 	private MessageService messageService;
 
-	//Simple CRUD methods
+	//Simple CRUD methods --------------------------------------------------
 
 	public Collection<Actor> findAll() {
 
@@ -103,19 +108,29 @@ public class ActorService {
 		userAccount = LoginService.getPrincipal();
 		Assert.isTrue(actor.getUserAccount().equals(userAccount));
 		Actor result = this.save(actor);
-		this.delete(actor);
 		
 		return result;
 	}
 	
-	public void sendMessage(Actor sender, Actor receiver, Message message) {
-		Assert.notNull(sender);
-		Assert.notNull(receiver);
+	public void sendMessage(Message message) {
+		Assert.notNull(message);
+		
 		UserAccount userAccount;
 		
 		userAccount = LoginService.getPrincipal();
-		Assert.isTrue(actor.getUserAccount().equals(userAccount));
+		Assert.notNull(userAccount);
 		
+		Assert.isTrue(message.getSender().getUserAccount().equals(userAccount));
+		
+		message.setMoment(new Date());
+		 
+		Box inBoxReceiver = this.boxService.findInBoxByActorId(message.getRecipient().getId());
+		Box outBoxSender = this.boxService.findInBoxByActorId(message.getSender().getId());
+		Collection<Box> c = new ArrayList<Box>(message.getBoxes());
+		c.add(outBoxSender);
+		c.add(inBoxReceiver);
+		message.setBoxes(c);
+	
 	}
 
 	public Collection<Actor> suspiciousActors() {

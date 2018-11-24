@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -45,6 +46,7 @@ public class MessageService {
 
 		result = new Message();
 		result.setMoment(momentSent);
+		result.setBoxes(new ArrayList<Box>());
 
 		return result;
 
