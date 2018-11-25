@@ -16,9 +16,9 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
-import domain.Administrator;
 import domain.Box;
 import domain.Customer;
+import domain.FixUpTask;
 
 @Service
 @Transactional
@@ -177,5 +177,26 @@ public class CustomerService {
 		result = this.customerRepository.findByUserAccountId(userAccount.getId());
 
 		return result;
+	}
+	
+	public Customer findByTask(FixUpTask fixUpTask){
+		Assert.notNull(fixUpTask);
+		/*Compruebo que está logeado un HandyWorker*/
+		Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		
+		Customer c;
+		
+		c = customerRepository.findByTask(fixUpTask);
+		
+		/*Se comprueba porque no puede haber un fixUpTask que no la haya publicado nadie*/
+		Assert.notNull(c);
+		
+		return c;
+		
+		
 	}
 }
