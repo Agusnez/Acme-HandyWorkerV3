@@ -22,12 +22,18 @@ public class PhaseService {
 
 	//Managed repository---------------------------------
 	@Autowired
-	private PhaseRepository	phaseRepository;
+	private PhaseRepository		phaseRepository;
 
 	//Suporting services---------------------------------
 
 	@Autowired
-	private ActorService	actorService;
+	private ActorService		actorService;
+
+	@Autowired
+	private HandyWorkerService	handyWorkerService;
+
+	@Autowired
+	private ApplicationService	applicationService;
 
 
 	//Simple CRUD methods--------------------------------
@@ -88,23 +94,14 @@ public class PhaseService {
 	}
 
 	public void delete(final Phase phase) {
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
-
 		Assert.notNull(phase);
 		Assert.isTrue(phase.getId() != 0);
-		
-		
 
-		final HandyWorker hw = (HandyWorker) actor;
-		final FixUpTask f = phase.getFixUpTask();
-		final Application a = new Application();
-		a.setFixUpTask(f);
-		a.setStatus("ACCEPTED");
-		Assert.isTrue(hw.getApplications().contains(a));
+		final HandyWorker hw = this.handyWorkerService.findByPrincipal();
+		final Application ap = this.applicationService.findApplicationByFixUpTaskId(phase.getFixUpTask().getId());
+		Assert.isTrue(hw.getApplications().contains(ap));
+
+		this.phaseRepository.delete(phase);
 
 	}
 

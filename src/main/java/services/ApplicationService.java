@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ApplicationRepository;
+import security.Authority;
+import domain.Actor;
 import domain.Application;
 import domain.Customer;
 import domain.FixUpTask;
@@ -21,13 +24,22 @@ public class ApplicationService {
 	@Autowired
 	private ApplicationRepository	applicationRepository;
 
-																																																																															
 	//Suporting services---------------------------------
-	
-	private ActorService actorService;
+	@Autowired
+	private ActorService			actorService;
+
+	@Autowired
+	private CustomerService			customerService;
+
 
 	//Simple CRUD methods--------------------------------
-	public Application create() {//Comprobar que es el handy worker o el customer
+	public Application create() {
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
+
 		Application result;
 		result = new Application();
 		return result;
@@ -47,10 +59,47 @@ public class ApplicationService {
 		return application;
 	}
 
-	public Application save(final Application application) {//Comprobar que es el handy worker o el customer
+	public Application save(final Application application) {
 		Assert.notNull(application);
 		Application app;
-		app = this.applicationRepository.save(application);
+
+		if (application.getId() == 0) {
+			final Actor actor = this.actorService.findByPrincipal();
+			Assert.notNull(actor);
+			final Authority authority = new Authority();
+			authority.setAuthority(Authority.HANDYWORKER);
+			Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
+
+			application.setStatus("PENDING");
+			final Date now = new Date();
+			application.setMoment(now);
+
+			app = this.applicationRepository.save(application);
+		} else {
+			final Actor actor = this.actorService.findByPrincipal();
+			Assert.notNull(actor);
+			final Authority authority = new Authority();
+			authority.setAuthority(Authority.CUSTOMER);
+			Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
+
+			Assert.notNull(application);
+			Assert.isTrue(application.getStatus() == "PENDING");
+			Assert.isTrue(this.applicationRepository.exists(application.getId()));
+			Assert.isTrue(application.getStatus() != "ACCEPTED" || application.getCreditCard() != null);
+			final Customer customer = this.customerService.findByPrincipal();
+			final FixUpTask fixUp = application.getFixUpTask();
+			Assert.isTrue(customer.getFixUpTasks().contains(fixUp));
+
+			final Collection<Application> c = application.getFixUpTask().getApplications();
+			c.remove(application);
+			if (application.getStatus() == "ACCEPTED")
+				for (final Application application2 : c) {
+					application2.setStatus("REJECTED");
+					this.applicationRepository.save(application2);
+				}
+			app = this.applicationRepository.save(application);
+
+		}
 		return app;
 	}
 
@@ -103,29 +152,10 @@ public class ApplicationService {
 
 	}
 
-	//Un customer actualiza una Application
-	public Application customerUpdate(final Application application) {
-
-		Assert.notNull(application);
-		Assert.isTrue(application.getStatus() == "PENDING");
-		Assert.isTrue(this.applicationRepository.exists(application.getId()));
-		//Assert.isTrue(application.getStatus() != "ACCEPTED" || application.getCreditCard() !=null); //FALTA EL CREDIT CARD
-		Customer customer = (Customer) actorService.findByPrincipal();
-		FixUpTask fixUp = application.getFixUpTask();
-		Assert.isTrue(customer.getFixUpTasks().contains(fixUp));
-		//int customerId = application.getFixUpTask().getCustomer().getId();
-		//Assert.isTrue(id==customerId);
-		
-
-		final Collection<Application> c = application.getFixUpTask().getApplications();
-		c.remove(application);
-		if (application.getStatus() == "ACCEPTED")
-			for (final Application application2 : c) {
-				application2.setStatus("REJECTED");
-				this.applicationRepository.save(application2);
-			}
-		return this.applicationRepository.save(application);
-
+	public Application findApplicationByFixUpTaskId(final int fixUpTaskId) {
+		final Application result = this.applicationRepository.findApplicationByFixUpTaskId(fixUpTaskId);
+		Assert.notNull(result);
+		return result;
 	}
 
 }

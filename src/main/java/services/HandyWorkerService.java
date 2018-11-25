@@ -33,9 +33,6 @@ public class HandyWorkerService {
 	@Autowired
 	private BoxService				boxService;
 
-	@Autowired
-	private ActorService			actorService;
-
 
 	//Simple CRUD methods--------------------------------
 	public HandyWorker create() {
@@ -47,13 +44,13 @@ public class HandyWorkerService {
 		find.setHandyWorker(hw);
 
 		final Authority authority = new Authority();
-        authority.setAuthority(Authority.HANDYWORKER);
-        final List<Authority> list = new ArrayList<Authority>();
-        list.add(authority);
+		authority.setAuthority(Authority.HANDYWORKER);
+		final List<Authority> list = new ArrayList<Authority>();
+		list.add(authority);
 
-        final UserAccount userAccount = new UserAccount();
-        userAccount.setAuthorities(list);
-        hw.setUserAccount(userAccount);
+		final UserAccount userAccount = new UserAccount();
+		userAccount.setAuthorities(list);
+		hw.setUserAccount(userAccount);
 
 		return hw;
 	}
@@ -119,6 +116,9 @@ public class HandyWorkerService {
 			outBox = this.boxService.saveNewActor(outBox);
 			trashBox = this.boxService.saveNewActor(trashBox);
 			spamBox = this.boxService.saveNewActor(spamBox);
+
+			final Finder finder = this.finderService.create();
+			finder.setHandyWorker(hw);
 
 		}
 		return hw;
