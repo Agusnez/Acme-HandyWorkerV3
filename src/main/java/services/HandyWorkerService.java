@@ -119,6 +119,7 @@ public class HandyWorkerService {
 
 			final Finder finder = this.finderService.create();
 			finder.setHandyWorker(hw);
+			this.finderService.save(finder);
 
 		}
 		return hw;
