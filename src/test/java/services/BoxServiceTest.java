@@ -281,6 +281,68 @@ public class BoxServiceTest extends AbstractTest {
 
 	}
 
+	@Test
+	public void testEditBox() {
+
+		this.createNewActorAndLogIn();
+
+		Box box, saved, changed, saved1;
+		Collection<Box> boxes;
+
+		box = this.boxservice.create();
+		box.setName("prueba 1");
+		box.setByDefault(false);
+		box.setActor(this.actorservice.findByPrincipal());
+
+		saved = this.boxservice.save(box);
+		boxes = this.boxservice.findAll();
+		Assert.isTrue(boxes.contains(saved));
+		Assert.isTrue(saved.getName() == "prueba 1");
+
+		changed = saved;
+		changed.setName("prueba 2");
+
+		saved1 = this.boxservice.save(changed);
+		boxes = this.boxservice.findAll();
+		Assert.isTrue(boxes.contains(saved1));
+		Assert.isTrue(saved1.getName() == "prueba 2");
+
+		super.authenticate(null);
+
+	}
+
+	@Test
+	public void testEditBoxDefault() {
+
+		this.createNewActorAndLogIn();
+
+		Collection<Box> boxes;
+
+		boxes = this.boxservice.findAllBoxByActor(this.actorservice.findByPrincipal().getId());
+
+		Integer i = 1;
+
+		for (final Box box : boxes) {
+			final Box saved = box;
+			final String nombre = "Caja " + i;
+			box.setName(nombre);
+			i++;
+
+			try {
+
+				this.boxservice.save(box);
+
+			} catch (final Exception e) {
+
+			}
+
+			Assert.isTrue(saved.getName() == this.boxservice.findOne(saved.getId()).getName());
+		}
+
+		super.authenticate(null);
+
+	}
+
 	private void createNewActorAndLogIn() {
 
 		final Authority authority = new Authority();
