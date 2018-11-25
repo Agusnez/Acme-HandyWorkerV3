@@ -1,11 +1,13 @@
 
 package services;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
 
@@ -24,5 +26,9 @@ public class CategoryServiceTest extends AbstractTest {
 	private FixUpTaskService fixUpTaskService;
 
 	//Tests -------------------------------------------------------
-
+	//TODO: Category Testing
+	@Test
+	public void testing() {
+		Assert.isTrue(1 == new Integer(1));
+	}
 }

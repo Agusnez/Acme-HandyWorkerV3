@@ -45,7 +45,7 @@ public class SampleTest extends AbstractTest {
 		Assert.isTrue(false);
 	}
 
-	@Test
+	/*@Test
 	public void SampleDriver() {
 		final Object testingData[][] = {
 			{
@@ -61,7 +61,7 @@ public class SampleTest extends AbstractTest {
 
 		for (int i = 0; i < testingData.length; i++)
 			this.SampleTemplate((String) testingData[i][0], (int) testingData[i][1], (Class<?>) testingData[i][2]);
-	}
+	}*/
 
 	// Ancillary methods ------------------------------------------------------
 
