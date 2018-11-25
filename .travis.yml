@@ -1,0 +1,28 @@
+sudo: required
+language: java
+jdk: openjdk7
+
+services: mysql
+
+before_install:
+- sudo mysql_upgrade
+- sudo service mysql restart
+- sudo mysql -e "create user 'acme-user'@'%' identified by 'ACME-Us3r-P@ssw0rd';"
+- sudo mysql -e  "create user 'acme-manager'@'%' identified by 'ACME-M@n@ger-6874';"
+- sudo mysql -e "create database \`Acme-HandyWorker\`;"
+- sudo mysql -e "grant select, insert, update, delete on \`Acme-HandyWorker\`.* to 'acme-user'@'%';"
+- sudo mysql -e "grant select, insert, update, delete, create, drop, references, index, alter, create temporary tables, lock tables, create view, create routine, alter routine, execute, trigger, show view on \`Acme-HandyWorker\`.* to 'acme-manager'@'%';"
+
+install:
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+script:
+- mvn test
+
+addons:
+  apt:
+   sources:
+    - mysql-5.7-trusty
+   packages:
+    - mysql-server
+    - mysql-client

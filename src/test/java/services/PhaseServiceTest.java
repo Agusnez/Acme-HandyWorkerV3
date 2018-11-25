@@ -1,10 +1,12 @@
 
 package services;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
 
@@ -18,5 +20,9 @@ public class PhaseServiceTest extends AbstractTest {
 	//Service under test ------------------------------------------
 
 	//Tests -------------------------------------------------------
-
+	// TODO Phase testing
+	@Test
+	public void testing() {
+		Assert.isTrue(1 == new Integer(1));
+	}
 }
