@@ -9,8 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ApplicationRepository;
-import security.LoginService;
 import domain.Application;
+import domain.Customer;
+import domain.FixUpTask;
 
 @Service
 @Transactional
@@ -20,8 +21,10 @@ public class ApplicationService {
 	@Autowired
 	private ApplicationRepository	applicationRepository;
 
-
+																																																																															
 	//Suporting services---------------------------------
+	
+	private ActorService actorService;
 
 	//Simple CRUD methods--------------------------------
 	public Application create() {//Comprobar que es el handy worker o el customer
@@ -107,9 +110,12 @@ public class ApplicationService {
 		Assert.isTrue(application.getStatus() == "PENDING");
 		Assert.isTrue(this.applicationRepository.exists(application.getId()));
 		//Assert.isTrue(application.getStatus() != "ACCEPTED" || application.getCreditCard() !=null); //FALTA EL CREDIT CARD
-		final int id = LoginService.getPrincipal().getId();
+		Customer customer = (Customer) actorService.findByPrincipal();
+		FixUpTask fixUp = application.getFixUpTask();
+		Assert.isTrue(customer.getFixUpTasks().contains(fixUp));
 		//int customerId = application.getFixUpTask().getCustomer().getId();
 		//Assert.isTrue(id==customerId);
+		
 
 		final Collection<Application> c = application.getFixUpTask().getApplications();
 		c.remove(application);

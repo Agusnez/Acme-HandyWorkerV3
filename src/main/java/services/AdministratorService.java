@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -48,6 +49,13 @@ public class AdministratorService {
 
 		Administrator result;
 		result = new Administrator();
+		
+        final List<Authority> list = new ArrayList<Authority>();
+        list.add(authority);
+
+        final UserAccount userAccount = new UserAccount();
+        userAccount.setAuthorities(list);
+        result.setUserAccount(userAccount);
 
 		return result;
 

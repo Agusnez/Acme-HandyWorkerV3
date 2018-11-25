@@ -10,10 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.CategoryRepository;
-
+import security.Authority;
 import domain.Actor;
 import domain.Administrator;
-
 import domain.Category;
 import domain.FixUpTask;
 

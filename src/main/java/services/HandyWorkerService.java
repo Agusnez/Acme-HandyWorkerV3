@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.HandyWorkerRepository;
+import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Box;
@@ -43,11 +44,16 @@ public class HandyWorkerService {
 
 		find = this.finderService.create();
 		hw = new HandyWorker();
-		final UserAccount user = new UserAccount();
-
 		find.setHandyWorker(hw);
 
-		hw.setUserAccount(user);
+		final Authority authority = new Authority();
+        authority.setAuthority(Authority.HANDYWORKER);
+        final List<Authority> list = new ArrayList<Authority>();
+        list.add(authority);
+
+        final UserAccount userAccount = new UserAccount();
+        userAccount.setAuthorities(list);
+        hw.setUserAccount(userAccount);
 
 		return hw;
 	}

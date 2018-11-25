@@ -96,6 +96,8 @@ public class PhaseService {
 
 		Assert.notNull(phase);
 		Assert.isTrue(phase.getId() != 0);
+		
+		
 
 		final HandyWorker hw = (HandyWorker) actor;
 		final FixUpTask f = phase.getFixUpTask();

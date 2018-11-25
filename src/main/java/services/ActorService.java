@@ -143,7 +143,7 @@ public class ActorService {
 
 		Collection<Actor> result;
 
-		result = this.suspiciousActors();
+		result = this.actorRepository.suspiciousActors();
 
 		return result;
 

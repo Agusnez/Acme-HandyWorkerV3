@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.SponsorRepository;
+import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
@@ -37,6 +39,16 @@ public class SponsorService {
 	public Sponsor create() { //Debe no estar autenticado?  
 		Sponsor result;
 		result = new Sponsor();
+		
+		final Authority authority = new Authority();
+        authority.setAuthority(Authority.SPONSOR);
+        final List<Authority> list = new ArrayList<Authority>();
+        list.add(authority);
+
+        final UserAccount userAccount = new UserAccount();
+        userAccount.setAuthorities(list);
+        result.setUserAccount(userAccount);
+        
 		return result;
 	}
 

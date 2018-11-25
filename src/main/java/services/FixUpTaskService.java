@@ -71,7 +71,15 @@ public class FixUpTaskService {
 	public FixUpTask save(final FixUpTask fixUpTask) {
 
 		Assert.notNull(fixUpTask);
-
+		
+		final Actor customer = this.actorService.findByPrincipal();
+		Assert.notNull(customer);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(!(customer.getUserAccount().getAuthorities().contains(authority)));
+		final Customer c = (Customer) customer;
+		Assert.isTrue(c.getFixUpTasks().contains(fixUpTask));
+		
 		final FixUpTask result = this.fixUpTaskRepository.save(fixUpTask);
 
 		return result;

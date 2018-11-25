@@ -12,7 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.CustomerRepository;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 import domain.Actor;
+import domain.Administrator;
 import domain.Box;
 import domain.Customer;
 
@@ -38,8 +42,19 @@ public class CustomerService {
 	public Customer create() {
 		Customer result;
 		result = new Customer();
+		
+		final Authority authority = new Authority();
+        authority.setAuthority(Authority.CUSTOMER);
+        final List<Authority> list = new ArrayList<Authority>();
+        list.add(authority);
+
+        final UserAccount userAccount = new UserAccount();
+        userAccount.setAuthorities(list);
+        result.setUserAccount(userAccount);
+        
 
 		return result;
+	
 
 	}
 
@@ -140,5 +155,27 @@ public class CustomerService {
 
 		return result;
 
+	}
+	
+	public Customer findByPrincipal() {
+		Customer customer;
+		UserAccount userAccount;
+
+		userAccount = LoginService.getPrincipal();
+		Assert.notNull(userAccount);
+		customer = this.findByUserAccount(userAccount);
+		Assert.notNull(customer);
+
+		return customer;
+	}
+	
+	public Customer findByUserAccount(final UserAccount userAccount) {
+		Assert.notNull(userAccount);
+
+		Customer result;
+
+		result = this.customerRepository.findByUserAccountId(userAccount.getId());
+
+		return result;
 	}
 }
