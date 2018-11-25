@@ -1,5 +1,9 @@
 .project
 .settings/org.eclipse.core.resources.prefs
+src/main/resources/Entities.map
+target/classes/
+target/Acme-HandyWorker-1.0
 *.class
+*.war
 *.properties
 ._*
