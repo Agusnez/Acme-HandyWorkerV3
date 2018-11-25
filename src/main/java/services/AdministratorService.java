@@ -12,9 +12,12 @@ import org.springframework.util.Assert;
 
 import repositories.AdministratorRepository;
 import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 import domain.Actor;
 import domain.Administrator;
 import domain.Box;
+import domain.HandyWorker;
 
 @Service
 @Transactional
@@ -117,4 +120,27 @@ public class AdministratorService {
 	}
 
 	// Other business methods -----------------------
+	
+	public Administrator findByPrincipal() {
+		Administrator admin;
+		UserAccount userAccount;
+
+		userAccount = LoginService.getPrincipal();
+		Assert.notNull(userAccount);
+		admin = this.findByUserAccount(userAccount);
+		Assert.notNull(admin);
+
+		return admin;
+	}
+	
+	public Administrator findByUserAccount(final UserAccount userAccount) {
+		Assert.notNull(userAccount);
+
+		Administrator result;
+
+		result = this.administratorRepository.findByUserAccountId(userAccount.getId());
+
+		return result;
+	}
+
 }

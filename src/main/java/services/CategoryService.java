@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.CategoryRepository;
-import security.Authority;
+
 import domain.Actor;
+import domain.Administrator;
+
 import domain.Category;
 import domain.FixUpTask;
 
@@ -25,17 +27,25 @@ public class CategoryService {
 	private CategoryRepository	categoryRepository;
 
 	// Suporting services ------------------------
+	@Autowired
 
+	private AdministratorService administratorService;
+	
+	@Autowired
+	private ActorService actorService;
+	
 	@Autowired
 	private FixUpTaskService	fixUpTaskService;
 
-	@Autowired
-	private ActorService		actorService;
 
 
 	// Simple CRUD methods -----------------------
 
 	public Category create() {
+	/*Compruebo que está logeado un Admin*/
+		Administrator admin= this.administratorService.findByPrincipal();
+		Assert.notNull(admin);
+		
 
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
@@ -45,7 +55,7 @@ public class CategoryService {
 
 		Category result;
 
-		final Category root = this.findRoot("CATEGORY");
+		final Category root = this.findByName("CATEGORY");
 
 		result = new Category();
 
@@ -56,6 +66,9 @@ public class CategoryService {
 	}
 
 	public Collection<Category> findAll() {
+		/*Compruebo que está logeado un Actor*/
+		Actor actor = actorService.findByPrincipal();
+		Assert.notNull(actor);
 
 		Assert.notNull(this.categoryRepository);
 
@@ -68,7 +81,10 @@ public class CategoryService {
 	}
 
 	public Category findOne(final int categoryId) {
-
+		/*Compruebo que está logeado un Actor*/
+		Actor actor = actorService.findByPrincipal();
+		Assert.notNull(actor);
+		
 		Assert.isTrue(categoryId != 0);
 
 		Assert.notNull(this.categoryRepository);
@@ -81,29 +97,31 @@ public class CategoryService {
 	}
 
 	public Category save(final Category category) {
+		/*Compruebo que está logeado un Admin*/
+		Administrator admin= this.administratorService.findByPrincipal();
+		Assert.notNull(admin);
+		
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
-
-		Assert.isTrue(category.getId() != 0);
-		Assert.isTrue(!(category.getName().equals("CATEGORY")));
 		Assert.notNull(category);
+		/*Compruebo que no esté en la BBDD*/
+		Assert.isTrue(category.getId() == 0);
+		
+		/*Compruebo que sea de nombre único*/
+		Category categorySameName = findByName(category.getName());
+		Assert.isTrue(categorySameName==null);
+		
 
 		final Category result = this.categoryRepository.save(category);
+		Assert.notNull(result);
 
 		return result;
 	}
 
 	public void delete(final Category category) {
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		/*Compruebo que está logeado un Admin*/
+		Administrator admin = administratorService.findByPrincipal();
+		Assert.notNull(admin);
 
 		//compruebo que exista
 		Assert.isTrue(category.getId() != 0);
@@ -113,14 +131,14 @@ public class CategoryService {
 		final Collection<Category> children = this.categoryRepository.findChildren(category.getId());
 		final Collection<FixUpTask> fixUp = this.fixUpTaskService.findFixUpTaskPerCategory(category.getId());
 
-		if (children != null || !(children.isEmpty()))
+		
+
 			for (final Category c : children) {
 				final Category cparent = category.getParent();
 				c.setParent(cparent);
 				this.save(c);
 			}
 
-		if (fixUp != null || !(fixUp.isEmpty()))
 			for (final FixUpTask f : fixUp) {
 				final Category cfix = category.getParent();
 				f.setCategory(cfix);
@@ -133,6 +151,9 @@ public class CategoryService {
 	// Other business methods -----------------------
 
 	public Collection<Category> findChildren(final int categoryId) {
+		/*Compruebo que está logeado un Actor*/
+		Actor actor = actorService.findByPrincipal();
+		Assert.notNull(actor);
 
 		final Collection<Category> result = this.categoryRepository.findChildren(categoryId);
 
@@ -141,12 +162,14 @@ public class CategoryService {
 		return result;
 	}
 
-	public Category findRoot(final String categoryName) {
+	public Category findByName(final String categoryName) {
+		/*Compruebo que está logeado un Actor*/
+		Actor actor = actorService.findByPrincipal();
+		Assert.notNull(actor);
 
-		final Category result = this.categoryRepository.findRoot(categoryName);
+		final Category result = this.categoryRepository.findByName(categoryName);
 
-		Assert.notNull(result);
-
+		
 		return result;
 	}
 }
