@@ -16,6 +16,7 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
+import domain.Administrator;
 import domain.Box;
 import domain.Customer;
 import domain.FixUpTask;
@@ -90,6 +91,13 @@ public class CustomerService {
 		result = this.customerRepository.save(customer);
 
 		if (customer.getId() == 0) {
+			
+			Actor actor = this.actorService.findByPrincipal();
+			int idHWLogged = actor.getId();
+			int idHWOwner = customer.getId();
+			Assert.isTrue(idHWLogged == idHWOwner);
+			
+			
 			Box inBox, outBox, trashBox, spamBox;
 
 			inBox = this.boxService.create();
@@ -130,6 +138,12 @@ public class CustomerService {
 	// Other business methods -----------------------
 
 	public Collection<Double> statsOfFixUpTasksPerCustomer() {
+		/*Compruebo que está logeado un Admin*/
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		final Collection<Double> result = this.customerRepository.statsOfFixUpTasksPerCustomer();
 		Assert.notNull(result);
@@ -138,14 +152,26 @@ public class CustomerService {
 	}
 
 	public Collection<Customer> customersTenPerCentMore() {
-
+		/*Compruebo que está logeado un Admin*/
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		
 		final Collection<Customer> result = this.customerRepository.customersTenPerCentMore();
 		Assert.notNull(result);
 		return result;
 	}
 
 	public Collection<Customer> topThreeCustomersComplaints() {
-
+		/*Compruebo que está logeado un Admin*/
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		
 		final Collection<Customer> customers = this.customerRepository.rankingCustomersComplaints();
 		Assert.notNull(customers);
 
@@ -155,28 +181,6 @@ public class CustomerService {
 
 		return result;
 
-	}
-	
-	public Customer findByPrincipal() {
-		Customer customer;
-		UserAccount userAccount;
-
-		userAccount = LoginService.getPrincipal();
-		Assert.notNull(userAccount);
-		customer = this.findByUserAccount(userAccount);
-		Assert.notNull(customer);
-
-		return customer;
-	}
-	
-	public Customer findByUserAccount(final UserAccount userAccount) {
-		Assert.notNull(userAccount);
-
-		Customer result;
-
-		result = this.customerRepository.findByUserAccountId(userAccount.getId());
-
-		return result;
 	}
 	
 	public Customer findByTask(FixUpTask fixUpTask){
@@ -196,7 +200,28 @@ public class CustomerService {
 		Assert.notNull(c);
 		
 		return c;
+	}	
+		public Customer findByPrincipal() {
+			Customer customer;
+			UserAccount userAccount;
+
+			userAccount = LoginService.getPrincipal();
+			Assert.notNull(userAccount);
+			customer = this.findByUserAccount(userAccount);
+			Assert.notNull(customer);
+
+			return customer;
+		}
 		
+		public Customer findByUserAccount(final UserAccount userAccount) {
+			Assert.notNull(userAccount);
+
+			Customer result;
+
+			result = this.customerRepository.findByUserAccountId(userAccount.getId());
+
+			return result;
+		}
 		
-	}
+	
 }

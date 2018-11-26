@@ -54,7 +54,6 @@ public class MiscellaneousRecordService {
 	}
 
 	public Collection<MiscellaneousRecord> findAll() {
-
 		Collection<MiscellaneousRecord> result;
 
 		result = this.miscellaneousRecordRepository.findAll();
@@ -64,7 +63,6 @@ public class MiscellaneousRecordService {
 	}
 
 	public MiscellaneousRecord findOne(final int miscellaneousRecordId) {
-
 		MiscellaneousRecord result;
 
 		result = this.miscellaneousRecordRepository.findOne(miscellaneousRecordId);
@@ -73,16 +71,20 @@ public class MiscellaneousRecordService {
 	}
 
 	public MiscellaneousRecord save(final MiscellaneousRecord miscellaneousRecord) {
-
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		
 		Assert.notNull(miscellaneousRecord);
 		MiscellaneousRecord result;
 
 		result = this.miscellaneousRecordRepository.save(miscellaneousRecord);
 
-		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		
 
-		final Curriculum curriculum = this.curriculumService.findByHandyWorkerId(handyWorker.getId());
+		final Curriculum curriculum = this.curriculumService.findByHandyWorkerId(actor.getId());
 		Assert.notNull(curriculum);
 		curriculum.getMiscellaneousRecords().add(result);
 		this.curriculumService.save(curriculum);
