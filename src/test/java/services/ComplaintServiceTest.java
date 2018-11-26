@@ -38,10 +38,6 @@ public class ComplaintServiceTest extends AbstractTest {
 
 	//Tests -------------------------------------------------------
 	// TODO Complaint testing
-	@Test
-	public void testing() {
-		Assert.isTrue(1 == new Integer(1));
-	}
 
 	@Test
 	public void testCreate() {
