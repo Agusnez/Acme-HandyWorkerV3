@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.TutorialRepository;
+import security.Authority;
+import domain.Actor;
 import domain.HandyWorker;
 import domain.Tutorial;
 
@@ -23,13 +25,17 @@ public class TutorialService {
 	// Suporting services ------------------------
 	
 	@Autowired
-	private HandyWorkerService handyWorkerService; 
+	private ActorService actorService;
 
 	// Simple CRUD methods -----------------------
 	
 	public Tutorial create(){
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		/*Compruebo que está logeado un HandyWorker*/
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 		
 		Tutorial t;
 		
@@ -51,7 +57,7 @@ public class TutorialService {
 	public Tutorial findOne(int tutorialId){
 		Tutorial t;
 		
-		// delete Assert.isTrue(tutorialId!=0);
+		Assert.isTrue(tutorialId!=0);
 		t = tutorialRepository.findOne(tutorialId);
 		Assert.notNull(t);
 		
@@ -59,12 +65,16 @@ public class TutorialService {
 	}
 	
 	public Tutorial save(Tutorial tutorial){
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		Assert.notNull(tutorial);
+		/*Compruebo que está logeado el HandyWorker de ese Tutorial*/
+		Actor actor = this.actorService.findByPrincipal();
+		int idHWLogged = actor.getId();
+		int idHWOwner = tutorial.getHandyWorker().getId();
+		Assert.isTrue(idHWLogged == idHWOwner);
 		
 		Tutorial t;
 		
-		Assert.notNull(tutorial);
+	
 		t = tutorialRepository.save(tutorial);
 		
 		return t;
@@ -72,16 +82,15 @@ public class TutorialService {
 	}
 	
 	public void delete(Tutorial tutorial){	
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		Assert.notNull(tutorial);
+		/*Compruebo que está logeado el HandyWorker de ese Tutorial*/
+		Actor actor = this.actorService.findByPrincipal();
+		int idHWLogged = actor.getId();
+		int idHWOwner = tutorial.getHandyWorker().getId();
+		Assert.isTrue(idHWLogged == idHWOwner);
 		
-		Assert.notNull(tutorial);	
+		/*compruebo que existe en BBDD*/	
 		Assert.isTrue(tutorial.getId()!=0);
-		
-		/*Comprobamos que el tutorial sea del HandyWorker logeado
-		  es este momento*/
-		Collection<Tutorial> tutorials = findTutorialForHW();
-		Assert.isTrue(tutorials.contains(tutorial));
 		
 		tutorialRepository.delete(tutorial);
 		
@@ -89,13 +98,15 @@ public class TutorialService {
 	
 	// Other business methods -----------------------
 	
-	public Collection<Tutorial> findTutorialForHW(){
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+	/*Del requisito 47.2*/
+	public Collection<Tutorial> findTutorialsForHW(HandyWorker handyworker){
+		/*Compruebo que está logeado un Actor*/
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
 		
 		Collection<Tutorial> tutorials;
 		
-		tutorials = tutorialRepository.findTutorialForHW(handyWorker);
+		tutorials = tutorialRepository.findTutorialForHW(handyworker);
 		Assert.notNull(tutorials);
 		
 		return tutorials;

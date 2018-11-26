@@ -36,19 +36,19 @@ public class SponsorService {
 
 
 	//Simple CRUD methods--------------------------------
-	public Sponsor create() { //Debe no estar autenticado?  
+	public Sponsor create() {
 		Sponsor result;
 		result = new Sponsor();
-		
-		final Authority authority = new Authority();
-        authority.setAuthority(Authority.SPONSOR);
-        final List<Authority> list = new ArrayList<Authority>();
-        list.add(authority);
 
-        final UserAccount userAccount = new UserAccount();
-        userAccount.setAuthorities(list);
-        result.setUserAccount(userAccount);
-        
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.SPONSOR);
+		final List<Authority> list = new ArrayList<Authority>();
+		list.add(authority);
+
+		final UserAccount userAccount = new UserAccount();
+		userAccount.setAuthorities(list);
+		result.setUserAccount(userAccount);
+
 		return result;
 	}
 
@@ -69,10 +69,12 @@ public class SponsorService {
 	public Sponsor save(final Sponsor sponsor) {
 		Assert.notNull(sponsor);
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
+		if (sponsor.getId() != 0) {
+			final Actor actor = this.actorService.findByPrincipal();
+			Assert.notNull(actor);
 
-		Assert.isTrue(actor.getId() == sponsor.getId());
+			Assert.isTrue(actor.getId() == sponsor.getId());
+		}
 
 		Sponsor result;
 		result = this.sponsorRepository.save(sponsor);

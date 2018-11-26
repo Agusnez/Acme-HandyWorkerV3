@@ -1,9 +1,7 @@
 
 package services;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import security.Authority;
 import security.UserAccount;
 import utilities.AbstractTest;
 import domain.Box;
@@ -343,17 +340,43 @@ public class BoxServiceTest extends AbstractTest {
 
 	}
 
+	@Test
+	public void testEditExternalBox() {
+
+		this.createNewActorAndLogIn();
+
+		Box box, saved, changed;
+		Collection<Box> boxes;
+
+		box = this.boxservice.create();
+		box.setName("prueba 1");
+		box.setByDefault(false);
+		box.setActor(this.actorservice.findByPrincipal());
+
+		saved = this.boxservice.save(box);
+		boxes = this.boxservice.findAll();
+		Assert.isTrue(boxes.contains(saved));
+
+		super.authenticate("customer1");
+
+		changed = saved;
+		changed.setName("prueba 2");
+
+		try {
+
+			this.boxservice.save(changed);
+
+		} catch (final Exception e) {
+
+		}
+
+		Assert.isTrue(saved.getName() == this.boxservice.findOne(saved.getId()).getName());
+
+		super.authenticate(null);
+
+	}
+
 	private void createNewActorAndLogIn() {
-
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.CUSTOMER);
-		final List<Authority> list = new ArrayList<Authority>();
-		list.add(authority);
-
-		final UserAccount userAccount = new UserAccount();
-		userAccount.setAuthorities(list);
-		userAccount.setUsername("Gustavito");
-		userAccount.setPassword("123123");
 
 		Customer customer, saved1;
 		Collection<Customer> customers;
@@ -363,6 +386,11 @@ public class BoxServiceTest extends AbstractTest {
 		customer.setMiddleName("Adolfo");
 		customer.setSurname("Gustavo");
 		customer.setAddress("Calle Almoralejo");
+
+		final UserAccount userAccount = customer.getUserAccount();
+		userAccount.setUsername("Gustavito");
+		userAccount.setPassword("123123");
+
 		customer.setUserAccount(userAccount);
 
 		saved1 = this.customerservice.save(customer);

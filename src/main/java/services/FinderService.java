@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.FinderRepository;
+import security.Authority;
 import domain.Actor;
 import domain.Finder;
 import domain.HandyWorker;
@@ -31,6 +32,11 @@ public class FinderService {
 	// Simple CRUD methods ------------------------------------------
 
 	public Finder create() {
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		Finder result;
 
