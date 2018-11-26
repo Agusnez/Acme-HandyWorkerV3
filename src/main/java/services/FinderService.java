@@ -58,12 +58,16 @@ public class FinderService {
 
 	public Finder save(final Finder finder) {
 
-		Assert.notNull(finder);
-		final Actor handyWorker = this.actorService.findByPrincipal();
-		Assert.notNull(handyWorker);
-		final HandyWorker owner = finder.getHandyWorker();
-		Assert.notNull(owner);
-		Assert.isTrue(handyWorker.getId() == owner.getId());
+		if (finder.getId() != 0) {
+
+			Assert.notNull(finder);
+			final Actor handyWorker = this.actorService.findByPrincipal();
+			Assert.notNull(handyWorker);
+			final HandyWorker owner = finder.getHandyWorker();
+			Assert.notNull(owner);
+			Assert.isTrue(handyWorker.getId() == owner.getId());
+
+		}
 
 		final Finder result = this.finderRepository.save(finder);
 
