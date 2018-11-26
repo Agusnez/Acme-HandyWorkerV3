@@ -36,12 +36,8 @@ public class HandyWorkerService {
 
 	//Simple CRUD methods--------------------------------
 	public HandyWorker create() {
-		HandyWorker hw;
-		Finder find;
 
-		find = this.finderService.create();
-		hw = new HandyWorker();
-		find.setHandyWorker(hw);
+		final HandyWorker hw = new HandyWorker();
 
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
