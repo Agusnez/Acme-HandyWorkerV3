@@ -30,9 +30,6 @@ public class ComplaintServiceTest extends AbstractTest {
 	private ComplaintService	complaintService;
 
 	@Autowired
-	private ActorService		actorService;
-
-	@Autowired
 	private CustomerService		customerservice;
 
 
@@ -80,6 +77,31 @@ public class ComplaintServiceTest extends AbstractTest {
 		Assert.isTrue(complaints.contains(saved));
 
 	}
+
+	@Test
+	public void testFindOne() {
+
+		this.createNewActorAndLogIn();
+
+		Complaint complaint, saved, finded;
+
+		complaint = this.complaintService.create();
+		complaint.setDescription("xxxx");
+		complaint.setTicker("251118-ASRT");
+
+		final Integer numberOfComplaints = this.customerservice.findByPrincipal().getComplaints().size();
+
+		saved = this.complaintService.save(complaint);
+
+		final Integer numberOfComplaints2 = this.customerservice.findByPrincipal().getComplaints().size();
+
+		Assert.isTrue(numberOfComplaints + 1 == numberOfComplaints2);
+
+		finded = this.complaintService.findOne(saved.getId());
+		Assert.isTrue(saved.equals(finded));
+
+	}
+
 	private void createNewActorAndLogIn() {
 
 		Customer customer, saved1;

@@ -15,6 +15,7 @@ import security.Authority;
 import domain.Actor;
 import domain.Complaint;
 import domain.Customer;
+import domain.Referee;
 
 @Service
 @Transactional
@@ -87,26 +88,45 @@ public class ComplaintService {
 	public Complaint save(final Complaint complaint) {
 
 		Assert.notNull(complaint);
+		Complaint result = null;
 
-		final Customer customer = (Customer) this.actorService.findByPrincipal();
-		Assert.notNull(customer);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue((customer.getUserAccount().getAuthorities().contains(authority)));
+		final Actor actor = this.actorService.findByPrincipal();
+
+		if (complaint.getId() == 0) {
+
+			final Authority authority = new Authority();
+			authority.setAuthority(Authority.CUSTOMER);
+			Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+
+			final Customer customer = (Customer) actor;
+
+			final Date currentMoment = new Date(System.currentTimeMillis() - 1000);
+			complaint.setMoment(currentMoment);
+
+			result = this.complaintRepository.save(complaint);
+
+			Collection<Complaint> complaints;
+			complaints = customer.getComplaints();
+			complaints.add(result);
+			customer.setComplaints(complaints);
+
+			this.customerservice.save(customer);
+
+		} else if (complaint.getId() != 0) {
+
+			final Authority authority = new Authority();
+			authority.setAuthority(Authority.REFEREE);
+			Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+
+			final Referee referee = (Referee) actor;
+
+			complaint.setReferee(referee);
+
+			result = this.complaintRepository.save(complaint);
+
+		}
 
 		//TODO: No se puede actualmente obtener la relacion con la fixUpTask dado que se trata de una collecion
-
-		final Date currentMoment = new Date();
-		complaint.setMoment(currentMoment);
-
-		final Complaint result = this.complaintRepository.save(complaint);
-
-		Collection<Complaint> complaints;
-		complaints = customer.getComplaints();
-		complaints.add(result);
-		customer.setComplaints(complaints);
-
-		this.customerservice.save(customer);
 
 		return result;
 
