@@ -1,8 +1,6 @@
 package services;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -11,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.SectionRepository;
+import security.Authority;
+import domain.Actor;
 import domain.HandyWorker;
 import domain.Section;
 
@@ -24,13 +24,17 @@ public class SectionService {
 	
 	// Suporting services ------------------------
 	@Autowired
-	private HandyWorkerService handyWorkerService;
+	private ActorService actorService;
 	
 	// Simple CRUD methods -----------------------
 	
 	public Section create(){
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		/*Compruebo que está logeado un HandyWorker*/
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 		
 		Section s;
 		
@@ -42,9 +46,6 @@ public class SectionService {
 	}
 	
 	public Collection<Section> findAll(){
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
-		
 		Collection<Section> sections;
 		
 		Assert.notNull(sectionRepository);
@@ -55,9 +56,6 @@ public class SectionService {
 	}
 	
 	public Section findOne(int sectionId){
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
-		
 		Section s;
 		
 		Assert.isTrue(sectionId!=0);
@@ -68,8 +66,16 @@ public class SectionService {
 	}
 	
 	public Section save(Section section){
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		/*Compruebo que está logeado un HandyWorker*/
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		
+		/*TODO: HAY QUE MIRARLO, NO HAY FORMA DE ENCONTRAR EL TUTORIAL ESPECÍFICO DE LA SECTION*/
+		
+		Assert.notNull(section);
 		
 		Section s;
 		
@@ -79,8 +85,7 @@ public class SectionService {
 	}
 	
 	public void delete(Section section){
-		HandyWorker handyWorker = handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		
 		
 		Collection<Section> sections = findAll();
 		
