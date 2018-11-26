@@ -76,14 +76,15 @@ public class PersonalRecordService {
 		Assert.notNull(personalRecord);
 		PersonalRecord result;
 
+		final Curriculum curriculum = this.curriculumService.findByPersonalRecordId(personalRecord.getId());
+		Assert.notNull(curriculum);
+		
 		result = this.personalRecordRepository.save(personalRecord);
 
 		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
 		Assert.notNull(handyWorker);
 
-		final Curriculum curriculum = this.curriculumService.findByHandyWorkerId(handyWorker.getId());
-		Assert.notNull(curriculum);
-		curriculum.setPersonalRecord(personalRecord);
+		curriculum.setPersonalRecord(result);
 		this.curriculumService.save(curriculum);
 
 		return result;

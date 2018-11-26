@@ -67,13 +67,9 @@ public class CurriculumServiceTest extends AbstractTest {
 		final PersonalRecord personalRecord;
 		final PersonalRecord personalRecordCompare;
 		final Collection<EducationRecord> educationRecords;
-		final EducationRecord educationRecord;
 		final Collection<ProfessionalRecord> professionalRecords;
-		final ProfessionalRecord professionalRecord;
 		final Collection<EndorserRecord> endorserRecords;
-		final EndorserRecord endorserRecord;
 		final Collection<MiscellaneousRecord> miscellaneousRecords;
-		final MiscellaneousRecord miscellaneousRecord;
 
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
@@ -253,8 +249,6 @@ public class CurriculumServiceTest extends AbstractTest {
 
 		curriculum.setTicker("241118-RAUL");
 
-		curriculum.setHandyWorker(saved1);
-
 		personalRecord = curriculum.getPersonalRecord();
 		personalRecord.setFullName("Gustavo Adolfo González");
 		personalRecord.setPhone("658456721");
@@ -300,7 +294,7 @@ public class CurriculumServiceTest extends AbstractTest {
 	public void testCurriculumSave() {
 
 		final Curriculum curriculum;
-		Curriculum saved;
+		final Curriculum saved, saved2;
 		Collection<Curriculum> curriculums;
 		HandyWorker handyWorker;
 		final HandyWorker saved1;
@@ -342,41 +336,43 @@ public class CurriculumServiceTest extends AbstractTest {
 
 		curriculum.setHandyWorker(saved1);
 
-		personalRecord = curriculum.getPersonalRecord();
+		saved = this.curriculumService.save(curriculum);
+
+		personalRecord = saved.getPersonalRecord();
 		personalRecord.setFullName("Gustavo Adolfo González");
 		personalRecord.setPhone("658456721");
-		curriculum.setPersonalRecord(personalRecord);
+		saved.setPersonalRecord(personalRecord);
 
-		educationRecords = curriculum.getEducationRecords();
+		educationRecords = saved.getEducationRecords();
 		educationRecord = this.educationRecordService.create();
 		educationRecord.setTitle("Ingeniería del software");
 		educationRecord.setPeriod("2006-2010");
 		educationRecord.setInstitution("etsic");
 		educationRecords.add(educationRecord);
-		curriculum.setEducationRecords(educationRecords);
+		saved.setEducationRecords(educationRecords);
 
-		professionalRecords = curriculum.getProfessionalRecords();
+		professionalRecords = saved.getProfessionalRecords();
 		professionalRecord = this.professinalRecordService.create();
 		professionalRecord.setCompanyName("Microsoft");
 		professionalRecord.setPeriod("2010-2012");
 		professionalRecord.setRole("ProjectManager");
-		curriculum.setProfessionalRecords(professionalRecords);
+		saved.setProfessionalRecords(professionalRecords);
 
-		endorserRecords = curriculum.getEndorserRecords();
+		endorserRecords = saved.getEndorserRecords();
 		endorserRecord = this.endorserRecordService.create();
 		endorserRecord.setFullName("Gustavo Adolfo González");
 		endorserRecord.setPhone("674567809");
-		curriculum.setEndorserRecords(endorserRecords);
+		saved.setEndorserRecords(endorserRecords);
 
-		miscellaneousRecords = curriculum.getMiscellaneousRecords();
+		miscellaneousRecords = saved.getMiscellaneousRecords();
 		miscellaneousRecord = this.miscellaneousRecordService.create();
 		miscellaneousRecord.setTitle("Java7");
-		curriculum.setMiscellaneousRecords(miscellaneousRecords);
+		saved.setMiscellaneousRecords(miscellaneousRecords);
 
-		saved = this.curriculumService.save(curriculum);
+		saved2 = this.curriculumService.save(saved);
 		curriculums = this.curriculumService.findAll();
 
-		Assert.isTrue(curriculums.contains(saved));
+		Assert.isTrue(curriculums.contains(saved2));
 
 	}
 }
