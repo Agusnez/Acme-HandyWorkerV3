@@ -208,7 +208,8 @@ public class CurriculumServiceTest extends AbstractTest {
 	@Test
 	public void testCurriculumFindOne() {
 
-		Curriculum curriculum, saved;
+		Curriculum curriculum;
+		final Curriculum saved, saved2;
 		Curriculum find;
 		final Integer curriculumId;
 		HandyWorker handyWorker;
@@ -249,41 +250,43 @@ public class CurriculumServiceTest extends AbstractTest {
 
 		curriculum.setTicker("241118-RAUL");
 
-		personalRecord = curriculum.getPersonalRecord();
+		curriculum.setHandyWorker(saved1);
+
+		saved = this.curriculumService.save(curriculum);
+
+		personalRecord = saved.getPersonalRecord();
 		personalRecord.setFullName("Gustavo Adolfo González");
 		personalRecord.setPhone("658456721");
-		curriculum.setPersonalRecord(personalRecord);
+		saved.setPersonalRecord(personalRecord);
 
-		educationRecords = curriculum.getEducationRecords();
+		educationRecords = saved.getEducationRecords();
 		educationRecord = this.educationRecordService.create();
 		educationRecord.setTitle("Ingeniería del software");
 		educationRecord.setPeriod("2006-2010");
 		educationRecord.setInstitution("etsic");
 		educationRecords.add(educationRecord);
-		curriculum.setEducationRecords(educationRecords);
+		saved.setEducationRecords(educationRecords);
 
-		professionalRecords = curriculum.getProfessionalRecords();
+		professionalRecords = saved.getProfessionalRecords();
 		professionalRecord = this.professinalRecordService.create();
 		professionalRecord.setCompanyName("Microsoft");
 		professionalRecord.setPeriod("2010-2012");
 		professionalRecord.setRole("ProjectManager");
-		curriculum.setProfessionalRecords(professionalRecords);
+		saved.setProfessionalRecords(professionalRecords);
 
-		endorserRecords = curriculum.getEndorserRecords();
+		endorserRecords = saved.getEndorserRecords();
 		endorserRecord = this.endorserRecordService.create();
 		endorserRecord.setFullName("Gustavo Adolfo González");
 		endorserRecord.setPhone("674567809");
-		curriculum.setEndorserRecords(endorserRecords);
+		saved.setEndorserRecords(endorserRecords);
 
-		miscellaneousRecords = curriculum.getMiscellaneousRecords();
+		miscellaneousRecords = saved.getMiscellaneousRecords();
 		miscellaneousRecord = this.miscellaneousRecordService.create();
 		miscellaneousRecord.setTitle("Java7");
-		curriculum.setMiscellaneousRecords(miscellaneousRecords);
+		saved.setMiscellaneousRecords(miscellaneousRecords);
 
-		curriculum.setHandyWorker(saved1);
-
-		saved = this.curriculumService.save(curriculum);
-		curriculumId = saved.getId();
+		saved2 = this.curriculumService.save(saved);
+		curriculumId = saved2.getId();
 		find = this.curriculumService.findOne(curriculumId);
 
 		Assert.isTrue(find.getId() == curriculumId);
