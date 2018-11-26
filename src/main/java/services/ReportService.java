@@ -2,6 +2,8 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.ReportRepository;
+import security.Authority;
+import domain.Actor;
+import domain.Note;
 import domain.Report;
 
 @Service
@@ -21,14 +26,28 @@ public class ReportService {
 	@Autowired
 	private ReportRepository	reportRepository;
 
-
 	// Suporting services
+
+	@Autowired
+	private ActorService		actorService;
+
 
 	// Simple CRUD methods
 
 	public Report create() {
 
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.REFEREE);
+		Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
+
 		final Report result = new Report();
+
+		final Collection<Note> notes = new HashSet<>();
+		result.setNotes(notes);
+		final Collection<String> attachments = new HashSet<>();
+		result.setAttachments(attachments);
 
 		return result;
 
@@ -53,13 +72,16 @@ public class ReportService {
 
 	}
 
-	public Report save(final Report s) {
-
-		final Report report = this.reportRepository.save(s);
+	public Report save(final Report report) {
 
 		Assert.notNull(report);
 
-		return report;
+		final Date currentMoment = new Date(System.currentTimeMillis() - 1000);
+		report.setMoment(currentMoment);
+
+		final Report result = this.reportRepository.save(report);
+
+		return result;
 
 	}
 

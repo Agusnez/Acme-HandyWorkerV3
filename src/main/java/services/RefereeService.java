@@ -47,15 +47,15 @@ public class RefereeService {
 
 		Referee result;
 		result = new Referee();
-		
-		final Authority authorityReferee = new Authority();
-        authorityReferee.setAuthority(Authority.REFEREE);
-        final List<Authority> list = new ArrayList<Authority>();
-        list.add(authorityReferee);
 
-        final UserAccount userAccount = new UserAccount();
-        userAccount.setAuthorities(list);
-        result.setUserAccount(userAccount);
+		final Authority authorityReferee = new Authority();
+		authorityReferee.setAuthority(Authority.REFEREE);
+		final List<Authority> list = new ArrayList<Authority>();
+		list.add(authorityReferee);
+
+		final UserAccount userAccount = new UserAccount();
+		userAccount.setAuthorities(list);
+		result.setUserAccount(userAccount);
 		return result;
 
 	}
@@ -79,10 +79,15 @@ public class RefereeService {
 	public Referee save(final Referee referee) {
 
 		Assert.notNull(referee);
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
 
-		Assert.isTrue(actor.getId() == referee.getId());
+		if (referee.getId() != 0) {
+
+			final Actor actor = this.actorService.findByPrincipal();
+			Assert.notNull(actor);
+
+			Assert.isTrue(actor.getId() == referee.getId());
+
+		}
 
 		final Referee result = this.refereeRepository.save(referee);
 
