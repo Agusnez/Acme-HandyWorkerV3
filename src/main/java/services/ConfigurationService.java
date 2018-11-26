@@ -1,6 +1,8 @@
 
 package services;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,5 +56,22 @@ public class ConfigurationService {
 		Assert.notNull(configuration);
 
 		return configuration;
+	}
+
+	public Boolean spamContent(final String text) {
+
+		Boolean result = false;
+
+		final Configuration config = new Configuration();
+
+		final Collection<String> spamWords = config.getSpamWord();
+
+		for (final String word : spamWords)
+			if (text.contains(word)) {
+				result = true;
+				break;
+			}
+
+		return result;
 	}
 }
