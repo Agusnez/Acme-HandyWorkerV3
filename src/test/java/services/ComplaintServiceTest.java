@@ -102,6 +102,32 @@ public class ComplaintServiceTest extends AbstractTest {
 
 	}
 
+	@Test
+	public void testFindAllByActor() {
+
+		this.createNewActorAndLogIn();
+
+		Complaint complaint, complaint2;
+		Collection<Complaint> complaints;
+
+		complaint = this.complaintService.create();
+		complaint.setDescription("xxxx");
+		complaint.setTicker("251118-ASRT");
+
+		complaint2 = this.complaintService.create();
+		complaint2.setDescription("yyyy");
+		complaint2.setTicker("261118-QSRT");
+
+		this.complaintService.save(complaint);
+		this.complaintService.save(complaint2);
+
+		complaints = this.complaintService.findAllByActor(this.customerservice.findByPrincipal().getId());
+
+		Assert.isTrue(complaints.contains(complaint));
+		Assert.isTrue(complaints.contains(complaint2));
+
+	}
+
 	private void createNewActorAndLogIn() {
 
 		Customer customer, saved1;

@@ -133,4 +133,14 @@ public class ComplaintService {
 	}
 	// Other business methods -----------------------------------------
 
+	public Collection<Complaint> findAllByActor(final int id) {
+
+		final Collection<Complaint> complaints = this.complaintRepository.findAllByActor(id);
+
+		Assert.notNull(complaints);
+
+		return complaints;
+
+	}
+
 }
