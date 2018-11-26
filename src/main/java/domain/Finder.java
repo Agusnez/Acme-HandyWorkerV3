@@ -36,21 +36,20 @@ public class Finder extends DomainEntity {
 
 	//Getters y Setters----------------------------------------------------------------
 
-	@NotNull
 	public String getKeyWord() {
 		return this.keyWord;
 	}
 	public void setKeyWord(final String keyWord) {
 		this.keyWord = keyWord;
 	}
-	@NotNull
+
 	public String getCategory() {
 		return this.category;
 	}
 	public void setCategory(final String category) {
 		this.category = category;
 	}
-	@NotNull
+
 	public String getWarranty() {
 		return this.warranty;
 	}

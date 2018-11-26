@@ -22,6 +22,7 @@ public class Application extends DomainEntity {
 	private String		status;
 	private Money		offeredPrice;
 	private String		comment;
+	private CreditCard	creditCard;
 
 	//relationship
 	private FixUpTask	fixUpTask;
@@ -75,4 +76,14 @@ public class Application extends DomainEntity {
 	public void setFixUpTask(final FixUpTask fixUpTask) {
 		this.fixUpTask = fixUpTask;
 	}
+
+	@Valid
+	public CreditCard getCreditCard() {
+		return this.creditCard;
+	}
+
+	public void setCreditCard(final CreditCard creditCard) {
+		this.creditCard = creditCard;
+	}
+
 }

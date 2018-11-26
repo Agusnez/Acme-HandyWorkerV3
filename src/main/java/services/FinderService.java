@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,12 +59,18 @@ public class FinderService {
 
 	public Finder save(final Finder finder) {
 
-		Assert.notNull(finder);
-		final Actor handyWorker = this.actorService.findByPrincipal();
-		Assert.notNull(handyWorker);
-		final HandyWorker owner = finder.getHandyWorker();
-		Assert.notNull(owner);
-		Assert.isTrue(handyWorker.getId() == owner.getId());
+		if (finder.getId() != 0) {
+
+			Assert.notNull(finder);
+			final Actor handyWorker = this.actorService.findByPrincipal();
+			Assert.notNull(handyWorker);
+			final HandyWorker owner = finder.getHandyWorker();
+			Assert.notNull(owner);
+			Assert.isTrue(handyWorker.getId() == owner.getId());
+
+		}
+
+		finder.setLastUpdate(new Date(System.currentTimeMillis() - 1000));
 
 		final Finder result = this.finderRepository.save(finder);
 

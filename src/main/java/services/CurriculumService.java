@@ -56,23 +56,8 @@ public class CurriculumService {
 		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		Curriculum c;
+
 		c = new Curriculum();
-
-		final PersonalRecord pr = this.personalRecordService.create();
-
-		final Collection<EducationRecord> c1 = new HashSet<>();
-
-		final Collection<ProfessionalRecord> c2 = new HashSet<>();
-
-		final Collection<EndorserRecord> c3 = new HashSet<>();
-
-		final Collection<MiscellaneousRecord> c4 = new HashSet<>();
-
-		c.setEducationRecords(c1);
-		c.setEndorserRecords(c3);
-		c.setMiscellaneousRecords(c4);
-		c.setPersonalRecord(pr);
-		c.setProfessionalRecords(c2);
 
 		return c;
 	}
@@ -103,6 +88,37 @@ public class CurriculumService {
 
 		Curriculum c;
 		c = this.curriculumRepository.save(curriculum);
+
+		if (curriculum.getId() == 0) {
+
+			final PersonalRecord pr = this.personalRecordService.create();
+
+			final Collection<EducationRecord> c1 = new HashSet<>();
+			final EducationRecord edr = this.educationRecordService.create();
+			c1.add(edr);
+
+			final Collection<ProfessionalRecord> c2 = new HashSet<>();
+			final ProfessionalRecord prr = this.professionalRecordService.create();
+			c2.add(prr);
+
+			final Collection<EndorserRecord> c3 = new HashSet<>();
+			final EndorserRecord enr = this.endorserRecordService.create();
+			c3.add(enr);
+
+			final Collection<MiscellaneousRecord> c4 = new HashSet<>();
+			final MiscellaneousRecord mir = this.miscellaneousRecordService.create();
+			c4.add(mir);
+
+			c.setEducationRecords(c1);
+			c.setEndorserRecords(c3);
+			c.setMiscellaneousRecords(c4);
+			c.setPersonalRecord(pr);
+			c.setProfessionalRecords(c2);
+
+			this.curriculumRepository.save(c);
+
+		}
+
 		return c;
 	}
 
@@ -115,4 +131,14 @@ public class CurriculumService {
 		return result;
 	}
 
+	public Curriculum findByPersonalRecordId(final int personalRecordId) {
+
+		Assert.notNull(personalRecordId);
+
+		final Curriculum result = this.curriculumRepository.findByPersonalRecordId(personalRecordId);
+
+		Assert.notNull(result);
+
+		return result;
+	}
 }

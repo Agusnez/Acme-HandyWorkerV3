@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.transaction.Transactional;
 
@@ -12,6 +13,8 @@ import org.springframework.util.Assert;
 import repositories.FixUpTaskRepository;
 import security.Authority;
 import domain.Actor;
+import domain.Application;
+import domain.Complaint;
 import domain.Customer;
 import domain.FixUpTask;
 
@@ -45,6 +48,12 @@ public class FixUpTaskService {
 
 		final FixUpTask result = new FixUpTask();
 
+		final Collection<Application> applications = new HashSet<>();
+		final Collection<Complaint> complaints = new HashSet<>();
+
+		result.setApplications(applications);
+		result.setComplaints(complaints);
+
 		return result;
 
 	}
@@ -71,21 +80,34 @@ public class FixUpTaskService {
 	public FixUpTask save(final FixUpTask fixUpTask) {
 
 		Assert.notNull(fixUpTask);
-		
-		final Actor customer = this.actorService.findByPrincipal();
+
+		FixUpTask result;
+
+		final Customer customer = this.customerService.findByPrincipal();
 		Assert.notNull(customer);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(!(customer.getUserAccount().getAuthorities().contains(authority)));
-		final Customer c = (Customer) customer;
-		Assert.isTrue(c.getFixUpTasks().contains(fixUpTask));
-		
-		final FixUpTask result = this.fixUpTaskRepository.save(fixUpTask);
+
+		if (fixUpTask.getId() != 0) {
+
+			Assert.isTrue(customer.getFixUpTasks().contains(fixUpTask));
+			result = this.fixUpTaskRepository.save(fixUpTask);
+
+		} else {
+			result = this.fixUpTaskRepository.save(fixUpTask);
+			final Integer num = customer.getFixUpTasks().size();
+			final Collection<FixUpTask> fixUpTasks = customer.getFixUpTasks();
+			fixUpTasks.add(result);
+			customer.setFixUpTasks(fixUpTasks);
+			final Customer customer2 = this.customerService.save(customer);
+			final Integer num2 = customer2.getFixUpTasks().size();
+			Assert.isTrue(num + 1 == num2);
+		}
 
 		return result;
 
 	}
-
 	public void delete(final FixUpTask fixUpTask) {
 
 		Assert.notNull(fixUpTask);
