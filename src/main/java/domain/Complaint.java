@@ -66,7 +66,6 @@ public class Complaint extends DomainEntity {
 	}
 
 	@Valid
-	@NotNull
 	@ManyToOne(optional = true)
 	public Referee getReferee() {
 		return this.referee;

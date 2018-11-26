@@ -76,6 +76,15 @@ public class SocialProfileService {
 
 	}
 
+	public Collection<SocialProfile> findAllByActor(final int id) {
+
+		final Collection<SocialProfile> socialProfiles = this.socialProfileRepository.findAllByActor(id);
+
+		Assert.notNull(socialProfiles);
+
+		return socialProfiles;
+	}
+
 	// Other business methods	
 
 }
