@@ -60,7 +60,9 @@ public class CustomerService {
 	}
 
 	public Collection<Customer> findAll() {
-
+		Actor actor = actorService.findByPrincipal();
+		Assert.notNull(actor);
+		
 		Collection<Customer> result;
 		result = this.customerRepository.findAll();
 		Assert.notNull(result);
@@ -68,7 +70,9 @@ public class CustomerService {
 	}
 
 	public Customer findOne(final int customerId) {
-
+		Actor actor = actorService.findByPrincipal();
+		Assert.notNull(actor);
+		
 		Assert.notNull(customerId);
 		Customer result;
 		result = this.customerRepository.findOne(customerId);
@@ -76,26 +80,25 @@ public class CustomerService {
 	}
 
 	public Customer save(final Customer customer) {
-
 		Assert.notNull(customer);
-
+		Customer result;
+		
 		if (customer.getId() != 0) {
 
 			final Actor actor = this.actorService.findByPrincipal();
 			Assert.notNull(actor);
 
 			Assert.isTrue(actor.getId() == customer.getId());
-		}
-
-		Customer result;
-		result = this.customerRepository.save(customer);
-
-		if (customer.getId() == 0) {
+			
+			result = this.customerRepository.save(customer);
+			
+		}else {
+			result = this.customerRepository.save(customer);
 			
 			Actor actor = this.actorService.findByPrincipal();
-			int idHWLogged = actor.getId();
-			int idHWOwner = customer.getId();
-			Assert.isTrue(idHWLogged == idHWOwner);
+			int idCustomerLogged = actor.getId();
+			int idCustomerOwner = customer.getId();
+			Assert.isTrue(idCustomerLogged == idCustomerOwner);
 			
 			
 			Box inBox, outBox, trashBox, spamBox;
@@ -133,6 +136,7 @@ public class CustomerService {
 
 		}
 		return result;
+		
 	}
 
 	// Other business methods -----------------------
