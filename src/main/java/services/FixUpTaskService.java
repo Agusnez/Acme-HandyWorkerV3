@@ -134,10 +134,10 @@ public class FixUpTaskService {
 		Assert.notNull(customer);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(!(customer.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority));
 		final Customer c = (Customer) customer;
 		Assert.isTrue(c.getFixUpTasks().contains(fixUpTask));
-		Assert.isTrue(!(fixUpTask.getApplications().isEmpty()));
+		Assert.isTrue(fixUpTask.getApplications().isEmpty());
 
 		final Collection<FixUpTask> f = c.getFixUpTasks();
 		f.remove(fixUpTask);

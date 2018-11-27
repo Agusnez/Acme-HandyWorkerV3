@@ -3,6 +3,7 @@ package services;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -132,7 +133,105 @@ public class FixUpTaskServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void FixUpTakFindAllTest() {
+	public void FixUpTakFindOneTest() {
 
+		final FixUpTask fixUpTask, saved, find;
+		Customer customer, saved1;
+		Collection<Customer> customers;
+
+		customer = this.customerService.create();
+		customer.setName("González");
+		customer.setMiddleName("Adolfo");
+		customer.setSurname("Gustavo");
+		customer.setAddress("Calle Almoralejo");
+
+		final UserAccount userAccount = customer.getUserAccount();
+		userAccount.setUsername("Gustavito");
+		userAccount.setPassword("123123");
+
+		customer.setUserAccount(userAccount);
+
+		saved1 = this.customerService.save(customer);
+		customers = this.customerService.findAll();
+		Assert.isTrue(customers.contains(saved1));
+
+		super.authenticate("Gustavito");
+
+		fixUpTask = this.fixUpTaskService.create();
+
+		fixUpTask.setTicker("120318-DUGE");
+		fixUpTask.setDescription("Example description");
+		fixUpTask.setAddress("Example address");
+		final Money money = new Money();
+		money.setAmount(145.);
+		money.setCurrency("euros");
+		fixUpTask.setMaximumPrice(money);
+		final Date startDate = new Date(System.currentTimeMillis() - 100000000);
+		fixUpTask.setStartDate(startDate);
+		final Date endDate = new Date(System.currentTimeMillis() - 1000000);
+		fixUpTask.setEndDate(endDate);
+		final Warranty warranty = this.warrantyService.findOne(super.getEntityId("warranty1"));
+		fixUpTask.setWarranty(warranty);
+		final Category category = this.categoryService.findOne(super.getEntityId("category2"));
+		fixUpTask.setCategory(category);
+
+		saved = this.fixUpTaskService.save(fixUpTask);
+
+		find = this.fixUpTaskService.findOne(saved.getId());
+
+		Assert.isTrue(find.equals(saved));
+	}
+
+	@Test
+	public void FixUpTaskDeleteTest() {
+
+		final FixUpTask fixUpTask, saved;
+		Collection<FixUpTask> fixUpTasks = new HashSet<>();
+		Customer customer, saved1;
+		Collection<Customer> customers;
+
+		customer = this.customerService.create();
+		customer.setName("González");
+		customer.setMiddleName("Adolfo");
+		customer.setSurname("Gustavo");
+		customer.setAddress("Calle Almoralejo");
+
+		final UserAccount userAccount = customer.getUserAccount();
+		userAccount.setUsername("Gustavito");
+		userAccount.setPassword("123123");
+
+		customer.setUserAccount(userAccount);
+
+		saved1 = this.customerService.save(customer);
+		customers = this.customerService.findAll();
+		Assert.isTrue(customers.contains(saved1));
+
+		super.authenticate("Gustavito");
+
+		fixUpTask = this.fixUpTaskService.create();
+
+		fixUpTask.setTicker("120318-DUGE");
+		fixUpTask.setDescription("Example description");
+		fixUpTask.setAddress("Example address");
+		final Money money = new Money();
+		money.setAmount(145.);
+		money.setCurrency("euros");
+		fixUpTask.setMaximumPrice(money);
+		final Date startDate = new Date(System.currentTimeMillis() - 100000000);
+		fixUpTask.setStartDate(startDate);
+		final Date endDate = new Date(System.currentTimeMillis() - 1000000);
+		fixUpTask.setEndDate(endDate);
+		final Warranty warranty = this.warrantyService.findOne(super.getEntityId("warranty1"));
+		fixUpTask.setWarranty(warranty);
+		final Category category = this.categoryService.findOne(super.getEntityId("category2"));
+		fixUpTask.setCategory(category);
+
+		saved = this.fixUpTaskService.save(fixUpTask);
+
+		this.fixUpTaskService.delete(saved);
+
+		fixUpTasks = this.fixUpTaskService.findAll();
+
+		Assert.isTrue(!fixUpTasks.contains(saved));
 	}
 }
