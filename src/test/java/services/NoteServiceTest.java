@@ -56,12 +56,21 @@ public class NoteServiceTest extends AbstractTest {
 
 		final Note saved = this.noteService.save(note);
 
-		saved.setCommentCustomer("Example comment");
+		final Note find = this.noteService.findOne(saved.getId());
 
-		final Note saved2 = this.noteService.save(saved);
+		find.setCommentReferee("Example comment");
 
-		final Note find = this.noteService.findOne(saved2.getId());
+		final Note saved2 = this.noteService.save(find);
 
-		Assert.isTrue(find.equals(saved));
+		System.out.println(note.toString());
+		System.out.println(note.getCommentReferee());
+		System.out.println(saved2.toString());
+		System.out.println(saved2.getCommentReferee());
+		System.out.println(find.toString());
+		System.out.println(find.getCommentReferee());
+		System.out.println(saved.toString());
+		System.out.println(saved.getCommentReferee());
+
+		Assert.isTrue(saved.equals(saved2));
 	}
 }
