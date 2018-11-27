@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import repositories.EducationRecordReposiroty;
+import repositories.EducationRecordRepository;
 import security.Authority;
 import domain.Actor;
 import domain.Curriculum;
@@ -22,7 +22,7 @@ public class EducationRecordService {
 
 	// Managed repository
 	@Autowired
-	private EducationRecordReposiroty	educationRecordRepository;
+	private EducationRecordRepository	educationRecordRepository;
 
 	// Suporting services
 
