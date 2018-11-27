@@ -16,6 +16,7 @@ import repositories.CustomerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import security.UserAccountService;
 import domain.Actor;
 import domain.Box;
 import domain.Complaint;
@@ -38,6 +39,9 @@ public class CustomerService {
 	@Autowired
 	private ActorService		actorService;
 
+	@Autowired
+	private UserAccountService	userAccountService;
+
 
 	// Simple CRUD methods -----------------------
 
@@ -45,13 +49,7 @@ public class CustomerService {
 		Customer result;
 		result = new Customer();
 
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.CUSTOMER);
-		final List<Authority> list = new ArrayList<Authority>();
-		list.add(authority);
-
-		final UserAccount userAccount = new UserAccount();
-		userAccount.setAuthorities(list);
+		final UserAccount userAccount = this.userAccountService.createCustomer();
 		result.setUserAccount(userAccount);
 
 		final Collection<FixUpTask> fixUpTasks = new HashSet<>();
@@ -98,6 +96,13 @@ public class CustomerService {
 			result = this.customerRepository.save(customer);
 
 		} else {
+
+			UserAccount user, saved;
+			user = customer.getUserAccount();
+			saved = this.userAccountService.save(user);
+
+			customer.setUserAccount(saved);
+
 			result = this.customerRepository.save(customer);
 
 			//			Actor actor = this.actorService.findByPrincipal();
@@ -193,12 +198,6 @@ public class CustomerService {
 
 	public Customer findByTask(final FixUpTask fixUpTask) {
 		Assert.notNull(fixUpTask);
-		/* Compruebo que está logeado un HandyWorker */
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Customer c;
 
