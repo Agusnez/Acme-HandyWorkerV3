@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 import repositories.FixUpTaskRepository;
 import security.Authority;
 import domain.Actor;
+import domain.Administrator;
 import domain.Application;
 import domain.Complaint;
 import domain.Customer;
@@ -26,15 +27,18 @@ public class FixUpTaskService {
 	// Managed repository
 
 	@Autowired
-	private FixUpTaskRepository	fixUpTaskRepository;
+	private FixUpTaskRepository		fixUpTaskRepository;
 
 	// Suporting services
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService			actorService;
 
 	@Autowired
-	private CustomerService		customerService;
+	private CustomerService			customerService;
+
+	@Autowired
+	private AdministratorService	administratorService;
 
 
 	// Simple CRUD methods
@@ -81,13 +85,23 @@ public class FixUpTaskService {
 
 		Assert.notNull(fixUpTask);
 
-		FixUpTask result;
+		final FixUpTask result;
+		Customer customer = null;
+		Administrator admin = null;
 
-		final Customer customer = this.customerService.findByPrincipal();
-		Assert.notNull(customer);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority));
+		try {
+			customer = this.customerService.findByPrincipal();
+			admin = this.administratorService.findByPrincipal();
+		} catch (final Exception e) {
+
+		}
+
+		Assert.isTrue(customer != null || admin != null);
+		final Authority authority1 = new Authority();
+		authority1.setAuthority(Authority.CUSTOMER);
+		final Authority authority2 = new Authority();
+		authority2.setAuthority(Authority.ADMIN);
+		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority1) || admin.getUserAccount().getAuthorities().contains(authority2));
 
 		if (fixUpTask.getId() != 0) {
 
