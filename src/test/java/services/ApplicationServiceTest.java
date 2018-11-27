@@ -23,6 +23,7 @@ public class ApplicationServiceTest extends AbstractTest {
 	@Autowired
 	private ApplicationService	applicationService;
 
+
 	//Tests -------------------------------------------------------
 	//TODO: Application Testing
 	@Test
