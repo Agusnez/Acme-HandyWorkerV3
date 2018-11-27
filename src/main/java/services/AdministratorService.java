@@ -18,7 +18,6 @@ import security.UserAccount;
 import domain.Actor;
 import domain.Administrator;
 import domain.Box;
-import domain.HandyWorker;
 
 @Service
 @Transactional
@@ -45,17 +44,17 @@ public class AdministratorService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Administrator result;
 		result = new Administrator();
-		
-        final List<Authority> list = new ArrayList<Authority>();
-        list.add(authority);
 
-        final UserAccount userAccount = new UserAccount();
-        userAccount.setAuthorities(list);
-        result.setUserAccount(userAccount);
+		final List<Authority> list = new ArrayList<Authority>();
+		list.add(authority);
+
+		final UserAccount userAccount = new UserAccount();
+		userAccount.setAuthorities(list);
+		result.setUserAccount(userAccount);
 
 		return result;
 
@@ -128,7 +127,7 @@ public class AdministratorService {
 	}
 
 	// Other business methods -----------------------
-	
+
 	public Administrator findByPrincipal() {
 		Administrator admin;
 		UserAccount userAccount;
@@ -140,7 +139,7 @@ public class AdministratorService {
 
 		return admin;
 	}
-	
+
 	public Administrator findByUserAccount(final UserAccount userAccount) {
 		Assert.notNull(userAccount);
 

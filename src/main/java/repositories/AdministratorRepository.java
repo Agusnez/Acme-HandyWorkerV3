@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import domain.Administrator;
-import domain.HandyWorker;
 
 @Repository
 public interface AdministratorRepository extends JpaRepository<Administrator, Integer> {
