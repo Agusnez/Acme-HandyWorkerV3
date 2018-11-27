@@ -14,9 +14,11 @@ import org.springframework.util.Assert;
 
 import security.UserAccount;
 import utilities.AbstractTest;
+import domain.Category;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.Money;
+import domain.Warranty;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -32,6 +34,12 @@ public class FixUpTaskServiceTest extends AbstractTest {
 
 	@Autowired
 	private CustomerService		customerService;
+
+	@Autowired
+	private WarrantyService		warrantyService;
+
+	@Autowired
+	private CategoryService		categoryService;
 
 
 	//Tests -------------------------------------------------------
@@ -111,11 +119,20 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		fixUpTask.setStartDate(startDate);
 		final Date endDate = new Date(System.currentTimeMillis() - 1000000);
 		fixUpTask.setEndDate(endDate);
+		final Warranty warranty = this.warrantyService.findOne(super.getEntityId("warranty1"));
+		fixUpTask.setWarranty(warranty);
+		final Category category = this.categoryService.findOne(super.getEntityId("category2"));
+		fixUpTask.setCategory(category);
 
 		saved = this.fixUpTaskService.save(fixUpTask);
 
 		final Collection<FixUpTask> fixUpTasks = this.fixUpTaskService.findAll();
 
 		Assert.isTrue(fixUpTasks.contains(saved));
+	}
+
+	@Test
+	public void FixUpTakFindAllTest() {
+
 	}
 }
