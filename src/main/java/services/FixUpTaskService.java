@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 import javax.transaction.Transactional;
@@ -44,7 +45,7 @@ public class FixUpTaskService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		final FixUpTask result = new FixUpTask();
 
@@ -87,7 +88,7 @@ public class FixUpTaskService {
 		Assert.notNull(customer);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(!(customer.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority));
 
 		if (fixUpTask.getId() != 0) {
 
@@ -95,6 +96,9 @@ public class FixUpTaskService {
 			result = this.fixUpTaskRepository.save(fixUpTask);
 
 		} else {
+			final Date currentMoment = new Date(System.currentTimeMillis() - 1000);
+			fixUpTask.setMoment(currentMoment);
+
 			result = this.fixUpTaskRepository.save(fixUpTask);
 			final Integer num = customer.getFixUpTasks().size();
 			final Collection<FixUpTask> fixUpTasks = customer.getFixUpTasks();
