@@ -71,9 +71,6 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		Assert.isNull(fixUpTask.getStartDate());
 		Assert.isNull(fixUpTask.getEndDate());
 
-		Assert.isTrue(fixUpTask.getApplications().isEmpty());
-		Assert.isTrue(fixUpTask.getComplaints().isEmpty());
-
 	}
 
 	@Test

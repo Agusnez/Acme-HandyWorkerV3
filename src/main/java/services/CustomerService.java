@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
 import domain.Box;
+import domain.Complaint;
 import domain.Customer;
 import domain.FixUpTask;
 
@@ -51,6 +53,12 @@ public class CustomerService {
 		final UserAccount userAccount = new UserAccount();
 		userAccount.setAuthorities(list);
 		result.setUserAccount(userAccount);
+
+		final Collection<FixUpTask> fixUpTasks = new HashSet<>();
+		final Collection<Complaint> complaints = new HashSet<>();
+
+		result.setFixUpTasks(fixUpTasks);
+		result.setComplaints(complaints);
 
 		return result;
 

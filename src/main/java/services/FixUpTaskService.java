@@ -49,11 +49,10 @@ public class FixUpTaskService {
 
 		final FixUpTask result = new FixUpTask();
 
-		final Collection<Application> applications = new HashSet<>();
 		final Collection<Complaint> complaints = new HashSet<>();
-
-		result.setApplications(applications);
 		result.setComplaints(complaints);
+		final Collection<Application> applications = new HashSet<>();
+		result.setApplications(applications);
 
 		return result;
 
