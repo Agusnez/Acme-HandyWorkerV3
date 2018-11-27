@@ -43,7 +43,7 @@ public class RefereeService {
 		Assert.notNull(actor);
 		final Authority authorityAdmin = new Authority();
 		authorityAdmin.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authorityAdmin)));
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authorityAdmin));
 
 		Referee result;
 		result = new Referee();
@@ -56,6 +56,7 @@ public class RefereeService {
 		final UserAccount userAccount = new UserAccount();
 		userAccount.setAuthorities(list);
 		result.setUserAccount(userAccount);
+
 		return result;
 
 	}
