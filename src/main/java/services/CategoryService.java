@@ -23,34 +23,31 @@ public class CategoryService {
 	// Managed Repository ------------------------
 
 	@Autowired
-	private CategoryRepository	categoryRepository;
+	private CategoryRepository		categoryRepository;
 
 	// Suporting services ------------------------
 	@Autowired
+	private AdministratorService	administratorService;
 
-	private AdministratorService administratorService;
-	
 	@Autowired
-	private ActorService actorService;
-	
-	@Autowired
-	private FixUpTaskService	fixUpTaskService;
+	private ActorService			actorService;
 
+	@Autowired
+	private FixUpTaskService		fixUpTaskService;
 
 
 	// Simple CRUD methods -----------------------
 
 	public Category create() {
-	/*Compruebo que está logeado un Admin*/
-		Administrator admin= this.administratorService.findByPrincipal();
+		/* Compruebo que está logeado un Admin */
+		final Administrator admin = this.administratorService.findByPrincipal();
 		Assert.notNull(admin);
-		
 
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		Category result;
 
@@ -65,8 +62,8 @@ public class CategoryService {
 	}
 
 	public Collection<Category> findAll() {
-		/*Compruebo que está logeado un Actor*/
-		Actor actor = actorService.findByPrincipal();
+		/* Compruebo que está logeado un Actor */
+		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 
 		Assert.notNull(this.categoryRepository);
@@ -80,10 +77,10 @@ public class CategoryService {
 	}
 
 	public Category findOne(final int categoryId) {
-		/*Compruebo que está logeado un Actor*/
-		Actor actor = actorService.findByPrincipal();
+		/* Compruebo que está logeado un Actor */
+		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
-		
+
 		Assert.isTrue(categoryId != 0);
 
 		Assert.notNull(this.categoryRepository);
@@ -96,19 +93,17 @@ public class CategoryService {
 	}
 
 	public Category save(final Category category) {
-		/*Compruebo que está logeado un Admin*/
-		Administrator admin= this.administratorService.findByPrincipal();
+		/* Compruebo que está logeado un Admin */
+		final Administrator admin = this.administratorService.findByPrincipal();
 		Assert.notNull(admin);
-		
 
 		Assert.notNull(category);
-		/*Compruebo que no esté en la BBDD*/
+		/* Compruebo que no esté en la BBDD */
 		Assert.isTrue(category.getId() == 0);
-		
-		/*Compruebo que sea de nombre único*/
-		Category categorySameName = findByName(category.getName());
-		Assert.isTrue(categorySameName==null);
-		
+
+		/* Compruebo que sea de nombre único */
+		final Category categorySameName = this.findByName(category.getName());
+		Assert.isTrue(categorySameName == null);
 
 		final Category result = this.categoryRepository.save(category);
 		Assert.notNull(result);
@@ -118,8 +113,8 @@ public class CategoryService {
 
 	public void delete(final Category category) {
 
-		/*Compruebo que está logeado un Admin*/
-		Administrator admin = administratorService.findByPrincipal();
+		/* Compruebo que está logeado un Admin */
+		final Administrator admin = this.administratorService.findByPrincipal();
 		Assert.notNull(admin);
 
 		//compruebo que exista
@@ -130,19 +125,17 @@ public class CategoryService {
 		final Collection<Category> children = this.categoryRepository.findChildren(category.getId());
 		final Collection<FixUpTask> fixUp = this.fixUpTaskService.findFixUpTaskPerCategory(category.getId());
 
-		
+		for (final Category c : children) {
+			final Category cparent = category.getParent();
+			c.setParent(cparent);
+			this.save(c);
+		}
 
-			for (final Category c : children) {
-				final Category cparent = category.getParent();
-				c.setParent(cparent);
-				this.save(c);
-			}
-
-			for (final FixUpTask f : fixUp) {
-				final Category cfix = category.getParent();
-				f.setCategory(cfix);
-				this.fixUpTaskService.save(f);
-			}
+		for (final FixUpTask f : fixUp) {
+			final Category cfix = category.getParent();
+			f.setCategory(cfix);
+			this.fixUpTaskService.save(f);
+		}
 
 		this.categoryRepository.delete(category);
 
@@ -150,8 +143,8 @@ public class CategoryService {
 	// Other business methods -----------------------
 
 	public Collection<Category> findChildren(final int categoryId) {
-		/*Compruebo que está logeado un Actor*/
-		Actor actor = actorService.findByPrincipal();
+		/* Compruebo que está logeado un Actor */
+		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 
 		final Collection<Category> result = this.categoryRepository.findChildren(categoryId);
@@ -162,13 +155,12 @@ public class CategoryService {
 	}
 
 	public Category findByName(final String categoryName) {
-		/*Compruebo que está logeado un Actor*/
-		Actor actor = actorService.findByPrincipal();
+		/* Compruebo que está logeado un Actor */
+		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 
 		final Category result = this.categoryRepository.findByName(categoryName);
 
-		
 		return result;
 	}
 }

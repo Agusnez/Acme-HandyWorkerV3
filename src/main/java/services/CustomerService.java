@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
 import domain.Box;
+import domain.Complaint;
 import domain.Customer;
 import domain.FixUpTask;
 
@@ -42,22 +44,24 @@ public class CustomerService {
 	public Customer create() {
 		Customer result;
 		result = new Customer();
-		
-		final Authority authority = new Authority();
-        authority.setAuthority(Authority.CUSTOMER);
-        final List<Authority> list = new ArrayList<Authority>();
-        list.add(authority);
 
-        final UserAccount userAccount = new UserAccount();
-        userAccount.setAuthorities(list);
-        result.setUserAccount(userAccount);
-        
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.CUSTOMER);
+		final List<Authority> list = new ArrayList<Authority>();
+		list.add(authority);
+
+		final UserAccount userAccount = new UserAccount();
+		userAccount.setAuthorities(list);
+		result.setUserAccount(userAccount);
+
+		final Collection<FixUpTask> fixUpTasks = new HashSet<>();
+		result.setFixUpTasks(fixUpTasks);
+		final Collection<Complaint> complaints = new HashSet<>();
+		result.setComplaints(complaints);
 
 		return result;
-	
 
 	}
-
 	public Collection<Customer> findAll() {
 
 		Collection<Customer> result;
@@ -156,7 +160,7 @@ public class CustomerService {
 		return result;
 
 	}
-	
+
 	public Customer findByPrincipal() {
 		Customer customer;
 		UserAccount userAccount;
@@ -168,7 +172,7 @@ public class CustomerService {
 
 		return customer;
 	}
-	
+
 	public Customer findByUserAccount(final UserAccount userAccount) {
 		Assert.notNull(userAccount);
 
@@ -178,25 +182,24 @@ public class CustomerService {
 
 		return result;
 	}
-	
-	public Customer findByTask(FixUpTask fixUpTask){
+
+	public Customer findByTask(final FixUpTask fixUpTask) {
 		Assert.notNull(fixUpTask);
-		/*Compruebo que está logeado un HandyWorker*/
-		Actor actor = this.actorService.findByPrincipal();
+		/* Compruebo que está logeado un HandyWorker */
+		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
-		
+
 		Customer c;
-		
-		c = customerRepository.findByTask(fixUpTask);
-		
-		/*Se comprueba porque no puede haber un fixUpTask que no la haya publicado nadie*/
+
+		c = this.customerRepository.findByTask(fixUpTask);
+
+		/* Se comprueba porque no puede haber un fixUpTask que no la haya publicado nadie */
 		Assert.notNull(c);
-		
+
 		return c;
-		
-		
+
 	}
 }
