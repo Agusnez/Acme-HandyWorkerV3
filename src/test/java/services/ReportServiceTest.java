@@ -70,6 +70,8 @@ public class ReportServiceTest extends AbstractTest {
 
 		final Complaint complaint = this.createComplaint();
 
+		this.authenticate("admin");
+
 		final Referee referee = this.createNewActorAndLogIn2();
 
 		Report report;
@@ -88,6 +90,33 @@ public class ReportServiceTest extends AbstractTest {
 		Assert.isTrue(reports.contains(saved));
 
 	}
+
+	@Test
+	public void testFindOne() {
+
+		final Complaint complaint = this.createComplaint();
+
+		this.authenticate("admin");
+
+		final Referee referee = this.createNewActorAndLogIn2();
+
+		Report report;
+		final Report saved, finded;
+		final Collection<Report> reports;
+
+		report = this.reportSevice.create();
+
+		report.setComplaint(complaint);
+		report.setReferee(referee);
+		report.setDescription("prueba");
+		report.setFinalMode(true);
+
+		saved = this.reportSevice.save(report);
+		finded = this.reportSevice.findOne(saved.getId());
+		Assert.isTrue(finded.equals(saved));
+
+	}
+
 	private Complaint createComplaint() {
 
 		this.createNewActorAndLogIn1();
