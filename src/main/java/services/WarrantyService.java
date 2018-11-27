@@ -39,7 +39,7 @@ public class WarrantyService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Warranty result;
 
