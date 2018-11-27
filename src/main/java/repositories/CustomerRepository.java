@@ -21,13 +21,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
 	@Query("select c.name, c.complaints.size from Customer c order by c.complaints.size desc")
 	Collection<Customer> rankingCustomersComplaints();
-	
+
 	@Query("select c from Customer c where c.userAccount.id = ?1")
 	Customer findByUserAccountId(int userAccountId);
-	
+
 	@Query("select c from Customer c join c.fixUpTasks f where f.id = ?1")
 	Customer findByTask(FixUpTask fixUpTask);
-	
-	
 
 }

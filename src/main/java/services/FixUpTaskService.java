@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 
 import repositories.FixUpTaskRepository;
 import security.Authority;
+import security.LoginService;
 import domain.Actor;
 import domain.Administrator;
 import domain.Application;
@@ -45,11 +46,11 @@ public class FixUpTaskService {
 
 	public FixUpTask create() {
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
+		final Customer customer = this.customerService.findByPrincipal();
+		Assert.notNull(customer);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority));
 
 		final FixUpTask result = new FixUpTask();
 
@@ -61,7 +62,6 @@ public class FixUpTaskService {
 		return result;
 
 	}
-
 	public Collection<FixUpTask> findAll() {
 
 		final Collection<FixUpTask> fixUpTasks = this.fixUpTaskRepository.findAll();
@@ -89,19 +89,19 @@ public class FixUpTaskService {
 		Customer customer = null;
 		Administrator admin = null;
 
-		try {
-			customer = this.customerService.findByPrincipal();
-			admin = this.administratorService.findByPrincipal();
-		} catch (final Exception e) {
-
-		}
-
-		Assert.isTrue(customer != null || admin != null);
 		final Authority authority1 = new Authority();
 		authority1.setAuthority(Authority.CUSTOMER);
 		final Authority authority2 = new Authority();
 		authority2.setAuthority(Authority.ADMIN);
-		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority1) || admin.getUserAccount().getAuthorities().contains(authority2));
+
+		if (LoginService.getPrincipal().getAuthorities().contains(authority1))
+			customer = this.customerService.findByPrincipal();
+		else if (LoginService.getPrincipal().getAuthorities().contains(authority2)) {
+			admin = this.administratorService.findByPrincipal();
+			customer = this.customerService.findByTask(fixUpTask);
+		}
+
+		Assert.isTrue(customer != null || admin != null);
 
 		if (fixUpTask.getId() != 0) {
 
