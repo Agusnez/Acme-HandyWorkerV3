@@ -8,7 +8,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import security.Authority;
 import utilities.AbstractTest;
+import domain.Customer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -17,12 +19,22 @@ import utilities.AbstractTest;
 @Transactional
 public class CustomerServiceTest extends AbstractTest {
 
-	//Service neder test ------------------------------------------
+	//Service under test ------------------------------------------
+	
+	private CustomerService customerService;
 
 	//Tests -------------------------------------------------------
-	// TODO Customer testing
-	@Test
-	public void testing() {
-		Assert.isTrue(1 == new Integer(1));
-	}
-}
+
+	
+//TODO: NullPointerException, no sé por qué	
+//	@Test
+//	public void testCreate(){
+//		Customer c;
+//		
+//		c = this.customerService.create();
+//		
+//		Assert.isTrue(c.getUserAccount().getAuthorities().contains(Authority.CUSTOMER));
+//		
+//	}
+	
+

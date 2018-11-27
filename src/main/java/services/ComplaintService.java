@@ -131,6 +131,5 @@ public class ComplaintService {
 		return result;
 
 	}
-	// Other business methods -----------------------------------------
 
 }

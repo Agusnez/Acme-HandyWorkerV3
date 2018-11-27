@@ -42,23 +42,23 @@ public class CustomerService {
 	public Customer create() {
 		Customer result;
 		result = new Customer();
-		
-		final Authority authority = new Authority();
-        authority.setAuthority(Authority.CUSTOMER);
-        final List<Authority> list = new ArrayList<Authority>();
-        list.add(authority);
 
-        final UserAccount userAccount = new UserAccount();
-        userAccount.setAuthorities(list);
-        result.setUserAccount(userAccount);
-        
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.CUSTOMER);
+		final List<Authority> list = new ArrayList<Authority>();
+		list.add(authority);
+
+		final UserAccount userAccount = new UserAccount();
+		userAccount.setAuthorities(list);
+		result.setUserAccount(userAccount);
 
 		return result;
-	
 
 	}
 
 	public Collection<Customer> findAll() {
+		//		final Actor actor = this.actorService.findByPrincipal();
+		//		Assert.notNull(actor);
 
 		Collection<Customer> result;
 		result = this.customerRepository.findAll();
@@ -67,6 +67,8 @@ public class CustomerService {
 	}
 
 	public Customer findOne(final int customerId) {
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
 
 		Assert.notNull(customerId);
 		Customer result;
@@ -75,8 +77,8 @@ public class CustomerService {
 	}
 
 	public Customer save(final Customer customer) {
-
 		Assert.notNull(customer);
+		Customer result;
 
 		if (customer.getId() != 0) {
 
@@ -84,12 +86,17 @@ public class CustomerService {
 			Assert.notNull(actor);
 
 			Assert.isTrue(actor.getId() == customer.getId());
-		}
 
-		Customer result;
-		result = this.customerRepository.save(customer);
+			result = this.customerRepository.save(customer);
 
-		if (customer.getId() == 0) {
+		} else {
+			result = this.customerRepository.save(customer);
+
+			//			Actor actor = this.actorService.findByPrincipal();
+			//			int idCustomerLogged = actor.getId();
+			//			int idCustomerOwner = customer.getId();
+			//			Assert.isTrue(idCustomerLogged == idCustomerOwner);
+
 			Box inBox, outBox, trashBox, spamBox;
 
 			inBox = this.boxService.create();
@@ -125,11 +132,18 @@ public class CustomerService {
 
 		}
 		return result;
+
 	}
 
 	// Other business methods -----------------------
 
 	public Collection<Double> statsOfFixUpTasksPerCustomer() {
+		/* Compruebo que está logeado un Admin */
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		final Collection<Double> result = this.customerRepository.statsOfFixUpTasksPerCustomer();
 		Assert.notNull(result);
@@ -138,6 +152,12 @@ public class CustomerService {
 	}
 
 	public Collection<Customer> customersTenPerCentMore() {
+		/* Compruebo que está logeado un Admin */
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		final Collection<Customer> result = this.customerRepository.customersTenPerCentMore();
 		Assert.notNull(result);
@@ -145,6 +165,12 @@ public class CustomerService {
 	}
 
 	public Collection<Customer> topThreeCustomersComplaints() {
+		/* Compruebo que está logeado un Admin */
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		final Collection<Customer> customers = this.customerRepository.rankingCustomersComplaints();
 		Assert.notNull(customers);
@@ -156,7 +182,25 @@ public class CustomerService {
 		return result;
 
 	}
-	
+
+	public Customer findByTask(final FixUpTask fixUpTask) {
+		Assert.notNull(fixUpTask);
+		/* Compruebo que está logeado un HandyWorker */
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+
+		Customer c;
+
+		c = this.customerRepository.findByTask(fixUpTask);
+
+		/* Se comprueba porque no puede haber un fixUpTask que no la haya publicado nadie */
+		Assert.notNull(c);
+
+		return c;
+	}
 	public Customer findByPrincipal() {
 		Customer customer;
 		UserAccount userAccount;
@@ -168,7 +212,7 @@ public class CustomerService {
 
 		return customer;
 	}
-	
+
 	public Customer findByUserAccount(final UserAccount userAccount) {
 		Assert.notNull(userAccount);
 
@@ -178,25 +222,5 @@ public class CustomerService {
 
 		return result;
 	}
-	
-	public Customer findByTask(FixUpTask fixUpTask){
-		Assert.notNull(fixUpTask);
-		/*Compruebo que está logeado un HandyWorker*/
-		Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
-		
-		Customer c;
-		
-		c = customerRepository.findByTask(fixUpTask);
-		
-		/*Se comprueba porque no puede haber un fixUpTask que no la haya publicado nadie*/
-		Assert.notNull(c);
-		
-		return c;
-		
-		
-	}
+
 }

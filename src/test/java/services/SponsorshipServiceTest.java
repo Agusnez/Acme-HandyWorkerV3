@@ -1,6 +1,8 @@
 
 package services;
 
+import java.util.Collection;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
+import domain.Sponsorship;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -23,10 +26,42 @@ public class SponsorshipServiceTest extends AbstractTest {
 	@Autowired
 	private SponsorshipService	sponsorshipService;
 
+
 	//Tests -------------------------------------------------------
-	// TODO Sponsorship testing
 	@Test
-	public void testing() {
-		Assert.isTrue(1 == new Integer(1));
+	public void testCreate() {
+		this.authenticate("sponsor1");
+		final Sponsorship s = this.sponsorshipService.create();
+		Assert.notNull(s);
+		this.authenticate(null);
 	}
+
+	@Test
+	public void testSave() {
+		this.authenticate("sponsor1");
+		final Sponsorship s = this.sponsorshipService.findOne(super.getEntityId("sponsorship1"));
+
+		s.setBanner("http://wwww.s.com/");
+
+		final Sponsorship saved = this.sponsorshipService.save(s);
+
+		final Collection<Sponsorship> ss = this.sponsorshipService.findAll();
+		Assert.isTrue(ss.contains(saved), "##### Error create #####");
+
+	}
+
+	@Test
+	public void testFindAll() {
+		final Collection<Sponsorship> ss = this.sponsorshipService.findAll();
+		Assert.isTrue(ss.size() > 0, "##### Error findAll #####");
+
+	}
+
+	@Test
+	public void testFindOne() {
+		final Sponsorship sponsorship = this.sponsorshipService.findOne(super.getEntityId("sponsorship1"));
+
+		Assert.isTrue(!sponsorship.equals(null), "##### Error findOne #####");
+	}
+
 }
