@@ -165,7 +165,6 @@ public class CategoryService {
 		Assert.notNull(actor);
 
 		final Category result = this.categoryRepository.findByName(categoryName);
-
 		
 		return result;
 	}
