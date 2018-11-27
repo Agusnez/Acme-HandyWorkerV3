@@ -45,11 +45,11 @@ public class FixUpTaskService {
 
 	public FixUpTask create() {
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
+		final Customer customer = this.customerService.findByPrincipal();
+		Assert.notNull(customer);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority));
 
 		final FixUpTask result = new FixUpTask();
 
@@ -61,7 +61,6 @@ public class FixUpTaskService {
 		return result;
 
 	}
-
 	public Collection<FixUpTask> findAll() {
 
 		final Collection<FixUpTask> fixUpTasks = this.fixUpTaskRepository.findAll();
@@ -89,13 +88,12 @@ public class FixUpTaskService {
 		Customer customer = null;
 		Administrator admin = null;
 
-		try {
+		if (this.customerService.findByPrincipal() != null)
 			customer = this.customerService.findByPrincipal();
+		else if (this.administratorService.findByPrincipal() != null) {
 			admin = this.administratorService.findByPrincipal();
-		} catch (final Exception e) {
-
+			customer = this.customerService.findByTask(fixUpTask);
 		}
-
 		Assert.isTrue(customer != null || admin != null);
 		final Authority authority1 = new Authority();
 		authority1.setAuthority(Authority.CUSTOMER);

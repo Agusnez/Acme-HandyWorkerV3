@@ -193,12 +193,6 @@ public class CustomerService {
 
 	public Customer findByTask(final FixUpTask fixUpTask) {
 		Assert.notNull(fixUpTask);
-		/* Compruebo que está logeado un HandyWorker */
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Customer c;
 

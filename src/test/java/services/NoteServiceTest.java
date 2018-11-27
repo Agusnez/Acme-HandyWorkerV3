@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
 
@@ -22,7 +21,7 @@ public class NoteServiceTest extends AbstractTest {
 	//Tests -------------------------------------------------------
 	// TODO Note testing
 	@Test
-	public void testing() {
-		Assert.isTrue(1 == new Integer(1));
+	public void NoteCreateTest() {
+
 	}
 }
