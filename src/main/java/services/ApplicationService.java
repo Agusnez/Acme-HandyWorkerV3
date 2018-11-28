@@ -12,10 +12,13 @@ import org.springframework.util.Assert;
 
 import repositories.ApplicationRepository;
 import security.Authority;
+import security.LoginService;
 import domain.Actor;
 import domain.Application;
 import domain.Customer;
 import domain.FixUpTask;
+import domain.HandyWorker;
+import domain.Referee;
 
 @Service
 @Transactional
@@ -31,6 +34,12 @@ public class ApplicationService {
 
 	@Autowired
 	private CustomerService			customerService;
+
+	@Autowired
+	private FixUpTaskService		fixUpTaskService;
+
+	@Autowired
+	private HandyWorkerService		handyWorkerService;
 
 
 	//Simple CRUD methods--------------------------------
@@ -62,7 +71,7 @@ public class ApplicationService {
 
 	public Application save(final Application application) {
 		Assert.notNull(application);
-		Application app;
+		Application app = null;
 
 		if (application.getId() == 0) {
 			final Actor actor = this.actorService.findByPrincipal();
@@ -77,31 +86,60 @@ public class ApplicationService {
 
 			app = this.applicationRepository.save(application);
 		} else {
-			final Application old = this.findOne(application.getId());
 
-			final Actor actor = this.actorService.findByPrincipal();
-			Assert.notNull(actor);
-			final Authority authority = new Authority();
-			authority.setAuthority(Authority.CUSTOMER);
-			Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
+			Customer customer = null;
+			final Referee referee = null;
+			HandyWorker handyWorker = null;
 
-			Assert.isTrue(old.getStatus().equals("PENDING"));
-			Assert.isTrue(!old.getStatus().equals("ACCEPTED") || application.getCreditCard() != null);
-			final Customer customer = this.customerService.findByPrincipal();
-			final FixUpTask fixUp = application.getFixUpTask();
-			Assert.isTrue(customer.getFixUpTasks().contains(fixUp));
+			final Authority authority1 = new Authority();
+			authority1.setAuthority(Authority.CUSTOMER);
+			final Authority authority3 = new Authority();
+			authority3.setAuthority(Authority.HANDYWORKER);
 
-			final Collection<Application> c = new ArrayList<>();
-			c.addAll(application.getFixUpTask().getApplications());
-			c.remove(application);
-			if (application.getStatus().equals("ACCEPTED"))
-				for (final Application application2 : c) {
+			if (LoginService.getPrincipal().getAuthorities().contains(authority1))
+				customer = this.customerService.findByPrincipal();
+			else if (LoginService.getPrincipal().getAuthorities().contains(authority3))
+				handyWorker = this.handyWorkerService.findByPrincipal();
 
-					application2.setStatus("REJECTED");
-					this.applicationRepository.save(application2);
-				}
-			app = this.applicationRepository.saveAndFlush(application);
+			Assert.isTrue(customer != null || handyWorker != null);
 
+			if (customer != null) {
+
+				final Application old = this.findOne(application.getId());
+
+				final Actor actor = this.actorService.findByPrincipal();
+				Assert.notNull(actor);
+				final Authority authority = new Authority();
+				authority.setAuthority(Authority.CUSTOMER);
+				Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
+
+				Assert.isTrue(!old.getStatus().equals("ACCEPTED") || application.getCreditCard() != null);
+				final FixUpTask fixUp = application.getFixUpTask();
+				Assert.isTrue(customer.getFixUpTasks().contains(fixUp));
+
+				Collection<Application> c = new ArrayList<>();
+				c = application.getFixUpTask().getApplications();
+				c.remove(old);
+				if (application.getStatus().equals("ACCEPTED"))
+					for (final Application application2 : c) {
+
+						application2.setStatus("REJECTED");
+						this.applicationRepository.save(application2);
+					}
+				app = this.applicationRepository.save(application);
+
+				Collection<Application> applications;
+				applications = fixUp.getApplications();
+				applications.add(application);
+				this.fixUpTaskService.save(fixUp);
+
+			} else if (handyWorker != null) {
+
+				Assert.isTrue(application.getStatus().equals("PENDING"));
+
+				app = this.applicationRepository.save(application);
+
+			}
 		}
 		return app;
 	}
