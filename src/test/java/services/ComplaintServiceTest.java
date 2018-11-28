@@ -34,7 +34,6 @@ public class ComplaintServiceTest extends AbstractTest {
 
 
 	//Tests -------------------------------------------------------
-	// TODO Complaint testing
 
 	@Test
 	public void testCreate() {

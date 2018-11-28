@@ -69,8 +69,9 @@ public class FinderService {
 			Assert.isTrue(handyWorker.getId() == owner.getId());
 
 		}
-		final Date d = new Date(System.currentTimeMillis() - 1000);
-		finder.setLastUpdate(d);
+
+
+		finder.setLastUpdate(new Date(System.currentTimeMillis() - 1000));
 
 		final Finder result = this.finderRepository.save(finder);
 

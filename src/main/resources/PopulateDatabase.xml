@@ -1112,7 +1112,7 @@
 	
 	<bean id="application4" class="domain.Application">
 		<property name="moment" value="2018/06/10 16:00" />
-		<property name="status" value="ACCEPTED" />
+		<property name="status" value="PENDING" />
 		<property name="offeredPrice" ref="money11" />
 		<property name="comment" value="Comment ap4" />
 		<property name="fixUpTask" ref="fixUpTask3" />
@@ -1154,7 +1154,7 @@
 	
 	<bean id="application9" class="domain.Application">
 		<property name="moment" value="2018/06/10 12:00" />
-		<property name="status" value="REJECTED" />
+		<property name="status" value="PENDING" />
 		<property name="offeredPrice" ref="money16" />
 		<property name="comment" value="Comment ap9" />
 		<property name="fixUpTask" ref="fixUpTask3" />
@@ -1171,7 +1171,7 @@
 	
 	<bean id="application11" class="domain.Application">
 		<property name="moment" value="2018/02/14 12:00" />
-		<property name="status" value="PENDING" />
+		<property name="status" value="REJECTED" />
 		<property name="offeredPrice" ref="money18" />
 		<property name="comment" value="Comment ap11" />
 		<property name="fixUpTask" ref="fixUpTask5" />
