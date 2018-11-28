@@ -201,7 +201,7 @@ public class CustomerService {
 
 		Customer c;
 
-		c = this.customerRepository.findByTask(fixUpTask);
+		c = this.customerRepository.findByTask(fixUpTask.getId());
 
 		/* Se comprueba porque no puede haber un fixUpTask que no la haya publicado nadie */
 		Assert.notNull(c);
