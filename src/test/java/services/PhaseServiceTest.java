@@ -41,19 +41,11 @@ public class PhaseServiceTest extends AbstractTest {
 		final FixUpTask fixUp = this.fixUpTaskService.findOne(super.getEntityId("fixUpTask5"));
 
 		final Phase phase = this.phaseService.create();
+
 		phase.setDescription("Hola mundo");
-
-		//		final Calendar calStart = Calendar.getInstance();
-		//		calStart.set(2018, 8, 16);
-		//		final Date start = new Date(calStart.getTimeInMillis());
-		//		System.out.println(start);
-		//		final Calendar calEnd = Calendar.getInstance();
-		//		calEnd.set(2018, 9, 21);
-		//		final Date end = new Date(calEnd.getTimeInMillis());
-		//		System.out.println(end);
-
 		final Date start = new GregorianCalendar(2018, Calendar.AUGUST, 17).getTime();
 		final Date end = new GregorianCalendar(2018, Calendar.SEPTEMBER, 20).getTime();
+
 		System.out.println(start);
 		System.out.println(end);
 
