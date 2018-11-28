@@ -40,6 +40,7 @@ public class CategoryServiceTest extends AbstractTest {
 		Category c;
 		c = this.categoryService.create();
 		Assert.notNull(c.getParent());
+		Assert.isNull(c.getName());
 
 		super.authenticate(null);
 	}
