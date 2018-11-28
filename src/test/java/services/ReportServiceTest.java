@@ -2,7 +2,6 @@
 package services;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,6 @@ import org.springframework.util.Assert;
 import security.UserAccount;
 import utilities.AbstractTest;
 import domain.Complaint;
-import domain.Customer;
 import domain.Referee;
 import domain.Report;
 
@@ -41,7 +39,7 @@ public class ReportServiceTest extends AbstractTest {
 	private ComplaintService	complaintService;
 
 	@Autowired
-	private ActorService		actorService;
+	private FixUpTaskService	fixUpTaskService;
 
 
 	//Tests -------------------------------------------------------
@@ -102,7 +100,6 @@ public class ReportServiceTest extends AbstractTest {
 
 		Report report;
 		final Report saved, finded;
-		final Collection<Report> reports;
 
 		report = this.reportSevice.create();
 
@@ -119,7 +116,7 @@ public class ReportServiceTest extends AbstractTest {
 
 	private Complaint createComplaint() {
 
-		this.createNewActorAndLogIn1();
+		super.authenticate("customer4");
 
 		Complaint complaint;
 		final Complaint saved;
@@ -130,44 +127,20 @@ public class ReportServiceTest extends AbstractTest {
 		complaint.setTicker("251118-ASRT");
 
 		final Integer numberOfComplaints = this.customerservice.findByPrincipal().getComplaints().size();
+		final Integer numberOfComplaints2 = this.fixUpTaskService.findOne(this.getEntityId("fixUpTask6")).getComplaints().size();
 
-		saved = this.complaintService.save(complaint);
+		saved = this.complaintService.saveNewComplaint(complaint, this.getEntityId("fixUpTask6"));
 
-		final Integer numberOfComplaints2 = this.customerservice.findByPrincipal().getComplaints().size();
+		final Integer numberOfComplaints3 = this.customerservice.findByPrincipal().getComplaints().size();
+		final Integer numberOfComplaints4 = this.fixUpTaskService.findOne(this.getEntityId("fixUpTask6")).getComplaints().size();
 
-		Assert.isTrue(numberOfComplaints + 1 == numberOfComplaints2);
+		Assert.isTrue(numberOfComplaints + 1 == numberOfComplaints3);
+		Assert.isTrue(numberOfComplaints2 + 1 == numberOfComplaints4);
 
 		complaints = this.complaintService.findAll();
 		Assert.isTrue(complaints.contains(saved));
 
 		return saved;
-
-	}
-
-	private void createNewActorAndLogIn1() {
-
-		Customer customer, saved1;
-		Collection<Customer> customers;
-		final Collection<Complaint> complaints = new HashSet<>();
-
-		customer = this.customerservice.create();
-		customer.setName("González");
-		customer.setMiddleName("Adolfo");
-		customer.setSurname("Gustavo");
-		customer.setAddress("Calle Almoralejo");
-		customer.setComplaints(complaints);
-
-		final UserAccount userAccount = customer.getUserAccount();
-		userAccount.setUsername("Gustavito2");
-		userAccount.setPassword("123123");
-
-		customer.setUserAccount(userAccount);
-
-		saved1 = this.customerservice.save(customer);
-		customers = this.customerservice.findAll();
-		Assert.isTrue(customers.contains(saved1));
-
-		super.authenticate("Gustavito2");
 
 	}
 
