@@ -73,7 +73,7 @@ public class HandyWorkerService {
 
 			final int id = LoginService.getPrincipal().getId();
 
-			Assert.isTrue(id == handyWorker.getId());
+			Assert.isTrue(id == handyWorker.getUserAccount().getId());
 		}
 
 		HandyWorker hw;
@@ -116,6 +116,8 @@ public class HandyWorkerService {
 			final Finder finder = this.finderService.create();
 			finder.setHandyWorker(hw);
 			this.finderService.save(finder);
+
+			hw.setMake(hw.getName() + hw.getMiddleName() + hw.getSurname());
 
 		}
 		return hw;

@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -76,28 +77,30 @@ public class ApplicationService {
 
 			app = this.applicationRepository.save(application);
 		} else {
+			final Application old = this.findOne(application.getId());
+
 			final Actor actor = this.actorService.findByPrincipal();
 			Assert.notNull(actor);
 			final Authority authority = new Authority();
 			authority.setAuthority(Authority.CUSTOMER);
 			Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
 
-			Assert.notNull(application);
-			Assert.isTrue(application.getStatus() == "PENDING");
-			Assert.isTrue(this.applicationRepository.exists(application.getId()));
-			Assert.isTrue(application.getStatus() != "ACCEPTED" || application.getCreditCard() != null);
+			Assert.isTrue(old.getStatus().equals("PENDING"));
+			Assert.isTrue(!old.getStatus().equals("ACCEPTED") || application.getCreditCard() != null);
 			final Customer customer = this.customerService.findByPrincipal();
 			final FixUpTask fixUp = application.getFixUpTask();
 			Assert.isTrue(customer.getFixUpTasks().contains(fixUp));
 
-			final Collection<Application> c = application.getFixUpTask().getApplications();
+			final Collection<Application> c = new ArrayList<>();
+			c.addAll(application.getFixUpTask().getApplications());
 			c.remove(application);
-			if (application.getStatus() == "ACCEPTED")
+			if (application.getStatus().equals("ACCEPTED"))
 				for (final Application application2 : c) {
+
 					application2.setStatus("REJECTED");
 					this.applicationRepository.save(application2);
 				}
-			app = this.applicationRepository.save(application);
+			app = this.applicationRepository.saveAndFlush(application);
 
 		}
 		return app;

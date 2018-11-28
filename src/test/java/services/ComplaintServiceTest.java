@@ -32,6 +32,9 @@ public class ComplaintServiceTest extends AbstractTest {
 	@Autowired
 	private CustomerService		customerservice;
 
+	@Autowired
+	private FixUpTaskService	fixUpTaskService;
+
 
 	//Tests -------------------------------------------------------
 	// TODO Complaint testing
@@ -55,7 +58,7 @@ public class ComplaintServiceTest extends AbstractTest {
 	@Test
 	public void testSave() {
 
-		this.createNewActorAndLogIn();
+		super.authenticate("customer4");
 
 		Complaint complaint;
 		final Complaint saved;
@@ -66,12 +69,15 @@ public class ComplaintServiceTest extends AbstractTest {
 		complaint.setTicker("251118-ASRT");
 
 		final Integer numberOfComplaints = this.customerservice.findByPrincipal().getComplaints().size();
+		final Integer numberOfComplaints2 = this.fixUpTaskService.findOne(this.getEntityId("fixUpTask6")).getComplaints().size();
 
-		saved = this.complaintService.save(complaint);
+		saved = this.complaintService.saveNewComplaint(complaint, this.getEntityId("fixUpTask6"));
 
-		final Integer numberOfComplaints2 = this.customerservice.findByPrincipal().getComplaints().size();
+		final Integer numberOfComplaints3 = this.customerservice.findByPrincipal().getComplaints().size();
+		final Integer numberOfComplaints4 = this.fixUpTaskService.findOne(this.getEntityId("fixUpTask6")).getComplaints().size();
 
-		Assert.isTrue(numberOfComplaints + 1 == numberOfComplaints2);
+		Assert.isTrue(numberOfComplaints + 1 == numberOfComplaints3);
+		Assert.isTrue(numberOfComplaints2 + 1 == numberOfComplaints4);
 
 		complaints = this.complaintService.findAll();
 		Assert.isTrue(complaints.contains(saved));

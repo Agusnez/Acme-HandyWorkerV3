@@ -1,6 +1,8 @@
 
 package services;
 
+import java.util.Collection;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
+import domain.Warranty;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -23,10 +26,52 @@ public class WarrantyServiceTest extends AbstractTest {
 	@Autowired
 	private WarrantyService	warrantyService;
 
+
 	//Tests -------------------------------------------------------
-	// TODO Warranty testing
 	@Test
-	public void testing() {
-		Assert.isTrue(1 == new Integer(1));
+	public void testCreate() {
+
+		this.authenticate("admin");
+
+		final Warranty warranty = this.warrantyService.create();
+
+		Assert.isNull(warranty.getTitle());
+		Assert.isNull(warranty.getTerms());
+		Assert.isNull(warranty.getLaw());
+		Assert.isNull(warranty.getFinalMode());
+
+	}
+
+	@Test
+	public void testSave() {
+
+		this.authenticate("admin");
+
+		Warranty warranty, saved1;
+		Collection<Warranty> warranties;
+
+		warranty = this.warrantyService.findOne(super.getEntityId("warranty2"));
+		warranty.setTitle("tttt");
+
+		saved1 = this.warrantyService.save(warranty);
+		warranties = this.warrantyService.findAll();
+		Assert.isTrue(warranties.contains(saved1));
+
+	}
+
+	@Test
+	public void testDelete() {
+
+		this.authenticate("admin");
+
+		Warranty warranty;
+		Collection<Warranty> warranties;
+
+		warranty = this.warrantyService.findOne(super.getEntityId("warranty2"));
+
+		this.warrantyService.delete(warranty);
+		warranties = this.warrantyService.findAll();
+		Assert.isTrue(!(warranties.contains(warranty)));
+
 	}
 }

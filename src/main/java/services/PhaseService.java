@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,10 +43,16 @@ public class PhaseService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
 		Phase phase;
 		phase = new Phase();
+		phase.setDescription("");
+		phase.setTitle("");
+		//		phase.setEndMoment();
+		//		phase.setStartMoment(startMoment);
+		//		phase.setFixUpTask("");
+
 		return phase;
 	}
 
@@ -68,23 +75,51 @@ public class PhaseService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
-		if (phase.getId() != 0) {
-			final HandyWorker hw = (HandyWorker) actor;
-			final FixUpTask f = phase.getFixUpTask();
-			final Application a = new Application();
-			a.setFixUpTask(f);
-			a.setStatus("ACCEPTED");
-			Assert.isTrue(hw.getApplications().contains(a));
-		}
+		//		final HandyWorker hw1 = (HandyWorker) actor;
+		//		final FixUpTask f1 = phase.getFixUpTask();
+		//
+		//		final Collection<Application> applicationsFixUpPhase1 = f1.getApplications();
+		//		final Collection<Application> applicationHandyWorker1 = hw1.getApplications();
+		//		Application appAccepted1 = null;
+		//		for (final Application application : applicationsFixUpPhase1)
+		//			if (application.getStatus().equals("ACCEPTED"))
+		//				appAccepted1 = application;
+		//		Assert.isTrue(applicationHandyWorker1.contains(appAccepted1));
+
+		//if (phase.getId() != 0) {
+		final HandyWorker hw = (HandyWorker) actor;
+		final FixUpTask f = phase.getFixUpTask();
+
+		final Collection<Application> applicationsFixUpPhase = f.getApplications();
+		final Collection<Application> applicationHandyWorker = hw.getApplications();
+		Application appAccepted = null;
+		for (final Application application : applicationsFixUpPhase)
+			if (application.getStatus().equals("ACCEPTED"))
+				appAccepted = application;
+		Assert.isTrue(applicationHandyWorker.contains(appAccepted));
+
+		//}
+		final Date phaseStart = phase.getStartMoment();
+		final Date phaseEnd = phase.getEndMoment();
+		final Date taskStart = phase.getFixUpTask().getStartDate();
+		final Date taskEnd = phase.getFixUpTask().getEndDate();
+		System.out.println("----------------------------------------------");
+		System.out.println(phaseStart);
+		System.out.println(phaseEnd);
+		System.out.println(taskStart);
+		System.out.println(taskEnd);
 
 		Assert.notNull(phase);
+
 		Assert.isTrue(!phase.getEndMoment().before(phase.getStartMoment()));
 		Assert.isTrue(!phase.getStartMoment().before(phase.getFixUpTask().getStartDate()));
-		Assert.isTrue(!phase.getStartMoment().after(phase.getFixUpTask().getEndDate()));
+		//Assert.isTrue(!phase.getStartMoment().after(phase.getFixUpTask().getEndDate()));
+		Assert.isTrue(phaseStart.before(taskEnd));
 		Assert.isTrue(!phase.getEndMoment().before(phase.getFixUpTask().getStartDate()));
-		Assert.isTrue(!phase.getEndMoment().after(phase.getFixUpTask().getEndDate()));
+		//Assert.isTrue(!phase.getEndMoment().after(phase.getFixUpTask().getEndDate()));
+		Assert.isTrue(phaseEnd.before(taskEnd));
 
 		Phase result;
 
@@ -92,7 +127,6 @@ public class PhaseService {
 
 		return result;
 	}
-
 	public void delete(final Phase phase) {
 		Assert.notNull(phase);
 		Assert.isTrue(phase.getId() != 0);

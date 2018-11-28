@@ -15,6 +15,7 @@ import security.Authority;
 import domain.Actor;
 import domain.Complaint;
 import domain.Customer;
+import domain.FixUpTask;
 import domain.Referee;
 
 @Service
@@ -33,6 +34,9 @@ public class ComplaintService {
 
 	@Autowired
 	private CustomerService		customerservice;
+
+	@Autowired
+	private FixUpTaskService	fixUpTaskService;
 
 
 	// Simple CRUD methods ------------------------------------------
@@ -92,41 +96,52 @@ public class ComplaintService {
 
 		final Actor actor = this.actorService.findByPrincipal();
 
-		if (complaint.getId() == 0) {
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.REFEREE);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
-			final Authority authority = new Authority();
-			authority.setAuthority(Authority.CUSTOMER);
-			Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		final Referee referee = (Referee) actor;
 
-			final Customer customer = (Customer) actor;
+		complaint.setReferee(referee);
 
-			final Date currentMoment = new Date(System.currentTimeMillis() - 1000);
-			complaint.setMoment(currentMoment);
+		result = this.complaintRepository.save(complaint);
 
-			result = this.complaintRepository.save(complaint);
+		return result;
 
-			Collection<Complaint> complaints;
-			complaints = customer.getComplaints();
-			complaints.add(result);
-			customer.setComplaints(complaints);
+	}
 
-			this.customerservice.save(customer);
+	public Complaint saveNewComplaint(final Complaint complaint, final int fixUpTaskId) {
 
-		} else if (complaint.getId() != 0) {
+		Assert.notNull(complaint);
+		Complaint result = null;
+		final FixUpTask fixUpTask = this.fixUpTaskService.findOne(fixUpTaskId);
 
-			final Authority authority = new Authority();
-			authority.setAuthority(Authority.REFEREE);
-			Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		final Actor actor = this.actorService.findByPrincipal();
 
-			final Referee referee = (Referee) actor;
+		final Authority authority = new Authority();
+		authority.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
-			complaint.setReferee(referee);
+		final Customer customer = (Customer) actor;
 
-			result = this.complaintRepository.save(complaint);
+		final Date currentMoment = new Date(System.currentTimeMillis() - 1000);
+		complaint.setMoment(currentMoment);
 
-		}
+		result = this.complaintRepository.save(complaint);
 
-		//TODO: No se puede actualmente obtener la relacion con la fixUpTask dado que se trata de una collecion
+		Collection<Complaint> complaints;
+		complaints = customer.getComplaints();
+		complaints.add(result);
+		customer.setComplaints(complaints);
+
+		Collection<Complaint> complaints2;
+		complaints2 = fixUpTask.getComplaints();
+		complaints2.add(result);
+		fixUpTask.setComplaints(complaints2);
+
+		this.customerservice.save(customer);
+
+		this.fixUpTaskService.save(fixUpTask);
 
 		return result;
 
