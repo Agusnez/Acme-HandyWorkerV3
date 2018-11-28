@@ -34,7 +34,7 @@ public class FinderServiceTest extends AbstractTest {
 	//Tests -------------------------------------------------------
 	// TODO Finder testing
 	@Test
-	public void createFinder() {
+	public void saveFinder() {
 		final HandyWorker hw = this.handyWorkerService.create();
 		hw.setAddress("1234");
 		hw.setName("Antonio");
@@ -70,6 +70,8 @@ public class FinderServiceTest extends AbstractTest {
 		final Finder saved = this.finderService.save(finder);
 
 		Assert.isTrue(saved.getKeyWord() != oldKeyWord);
+
+		super.unauthenticate();
 	}
 
 	@Test

@@ -54,18 +54,20 @@ public class PhaseServiceTest extends AbstractTest {
 		final Phase result = this.phaseService.save(phase);
 		final Collection<Phase> phases = this.phaseService.findAll();
 		Assert.isTrue(phases.contains(result));
+		super.unauthenticate();
 
 	}
 
 	@Test
 	public void createPhase() {
+		super.authenticate("handyWorker1");
 		final Phase phase = this.phaseService.create();
 		Assert.isNull(phase.getDescription());
 		Assert.isNull(phase.getEndMoment());
 		Assert.isNull(phase.getFixUpTask());
 		Assert.isNull(phase.getStartMoment());
 		Assert.isNull(phase.getTitle());
-
+		super.unauthenticate();
 	}
 
 	@Test
@@ -78,7 +80,7 @@ public class PhaseServiceTest extends AbstractTest {
 		final Phase result = this.phaseService.save(phase);
 
 		Assert.isTrue(!result.getTitle().equals(title));
-
+		super.unauthenticate();
 	}
 
 	@Test
@@ -90,6 +92,7 @@ public class PhaseServiceTest extends AbstractTest {
 
 		final Collection<Phase> phases = this.phaseService.findAll();
 		Assert.isTrue(!phases.contains(phase));
+		super.unauthenticate();
 
 	}
 
