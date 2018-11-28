@@ -95,18 +95,7 @@ public class CurriculumService {
 		
 		this.personalRecordService.save(curriculum.getPersonalRecord());
 		
-		for (EducationRecord edu: curriculum.getEducationRecords()) {
-			this.educationRecordService.save(edu);
-		}
-		for (ProfessionalRecord pro: curriculum.getProfessionalRecords()) {
-			this.professionalRecordService.save(pro);
-		}
-		for (EndorserRecord endo: curriculum.getEndorserRecords()) {
-			this.endorserRecordService.save(endo);
-		}
-		for (MiscellaneousRecord misce: curriculum.getMiscellaneousRecords()) {
-			this.miscellaneousRecordService.save(misce);
-		}
+		
 		
 		Curriculum c = this.curriculumRepository.save(curriculum);
 
