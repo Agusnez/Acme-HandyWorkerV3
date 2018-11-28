@@ -10,7 +10,6 @@ import org.springframework.util.Assert;
 
 import repositories.PersonalRecordRepository;
 import security.Authority;
-import domain.Curriculum;
 import domain.HandyWorker;
 import domain.PersonalRecord;
 
@@ -26,13 +25,7 @@ public class PersonalRecordService {
 	//Supporting services
 
 	@Autowired
-	private CurriculumService			curriculumService;
-
-	@Autowired
 	private HandyWorkerService			handyWorkerService;
-
-	@Autowired
-	private ActorService				actorService;
 
 
 	//Simple CRUD methods
@@ -71,10 +64,10 @@ public class PersonalRecordService {
 	}
 
 	public PersonalRecord save(final PersonalRecord personalRecord) {
-		HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
+		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
 		Assert.notNull(handyWorker);
 		Assert.notNull(personalRecord);
-		
+
 		PersonalRecord result;
 
 		result = this.personalRecordRepository.save(personalRecord);
