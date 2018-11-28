@@ -87,7 +87,7 @@ public class AdministratorServiceTest extends AbstractTest {
 		administrator.setAddress("aaaa");
 
 		final UserAccount userAccount = administrator.getUserAccount();
-		userAccount.setUsername("user");
+		userAccount.setUsername("userAdmin");
 		userAccount.setPassword("123456");
 
 		administrator.setUserAccount(userAccount);
@@ -96,7 +96,7 @@ public class AdministratorServiceTest extends AbstractTest {
 		administrators = this.administratorService.findAll();
 		Assert.isTrue(administrators.contains(saved1));
 
-		super.authenticate("user");
+		super.authenticate("userAdmin");
 
 		return saved1;
 
