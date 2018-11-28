@@ -18,7 +18,6 @@ import domain.Application;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.HandyWorker;
-import domain.Referee;
 
 @Service
 @Transactional
@@ -88,7 +87,6 @@ public class ApplicationService {
 		} else {
 
 			Customer customer = null;
-			final Referee referee = null;
 			HandyWorker handyWorker = null;
 
 			final Authority authority1 = new Authority();

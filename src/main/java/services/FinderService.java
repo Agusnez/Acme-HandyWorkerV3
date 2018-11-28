@@ -70,7 +70,7 @@ public class FinderService {
 
 		}
 
-		finder.setLastUpdate(new Date());
+		finder.setLastUpdate(new Date(System.currentTimeMillis() - 1000));
 
 		final Finder result = this.finderRepository.save(finder);
 
