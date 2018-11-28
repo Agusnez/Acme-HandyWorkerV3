@@ -34,7 +34,7 @@ public class SponsorServiceTest extends AbstractTest {
 
 	//Tests -------------------------------------------------------
 	@Test
-	public void createSponsor() {
+	public void saveSponsor() {
 		final Sponsor s = this.sponsorService.create();
 		s.setAddress("1234");
 		s.setName("Antonio");
@@ -51,6 +51,19 @@ public class SponsorServiceTest extends AbstractTest {
 		Assert.isTrue(!allBoxes.isEmpty());
 		final Sponsor sp = this.sponsorService.findOne(saved.getId());
 		Assert.isTrue(sp.getId() == saved.getId());
+	}
+
+	@Test
+	public void createSponsor() {
+		final Sponsor sp = this.sponsorService.create();
+		Assert.isNull(sp.getAddress());
+		Assert.isNull(sp.getSuspicious());
+		Assert.isNull(sp.getName());
+		Assert.isNull(sp.getMiddleName());
+		Assert.isNull(sp.getSurname());
+		Assert.isNull(sp.getPhone());
+		Assert.isNull(sp.getPhoto());
+		Assert.isNull(sp.getEmail());
 	}
 
 	@Test

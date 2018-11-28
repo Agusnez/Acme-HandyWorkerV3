@@ -36,7 +36,7 @@ public class PhaseServiceTest extends AbstractTest {
 
 	//Tests -------------------------------------------------------
 	@Test
-	public void createPhase() {
+	public void savePhase() {
 		super.authenticate("handyWorker1");
 		final FixUpTask fixUp = this.fixUpTaskService.findOne(super.getEntityId("fixUpTask5"));
 
@@ -46,9 +46,6 @@ public class PhaseServiceTest extends AbstractTest {
 		final Date start = new GregorianCalendar(2018, Calendar.AUGUST, 17).getTime();
 		final Date end = new GregorianCalendar(2018, Calendar.SEPTEMBER, 20).getTime();
 
-		System.out.println(start);
-		System.out.println(end);
-
 		phase.setStartMoment(start);
 		phase.setEndMoment(end);
 		phase.setFixUpTask(fixUp);
@@ -57,6 +54,17 @@ public class PhaseServiceTest extends AbstractTest {
 		final Phase result = this.phaseService.save(phase);
 		final Collection<Phase> phases = this.phaseService.findAll();
 		Assert.isTrue(phases.contains(result));
+
+	}
+
+	@Test
+	public void createPhase() {
+		final Phase phase = this.phaseService.create();
+		Assert.isNull(phase.getDescription());
+		Assert.isNull(phase.getEndMoment());
+		Assert.isNull(phase.getFixUpTask());
+		Assert.isNull(phase.getStartMoment());
+		Assert.isNull(phase.getTitle());
 
 	}
 

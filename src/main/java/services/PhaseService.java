@@ -45,13 +45,7 @@ public class PhaseService {
 		authority.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
-		Phase phase;
-		phase = new Phase();
-		phase.setDescription("");
-		phase.setTitle("");
-		//		phase.setEndMoment();
-		//		phase.setStartMoment(startMoment);
-		//		phase.setFixUpTask("");
+		final Phase phase = new Phase();
 
 		return phase;
 	}

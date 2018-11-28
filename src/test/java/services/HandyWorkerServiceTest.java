@@ -38,7 +38,7 @@ public class HandyWorkerServiceTest extends AbstractTest {
 	//Tests -------------------------------------------------------
 
 	@Test
-	public void createHandyWorker() {
+	public void saveHandyWorker() {
 		final HandyWorker hw = this.handyWorkerService.create();
 		hw.setAddress("1234");
 		hw.setName("Antonio");
@@ -64,6 +64,21 @@ public class HandyWorkerServiceTest extends AbstractTest {
 				Assert.isTrue(finder != null);
 				break;
 			}
+	}
+
+	@Test
+	public void createHandyWorker() {
+		final HandyWorker hw = this.handyWorkerService.create();
+		Assert.isNull(hw.getAddress());
+		Assert.isNull(hw.getSuspicious());
+		Assert.isTrue(hw.getApplications().isEmpty());
+		Assert.isNull(hw.getName());
+		Assert.isNull(hw.getMiddleName());
+		Assert.isNull(hw.getSurname());
+		Assert.isNull(hw.getPhone());
+		Assert.isNull(hw.getPhoto());
+		Assert.isNull(hw.getEmail());
+		Assert.isNull(hw.getMake());
 	}
 
 	@Test

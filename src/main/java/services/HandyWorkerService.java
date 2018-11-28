@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import repositories.HandyWorkerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Application;
 import domain.Box;
 import domain.Finder;
 import domain.HandyWorker;
@@ -48,9 +50,11 @@ public class HandyWorkerService {
 		userAccount.setAuthorities(list);
 		hw.setUserAccount(userAccount);
 
+		final Collection<Application> app = new HashSet<>();
+		hw.setApplications(app);
+
 		return hw;
 	}
-
 	public Collection<HandyWorker> findAll() {
 		Collection<HandyWorker> result;
 		result = this.handyWorkerRepository.findAll();
