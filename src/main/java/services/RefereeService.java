@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 
 import repositories.RefereeRepository;
 import security.Authority;
+import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
 import domain.Box;
@@ -43,7 +44,7 @@ public class RefereeService {
 		Assert.notNull(actor);
 		final Authority authorityAdmin = new Authority();
 		authorityAdmin.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authorityAdmin)));
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authorityAdmin));
 
 		Referee result;
 		result = new Referee();
@@ -56,6 +57,7 @@ public class RefereeService {
 		final UserAccount userAccount = new UserAccount();
 		userAccount.setAuthorities(list);
 		result.setUserAccount(userAccount);
+
 		return result;
 
 	}
@@ -133,4 +135,25 @@ public class RefereeService {
 
 	// Other business methods -----------------------------------------
 
+	public Referee findByPrincipal() {
+		Referee referee;
+		UserAccount userAccount;
+
+		userAccount = LoginService.getPrincipal();
+		Assert.notNull(userAccount);
+		referee = this.findByUserAccount(userAccount);
+		Assert.notNull(referee);
+
+		return referee;
+	}
+
+	public Referee findByUserAccount(final UserAccount userAccount) {
+		Assert.notNull(userAccount);
+
+		Referee result;
+
+		result = this.refereeRepository.findByUserAccountId(userAccount.getId());
+
+		return result;
+	}
 }

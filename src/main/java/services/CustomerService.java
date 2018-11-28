@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -15,9 +16,10 @@ import repositories.CustomerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import security.UserAccountService;
 import domain.Actor;
-import domain.Administrator;
 import domain.Box;
+import domain.Complaint;
 import domain.Customer;
 import domain.FixUpTask;
 
@@ -37,32 +39,33 @@ public class CustomerService {
 	@Autowired
 	private ActorService		actorService;
 
+	@Autowired
+	private UserAccountService	userAccountService;
+
 
 	// Simple CRUD methods -----------------------
 
 	public Customer create() {
 		Customer result;
 		result = new Customer();
-		
-		final Authority authority = new Authority();
-        authority.setAuthority(Authority.CUSTOMER);
-        final List<Authority> list = new ArrayList<Authority>();
-        list.add(authority);
 
-        final UserAccount userAccount = new UserAccount();
-        userAccount.setAuthorities(list);
-        result.setUserAccount(userAccount);
-        
+		final UserAccount userAccount = this.userAccountService.createCustomer();
+		result.setUserAccount(userAccount);
+
+		final Collection<FixUpTask> fixUpTasks = new HashSet<>();
+		final Collection<Complaint> complaints = new HashSet<>();
+
+		result.setFixUpTasks(fixUpTasks);
+		result.setComplaints(complaints);
 
 		return result;
-	
 
 	}
 
 	public Collection<Customer> findAll() {
-		Actor actor = actorService.findByPrincipal();
-		Assert.notNull(actor);
-		
+		//		final Actor actor = this.actorService.findByPrincipal();
+		//		Assert.notNull(actor);
+
 		Collection<Customer> result;
 		result = this.customerRepository.findAll();
 		Assert.notNull(result);
@@ -70,9 +73,9 @@ public class CustomerService {
 	}
 
 	public Customer findOne(final int customerId) {
-		Actor actor = actorService.findByPrincipal();
+		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
-		
+
 		Assert.notNull(customerId);
 		Customer result;
 		result = this.customerRepository.findOne(customerId);
@@ -82,25 +85,31 @@ public class CustomerService {
 	public Customer save(final Customer customer) {
 		Assert.notNull(customer);
 		Customer result;
-		
+
 		if (customer.getId() != 0) {
 
 			final Actor actor = this.actorService.findByPrincipal();
 			Assert.notNull(actor);
 
 			Assert.isTrue(actor.getId() == customer.getId());
-			
+
 			result = this.customerRepository.save(customer);
-			
-		}else {
+
+		} else {
+
+			UserAccount user, saved;
+			user = customer.getUserAccount();
+			saved = this.userAccountService.save(user);
+
+			customer.setUserAccount(saved);
+
 			result = this.customerRepository.save(customer);
-			
-			Actor actor = this.actorService.findByPrincipal();
-			int idCustomerLogged = actor.getId();
-			int idCustomerOwner = customer.getId();
-			Assert.isTrue(idCustomerLogged == idCustomerOwner);
-			
-			
+
+			//			Actor actor = this.actorService.findByPrincipal();
+			//			int idCustomerLogged = actor.getId();
+			//			int idCustomerOwner = customer.getId();
+			//			Assert.isTrue(idCustomerLogged == idCustomerOwner);
+
 			Box inBox, outBox, trashBox, spamBox;
 
 			inBox = this.boxService.create();
@@ -136,13 +145,13 @@ public class CustomerService {
 
 		}
 		return result;
-		
+
 	}
 
 	// Other business methods -----------------------
 
 	public Collection<Double> statsOfFixUpTasksPerCustomer() {
-		/*Compruebo que está logeado un Admin*/
+		/* Compruebo que está logeado un Admin */
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
@@ -156,26 +165,26 @@ public class CustomerService {
 	}
 
 	public Collection<Customer> customersTenPerCentMore() {
-		/*Compruebo que está logeado un Admin*/
+		/* Compruebo que está logeado un Admin */
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
 		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
-		
+
 		final Collection<Customer> result = this.customerRepository.customersTenPerCentMore();
 		Assert.notNull(result);
 		return result;
 	}
 
 	public Collection<Customer> topThreeCustomersComplaints() {
-		/*Compruebo que está logeado un Admin*/
+		/* Compruebo que está logeado un Admin */
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
 		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
-		
+
 		final Collection<Customer> customers = this.customerRepository.rankingCustomersComplaints();
 		Assert.notNull(customers);
 
@@ -186,46 +195,39 @@ public class CustomerService {
 		return result;
 
 	}
-	
-	public Customer findByTask(FixUpTask fixUpTask){
+
+	public Customer findByTask(final FixUpTask fixUpTask) {
 		Assert.notNull(fixUpTask);
-		/*Compruebo que está logeado un HandyWorker*/
-		Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
-		
+
 		Customer c;
-		
-		c = customerRepository.findByTask(fixUpTask);
-		
-		/*Se comprueba porque no puede haber un fixUpTask que no la haya publicado nadie*/
+
+		c = this.customerRepository.findByTask(fixUpTask.getId());
+
+		/* Se comprueba porque no puede haber un fixUpTask que no la haya publicado nadie */
 		Assert.notNull(c);
-		
+
 		return c;
-	}	
-		public Customer findByPrincipal() {
-			Customer customer;
-			UserAccount userAccount;
+	}
+	public Customer findByPrincipal() {
+		Customer customer;
+		UserAccount userAccount;
 
-			userAccount = LoginService.getPrincipal();
-			Assert.notNull(userAccount);
-			customer = this.findByUserAccount(userAccount);
-			Assert.notNull(customer);
+		userAccount = LoginService.getPrincipal();
+		Assert.notNull(userAccount);
+		customer = this.findByUserAccount(userAccount);
+		Assert.notNull(customer);
 
-			return customer;
-		}
-		
-		public Customer findByUserAccount(final UserAccount userAccount) {
-			Assert.notNull(userAccount);
+		return customer;
+	}
 
-			Customer result;
+	public Customer findByUserAccount(final UserAccount userAccount) {
+		Assert.notNull(userAccount);
 
-			result = this.customerRepository.findByUserAccountId(userAccount.getId());
+		Customer result;
 
-			return result;
-		}
-		
-	
+		result = this.customerRepository.findByUserAccountId(userAccount.getId());
+
+		return result;
+	}
+
 }

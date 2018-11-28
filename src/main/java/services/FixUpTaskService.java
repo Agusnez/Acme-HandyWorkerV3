@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 import javax.transaction.Transactional;
@@ -12,7 +13,9 @@ import org.springframework.util.Assert;
 
 import repositories.FixUpTaskRepository;
 import security.Authority;
+import security.LoginService;
 import domain.Actor;
+import domain.Administrator;
 import domain.Application;
 import domain.Complaint;
 import domain.Customer;
@@ -25,39 +28,40 @@ public class FixUpTaskService {
 	// Managed repository
 
 	@Autowired
-	private FixUpTaskRepository	fixUpTaskRepository;
+	private FixUpTaskRepository		fixUpTaskRepository;
 
 	// Suporting services
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService			actorService;
 
 	@Autowired
-	private CustomerService		customerService;
+	private CustomerService			customerService;
+
+	@Autowired
+	private AdministratorService	administratorService;
 
 
 	// Simple CRUD methods
 
 	public FixUpTask create() {
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
+		final Customer customer = this.customerService.findByPrincipal();
+		Assert.notNull(customer);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority));
 
 		final FixUpTask result = new FixUpTask();
 
-		final Collection<Application> applications = new HashSet<>();
 		final Collection<Complaint> complaints = new HashSet<>();
-
-		result.setApplications(applications);
 		result.setComplaints(complaints);
+		final Collection<Application> applications = new HashSet<>();
+		result.setApplications(applications);
 
 		return result;
 
 	}
-
 	public Collection<FixUpTask> findAll() {
 
 		final Collection<FixUpTask> fixUpTasks = this.fixUpTaskRepository.findAll();
@@ -81,13 +85,23 @@ public class FixUpTaskService {
 
 		Assert.notNull(fixUpTask);
 
-		FixUpTask result;
+		final FixUpTask result;
+		Customer customer = null;
+		Administrator admin = null;
 
-		final Customer customer = this.customerService.findByPrincipal();
-		Assert.notNull(customer);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(!(customer.getUserAccount().getAuthorities().contains(authority)));
+		final Authority authority1 = new Authority();
+		authority1.setAuthority(Authority.CUSTOMER);
+		final Authority authority2 = new Authority();
+		authority2.setAuthority(Authority.ADMIN);
+
+		if (LoginService.getPrincipal().getAuthorities().contains(authority1))
+			customer = this.customerService.findByPrincipal();
+		else if (LoginService.getPrincipal().getAuthorities().contains(authority2)) {
+			admin = this.administratorService.findByPrincipal();
+			customer = this.customerService.findByTask(fixUpTask);
+		}
+
+		Assert.isTrue(customer != null || admin != null);
 
 		if (fixUpTask.getId() != 0) {
 
@@ -95,6 +109,9 @@ public class FixUpTaskService {
 			result = this.fixUpTaskRepository.save(fixUpTask);
 
 		} else {
+			final Date currentMoment = new Date(System.currentTimeMillis() - 1000);
+			fixUpTask.setMoment(currentMoment);
+
 			result = this.fixUpTaskRepository.save(fixUpTask);
 			final Integer num = customer.getFixUpTasks().size();
 			final Collection<FixUpTask> fixUpTasks = customer.getFixUpTasks();
@@ -117,10 +134,10 @@ public class FixUpTaskService {
 		Assert.notNull(customer);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(!(customer.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue(customer.getUserAccount().getAuthorities().contains(authority));
 		final Customer c = (Customer) customer;
 		Assert.isTrue(c.getFixUpTasks().contains(fixUpTask));
-		Assert.isTrue(!(fixUpTask.getApplications().isEmpty()));
+		Assert.isTrue(fixUpTask.getApplications().isEmpty());
 
 		final Collection<FixUpTask> f = c.getFixUpTasks();
 		f.remove(fixUpTask);

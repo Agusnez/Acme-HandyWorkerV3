@@ -28,6 +28,7 @@ public class ApplicationServiceTest extends AbstractTest {
 	@Autowired
 	private ApplicationService	applicationService;
 
+
 	@Autowired
 	private FixUpTaskService	fixUpTaskService;
 
