@@ -13,7 +13,6 @@ import repositories.MiscellaneousRecordRepository;
 import security.Authority;
 import domain.Actor;
 import domain.Curriculum;
-import domain.HandyWorker;
 import domain.MiscellaneousRecord;
 
 @Service
@@ -28,9 +27,6 @@ public class MiscellaneousRecordService {
 
 	@Autowired
 	private CurriculumService				curriculumService;
-
-	@Autowired
-	private HandyWorkerService				handyWorkerService;
 
 	@Autowired
 	private ActorService					actorService;
@@ -76,13 +72,11 @@ public class MiscellaneousRecordService {
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
-		
+
 		Assert.notNull(miscellaneousRecord);
 		MiscellaneousRecord result;
 
 		result = this.miscellaneousRecordRepository.save(miscellaneousRecord);
-
-		
 
 		final Curriculum curriculum = this.curriculumService.findByHandyWorkerId(actor.getId());
 		Assert.notNull(curriculum);

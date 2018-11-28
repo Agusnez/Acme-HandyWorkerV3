@@ -34,9 +34,9 @@ public class ConfigurationService {
 
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		final Authority authorityAdmin = new Authority();
+		authorityAdmin.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authorityAdmin));
 
 		final Configuration configuration = this.configurationRepository.save(c);
 
@@ -49,7 +49,9 @@ public class ConfigurationService {
 
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().toString().contains("ADMIN")));
+		final Authority authorityAdmin = new Authority();
+		authorityAdmin.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authorityAdmin));
 
 		final Configuration configuration = this.configurationRepository.findOne(configurationId);
 
@@ -58,7 +60,28 @@ public class ConfigurationService {
 		return configuration;
 	}
 
+	public Collection<Configuration> findAll() {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authorityAdmin = new Authority();
+		authorityAdmin.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authorityAdmin));
+
+		final Collection<Configuration> configurations = this.configurationRepository.findAll();
+
+		Assert.notNull(configurations);
+
+		return configurations;
+	}
+
 	public Boolean spamContent(final String text) {
+
+		final Actor actor = this.actorService.findByPrincipal();
+		Assert.notNull(actor);
+		final Authority authorityAdmin = new Authority();
+		authorityAdmin.setAuthority(Authority.ADMIN);
+		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authorityAdmin));
 
 		Boolean result = false;
 
