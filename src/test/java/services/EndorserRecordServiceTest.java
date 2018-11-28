@@ -29,7 +29,7 @@ public class EndorserRecordServiceTest extends AbstractTest {
 
 
 	//Tests -------------------------------------------------------
-	// TODO EndorserRecord testing
+
 	@Test
 	public void EndorserRecordCreateTest() {
 
