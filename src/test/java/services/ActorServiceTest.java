@@ -12,12 +12,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import security.LoginService;
+import utilities.AbstractTest;
 import domain.Actor;
 import domain.Box;
 import domain.Message;
-
-import security.LoginService;
-import utilities.AbstractTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -30,45 +29,43 @@ public class ActorServiceTest extends AbstractTest {
 
 	@Autowired
 	private ActorService	actorService;
-	
+
 	@Autowired
-	private MessageService messageService;
-	
+	private MessageService	messageService;
+
 	@Autowired
-	private BoxService boxService;
-	
-	@Autowired
-	private LoginService loginService;
+	private BoxService		boxService;
+
 
 	//Tests -------------------------------------------------------
 
 	@Test
 	public void testMessage() {
 		super.authenticate("customer2");
-		
-		Message msg = messageService.create();
-		Actor recipient = actorService.findOne(2508);
-		
-		msg.setSender(actorService.findByUserAccount(LoginService.getPrincipal()));
+
+		final Message msg = this.messageService.create();
+		final Actor recipient = this.actorService.findOne(2508);
+
+		msg.setSender(this.actorService.findByUserAccount(LoginService.getPrincipal()));
 		msg.setRecipient(recipient);
 		msg.setSubject("Un asunto de ejemplo");
 		msg.setBody("Esto es un mensaje de prueba.");
 		msg.setPriority("URGENT");
 		msg.setTags("Development");
-		
+
 		// Perform the sending
 		this.actorService.sendMessage(msg);
-		
-		Box inBoxRecipient = this.boxService.findInBoxByActorId(recipient.getId());
-		Box outBoxRecipient = this.boxService.findOutBoxByActorId(this.actorService.findByPrincipal().getId());
-		
-		Collection<Box> supposedBoxes = new ArrayList<Box>();
+
+		final Box inBoxRecipient = this.boxService.findInBoxByActorId(recipient.getId());
+		final Box outBoxRecipient = this.boxService.findOutBoxByActorId(this.actorService.findByPrincipal().getId());
+
+		final Collection<Box> supposedBoxes = new ArrayList<Box>();
 		supposedBoxes.add(inBoxRecipient);
 		supposedBoxes.add(outBoxRecipient);
-		
-		Collection<Box> boxesOfTheMessage = msg.getBoxes();
-		
+
+		final Collection<Box> boxesOfTheMessage = msg.getBoxes();
+
 		Assert.isTrue(boxesOfTheMessage.containsAll(supposedBoxes));
-		
+
 	}
 }
