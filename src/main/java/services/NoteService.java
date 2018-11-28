@@ -65,6 +65,9 @@ public class NoteService {
 		Note result;
 
 		result = new Note();
+		result.setCommentCustomer("-");
+		result.setCommentHandyWorker("-");
+		result.setCommentReferee("-");
 
 		return result;
 	}
@@ -94,7 +97,8 @@ public class NoteService {
 		Collection<Note> result;
 
 		result = this.noteRepository.findAll();
-		Assert.notNull(result);
+
+		Assert.isTrue(result.size() != 0);
 
 		return result;
 	}
@@ -163,21 +167,29 @@ public class NoteService {
 			final String findcu = find.getCommentCustomer();
 
 			if (LoginService.getPrincipal().getAuthorities().contains(authority1))
-				Assert.isTrue(((findhw == null && notehw == null) || (findhw.equals(notehw))) && ((findre == null && notere == null) || (findre.equals(notere))));
+				Assert.isTrue(((findhw == null && notehw == null) || (findhw == notehw)) && ((findre == null && notere == null) || (findre == notere)));
 			else if (LoginService.getPrincipal().getAuthorities().contains(authority2))
-				Assert.isTrue(((findhw == null && notehw == null) || (((findhw == null && notehw != null)) && ((findhw != null && notehw == null))) || (findhw.equals(notehw)))
-					&& ((findcu == null && notecu == null) || (((findcu == null && notecu != null)) && ((findcu != null && notecu == null))) || (findcu.equals(notecu))));
+				Assert.isTrue(((findhw == null && notehw == null) || (findhw.equals(notehw))) && ((findcu == null && notecu == null) || (findcu.equals(notecu))));
 			else if (LoginService.getPrincipal().getAuthorities().contains(authority3))
-				Assert.isTrue(((findcu == null && notecu == null) || (findhw.equals(notehw))) && ((findre == null && notere == null) || (findre.equals(notere))));
-
+				Assert.isTrue(((findcu == null && notecu == null) || (findcu == notecu)) && ((findre == null && notere == null) || (findre == notere)));
+		}else if(note.getId() == 0){
+			if (LoginService.getPrincipal().getAuthorities().contains(authority1)){
+				Assert.isTrue(note.getCommentHandyWorker().equals("-"));
+				Assert.isTrue(note.getCommentReferee().equals("-"));
+			}else if (LoginService.getPrincipal().getAuthorities().contains(authority2)){
+				Assert.isTrue(note.getCommentHandyWorker().equals("-"));
+				Assert.isTrue(note.getCommentCustomer().equals("-"));
+			}else if (LoginService.getPrincipal().getAuthorities().contains(authority3)){
+				Assert.isTrue(note.getCommentReferee().equals("-"));
+				Assert.isTrue(note.getCommentReferee().equals("-"));
+			}	
 		}
-
 		Note result;
 
 		result = this.noteRepository.save(note);
 
 		return result;
-	}
 
+	}
 	// Other business methods -----------------------
 }
