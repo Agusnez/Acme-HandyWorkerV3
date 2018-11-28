@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import repositories.EducationRecordReposiroty;
+import repositories.EducationRecordRepository;
 import security.Authority;
 import domain.Actor;
 import domain.Curriculum;
@@ -22,7 +22,7 @@ public class EducationRecordService {
 
 	// Managed repository
 	@Autowired
-	private EducationRecordReposiroty	educationRecordRepository;
+	private EducationRecordRepository	educationRecordRepository;
 
 	// Suporting services
 
@@ -76,14 +76,15 @@ public class EducationRecordService {
 	}
 
 	public EducationRecord save(final EducationRecord educationRecord) {
+		HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
 
 		Assert.notNull(educationRecord);
 		EducationRecord result;
 
 		result = this.educationRecordRepository.save(educationRecord);
 
-		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		
 
 		final Curriculum curriculum = this.curriculumService.findByHandyWorkerId(handyWorker.getId());
 		Assert.notNull(curriculum);

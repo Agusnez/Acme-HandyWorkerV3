@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import domain.EducationRecord;
 
 @Repository
-public interface EducationRecordReposiroty extends JpaRepository<EducationRecord, Integer> {
+public interface EducationRecordRepository extends JpaRepository<EducationRecord, Integer> {
 
 }
