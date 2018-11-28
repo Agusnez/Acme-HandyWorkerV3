@@ -97,11 +97,11 @@ public class CustomerService {
 
 		} else {
 
-			UserAccount user, saved;
-			user = customer.getUserAccount();
-			saved = this.userAccountService.save(user);
-
-			customer.setUserAccount(saved);
+			//			UserAccount user, saved;
+			//			user = customer.getUserAccount();
+			//			saved = this.userAccountService.save(user);
+			//
+			//			customer.setUserAccount(saved);
 
 			result = this.customerRepository.save(customer);
 

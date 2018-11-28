@@ -2,7 +2,6 @@
 package services;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import security.UserAccount;
 import utilities.AbstractTest;
 import domain.Complaint;
-import domain.Customer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -87,7 +84,7 @@ public class ComplaintServiceTest extends AbstractTest {
 	@Test
 	public void testFindOne() {
 
-		this.createNewActorAndLogIn();
+		super.authenticate("customer4");
 
 		Complaint complaint, saved, finded;
 
@@ -95,43 +92,11 @@ public class ComplaintServiceTest extends AbstractTest {
 		complaint.setDescription("xxxx");
 		complaint.setTicker("251118-ASRT");
 
-		final Integer numberOfComplaints = this.customerservice.findByPrincipal().getComplaints().size();
-
-		saved = this.complaintService.save(complaint);
-
-		final Integer numberOfComplaints2 = this.customerservice.findByPrincipal().getComplaints().size();
-
-		Assert.isTrue(numberOfComplaints + 1 == numberOfComplaints2);
+		saved = this.complaintService.saveNewComplaint(complaint, this.getEntityId("fixUpTask6"));
 
 		finded = this.complaintService.findOne(saved.getId());
 		Assert.isTrue(saved.equals(finded));
 
 	}
 
-	private void createNewActorAndLogIn() {
-
-		Customer customer, saved1;
-		Collection<Customer> customers;
-		final Collection<Complaint> complaints = new HashSet<>();
-
-		customer = this.customerservice.create();
-		customer.setName("González");
-		customer.setMiddleName("Adolfo");
-		customer.setSurname("Gustavo");
-		customer.setAddress("Calle Almoralejo");
-		customer.setComplaints(complaints);
-
-		final UserAccount userAccount = customer.getUserAccount();
-		userAccount.setUsername("Gustavito");
-		userAccount.setPassword("123123");
-
-		customer.setUserAccount(userAccount);
-
-		saved1 = this.customerservice.save(customer);
-		customers = this.customerservice.findAll();
-		Assert.isTrue(customers.contains(saved1));
-
-		super.authenticate("Gustavito");
-
-	}
 }
