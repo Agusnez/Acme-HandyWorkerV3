@@ -10,7 +10,6 @@ import org.springframework.util.Assert;
 
 import repositories.PersonalRecordRepository;
 import security.Authority;
-import domain.Actor;
 import domain.Curriculum;
 import domain.HandyWorker;
 import domain.PersonalRecord;
@@ -40,11 +39,11 @@ public class PersonalRecordService {
 
 	public PersonalRecord create() {
 
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
+		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		Assert.isTrue(handyWorker.getUserAccount().getAuthorities().contains(authority));
 
 		PersonalRecord result;
 
@@ -78,7 +77,7 @@ public class PersonalRecordService {
 
 		final Curriculum curriculum = this.curriculumService.findByPersonalRecordId(personalRecord.getId());
 		Assert.notNull(curriculum);
-		
+
 		result = this.personalRecordRepository.save(personalRecord);
 
 		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();

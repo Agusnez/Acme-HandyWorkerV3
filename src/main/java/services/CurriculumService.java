@@ -15,6 +15,7 @@ import domain.Actor;
 import domain.Curriculum;
 import domain.EducationRecord;
 import domain.EndorserRecord;
+import domain.HandyWorker;
 import domain.MiscellaneousRecord;
 import domain.PersonalRecord;
 import domain.ProfessionalRecord;
@@ -46,18 +47,46 @@ public class CurriculumService {
 	@Autowired
 	private ActorService				actorService;
 
+	@Autowired
+	private HandyWorkerService			handyWorkerService;
+
 
 	//Simple CRUD methods--------------------------------
 	public Curriculum create() {
-		final Actor actor = this.actorService.findByPrincipal();
-		Assert.notNull(actor);
+
+		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		Assert.isTrue(handyWorker.getUserAccount().getAuthorities().contains(authority));
 
 		Curriculum c;
 
 		c = new Curriculum();
+
+		final PersonalRecord pr = this.personalRecordService.create();
+
+		final Collection<EducationRecord> c1 = new HashSet<>();
+		final EducationRecord edr = this.educationRecordService.create();
+		c1.add(edr);
+
+		final Collection<ProfessionalRecord> c2 = new HashSet<>();
+		final ProfessionalRecord prr = this.professionalRecordService.create();
+		c2.add(prr);
+
+		final Collection<EndorserRecord> c3 = new HashSet<>();
+		final EndorserRecord enr = this.endorserRecordService.create();
+		c3.add(enr);
+
+		final Collection<MiscellaneousRecord> c4 = new HashSet<>();
+		final MiscellaneousRecord mir = this.miscellaneousRecordService.create();
+		c4.add(mir);
+
+		c.setEducationRecords(c1);
+		c.setEndorserRecords(c3);
+		c.setMiscellaneousRecords(c4);
+		c.setPersonalRecord(pr);
+		c.setProfessionalRecords(c2);
 
 		return c;
 	}
@@ -87,37 +116,8 @@ public class CurriculumService {
 		Assert.isTrue(actor.getId() == owner.getId());
 
 		Curriculum c;
+
 		c = this.curriculumRepository.save(curriculum);
-
-		if (curriculum.getId() == 0) {
-
-			final PersonalRecord pr = this.personalRecordService.create();
-
-			final Collection<EducationRecord> c1 = new HashSet<>();
-			final EducationRecord edr = this.educationRecordService.create();
-			c1.add(edr);
-
-			final Collection<ProfessionalRecord> c2 = new HashSet<>();
-			final ProfessionalRecord prr = this.professionalRecordService.create();
-			c2.add(prr);
-
-			final Collection<EndorserRecord> c3 = new HashSet<>();
-			final EndorserRecord enr = this.endorserRecordService.create();
-			c3.add(enr);
-
-			final Collection<MiscellaneousRecord> c4 = new HashSet<>();
-			final MiscellaneousRecord mir = this.miscellaneousRecordService.create();
-			c4.add(mir);
-
-			c.setEducationRecords(c1);
-			c.setEndorserRecords(c3);
-			c.setMiscellaneousRecords(c4);
-			c.setPersonalRecord(pr);
-			c.setProfessionalRecords(c2);
-
-			this.curriculumRepository.save(c);
-
-		}
 
 		return c;
 	}
