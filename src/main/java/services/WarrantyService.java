@@ -39,7 +39,7 @@ public class WarrantyService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
+		Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Warranty result;
 
@@ -73,7 +73,7 @@ public class WarrantyService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Assert.notNull(warranty);
 		Assert.isTrue(warranty.getFinalMode() == false);
@@ -89,7 +89,7 @@ public class WarrantyService {
 		Assert.notNull(actor);
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
-		Assert.isTrue(!(actor.getUserAccount().getAuthorities().contains(authority)));
+		Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
 
 		Assert.notNull(warranty);
 		Assert.isTrue(warranty.getId() != 0);
@@ -97,7 +97,7 @@ public class WarrantyService {
 
 		final Integer references = this.fixUpTaskService.countFixUpTaskByWarrantyId(warranty.getId());
 
-		Assert.isTrue(references > 0);
+		Assert.isTrue(references == 0);
 
 		this.warrantyRepository.delete(warranty);
 
