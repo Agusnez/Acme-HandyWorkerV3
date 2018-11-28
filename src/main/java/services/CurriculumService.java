@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -60,9 +61,17 @@ public class CurriculumService {
 		authority.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(handyWorker.getUserAccount().getAuthorities().contains(authority));
 
-		Curriculum c;
-
-		c = new Curriculum();
+		Curriculum c = new Curriculum();;
+		
+		Collection<EducationRecord> educationRecords = new ArrayList<>();
+		Collection<ProfessionalRecord> professionalRecords = new ArrayList<>();
+		Collection<EndorserRecord> endorserRecords = new ArrayList<>();
+		Collection<MiscellaneousRecord> miscellaneousRecords = new ArrayList<>();
+		
+		c.setEducationRecords(educationRecords);
+		c.setProfessionalRecords(professionalRecords);
+		c.setEndorserRecords(endorserRecords);
+		c.setMiscellaneousRecords(miscellaneousRecords);
 
 		final PersonalRecord pr = this.personalRecordService.create();
 
@@ -110,14 +119,15 @@ public class CurriculumService {
 
 		final Actor actor = this.actorService.findByPrincipal();
 		Assert.notNull(actor);
-
 		final Actor owner = curriculum.getHandyWorker();
-
 		Assert.isTrue(actor.getId() == owner.getId());
+		
+		this.personalRecordService.save(curriculum.getPersonalRecord());
+		
+		
+		
+		Curriculum c = this.curriculumRepository.save(curriculum);
 
-		Curriculum c;
-
-		c = this.curriculumRepository.save(curriculum);
 
 		return c;
 	}

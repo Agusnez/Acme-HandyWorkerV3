@@ -47,6 +47,14 @@ public class Curriculum extends DomainEntity {
 	public void setProfessionalRecords(final Collection<ProfessionalRecord> professionalRecords) {
 		this.professionalRecords = professionalRecords;
 	}
+	
+	public void addProfessionalRecord(ProfessionalRecord professionalRecord) {
+		this.professionalRecords.add(professionalRecord);
+	}
+	
+	public void removeProfessionalRecord(ProfessionalRecord professionalRecord) {
+		this.professionalRecords.remove(professionalRecord);
+	}
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL)
@@ -56,6 +64,14 @@ public class Curriculum extends DomainEntity {
 
 	public void setEducationRecords(final Collection<EducationRecord> educationRecords) {
 		this.educationRecords = educationRecords;
+	}
+	
+	public void addEducationRecord(EducationRecord educationRecord) {
+		this.educationRecords.add(educationRecord);
+	}
+	
+	public void removeEducationRecord(EducationRecord educationRecord) {
+		this.educationRecords.remove(educationRecord);
 	}
 
 	@Valid
@@ -78,6 +94,14 @@ public class Curriculum extends DomainEntity {
 		this.endorserRecords = endorserRecords;
 	}
 
+	public void addEndorserRecord(EndorserRecord endorserRecord) {
+		this.endorserRecords.add(endorserRecord);
+	}
+	
+	public void removeEndorserRecord(EndorserRecord endorserRecord) {
+		this.endorserRecords.remove(endorserRecord);
+	}
+	
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL)
 	public Collection<MiscellaneousRecord> getMiscellaneousRecords() {
@@ -86,6 +110,14 @@ public class Curriculum extends DomainEntity {
 
 	public void setMiscellaneousRecords(final Collection<MiscellaneousRecord> miscellaneousRecords) {
 		this.miscellaneousRecords = miscellaneousRecords;
+	}
+	
+	public void addMiscellaneousRecord(MiscellaneousRecord miscellaneousRecord) {
+		this.miscellaneousRecords.add(miscellaneousRecord);
+	}
+	
+	public void removeMiscellaneousRecord(MiscellaneousRecord miscellaneousRecord) {
+		this.miscellaneousRecords.remove(miscellaneousRecord);
 	}
 
 	@Valid
@@ -97,5 +129,7 @@ public class Curriculum extends DomainEntity {
 	public void setHandyWorker(final HandyWorker handyWorker) {
 		this.handyWorker = handyWorker;
 	}
+	
+	
 
 }

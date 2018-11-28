@@ -71,20 +71,13 @@ public class PersonalRecordService {
 	}
 
 	public PersonalRecord save(final PersonalRecord personalRecord) {
-
+		HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
 		Assert.notNull(personalRecord);
+		
 		PersonalRecord result;
 
-		final Curriculum curriculum = this.curriculumService.findByPersonalRecordId(personalRecord.getId());
-		Assert.notNull(curriculum);
-
 		result = this.personalRecordRepository.save(personalRecord);
-
-		final HandyWorker handyWorker = this.handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
-
-		curriculum.setPersonalRecord(result);
-		this.curriculumService.save(curriculum);
 
 		return result;
 	}

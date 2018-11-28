@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import security.Authority;
+import security.LoginService;
 import security.UserAccount;
 import utilities.AbstractTest;
 import domain.Curriculum;
@@ -60,176 +61,68 @@ public class CurriculumServiceTest extends AbstractTest {
 	@Test
 	public void testCurriculumCreate() {
 
-		final Curriculum curriculum;
+		super.authenticate("handyworker1");
+		Curriculum c = this.curriculumService.create();
+		Assert.isNull(c.getTicker());
+	}
 
-		super.authenticate("handyWorker1");
-
-		curriculum = this.curriculumService.create();
-		Assert.isNull(curriculum.getTicker());
-		Assert.isNull(curriculum.getPersonalRecord().getFullName());
-		Assert.isNull(curriculum.getPersonalRecord().getEmail());
-		Assert.isNull(curriculum.getPersonalRecord().getLinkedInProfile());
-		Assert.isNull(curriculum.getPersonalRecord().getPhone());
-		Assert.isNull(curriculum.getPersonalRecord().getPhoto());
-		Assert.isTrue(curriculum.getProfessionalRecords().size() != 0);
+	@Test
+	public void testCurriculumFindAll() {
+		Collection<Curriculum> cvs = this.curriculumService.findAll();
+		Assert.isTrue(cvs.size()>=1);
 
 	}
 
 	@Test
 	public void testCurriculumFindOne() {
-
-		Curriculum curriculum;
-		final Curriculum saved, saved2;
-		Curriculum find;
-		final Integer curriculumId;
-		HandyWorker handyWorker;
-		final HandyWorker saved1;
-		final PersonalRecord personalRecord;
-		final Collection<EducationRecord> educationRecords;
-		final EducationRecord educationRecord;
-		final Collection<ProfessionalRecord> professionalRecords;
-		final ProfessionalRecord professionalRecord;
-		final Collection<EndorserRecord> endorserRecords;
-		final EndorserRecord endorserRecord;
-		final Collection<MiscellaneousRecord> miscellaneousRecords;
-		final MiscellaneousRecord miscellaneousRecord;
-
-		final Authority authority = new Authority();
-		authority.setAuthority(Authority.HANDYWORKER);
-		final List<Authority> list = new ArrayList<Authority>();
-		list.add(authority);
-
-		final UserAccount userAccount = new UserAccount();
-		userAccount.setAuthorities(list);
-		userAccount.setUsername("Gustavito");
-		userAccount.setPassword("123123");
-
-		handyWorker = this.handyWorkerService.create();
-		handyWorker.setName("González");
-		handyWorker.setMiddleName("Adolfo");
-		handyWorker.setSurname("Gustavo");
-		handyWorker.setAddress("Calle Almoralejo");
-		handyWorker.setMake("Gustavo Adolfo González");
-		handyWorker.setUserAccount(userAccount);
-
-		saved1 = this.handyWorkerService.save(handyWorker);
-
-		super.authenticate("Gustavito");
-
-		curriculum = this.curriculumService.create();
-
-		curriculum.setTicker("241118-RAUL");
-
-		curriculum.setHandyWorker(saved1);
-
-		saved = this.curriculumService.save(curriculum);
-
-		personalRecord = saved.getPersonalRecord();
-		personalRecord.setFullName("Gustavo Adolfo González");
-		personalRecord.setPhone("658456721");
-		saved.setPersonalRecord(personalRecord);
-
-		educationRecords = saved.getEducationRecords();
-		educationRecord = this.educationRecordService.create();
-		educationRecord.setTitle("Ingeniería del software");
-		educationRecord.setPeriod("2006-2010");
-		educationRecord.setInstitution("etsic");
-		educationRecords.add(educationRecord);
-		saved.setEducationRecords(educationRecords);
-
-		professionalRecords = saved.getProfessionalRecords();
-		professionalRecord = this.professinalRecordService.create();
-		professionalRecord.setCompanyName("Microsoft");
-		professionalRecord.setPeriod("2010-2012");
-		professionalRecord.setRole("ProjectManager");
-		saved.setProfessionalRecords(professionalRecords);
-
-		endorserRecords = saved.getEndorserRecords();
-		endorserRecord = this.endorserRecordService.create();
-		endorserRecord.setFullName("Gustavo Adolfo González");
-		endorserRecord.setPhone("674567809");
-		saved.setEndorserRecords(endorserRecords);
-
-		miscellaneousRecords = saved.getMiscellaneousRecords();
-		miscellaneousRecord = this.miscellaneousRecordService.create();
-		miscellaneousRecord.setTitle("Java7");
-		saved.setMiscellaneousRecords(miscellaneousRecords);
-
-		saved2 = this.curriculumService.save(saved);
-		curriculumId = saved2.getId();
-		find = this.curriculumService.findOne(curriculumId);
-
-		Assert.isTrue(find.getId() == curriculumId);
-
+		int cvid = super.getEntityId("curriculum1");
+		Curriculum cv = this.curriculumService.findOne(cvid);
+		Assert.notNull(cv);
 	}
 
 	@Test
 	public void testCurriculumSave() {
 
-		final Curriculum curriculum;
-		final Curriculum saved, saved2;
-		Collection<Curriculum> curriculums;
-		final HandyWorker handyWorker;
-		final HandyWorker saved1;
-		final PersonalRecord personalRecord;
-		final Collection<EducationRecord> educationRecords;
-		final EducationRecord educationRecord;
-		final Collection<ProfessionalRecord> professionalRecords;
-		final ProfessionalRecord professionalRecord;
-		final Collection<EndorserRecord> endorserRecords;
-		final EndorserRecord endorserRecord;
-		final Collection<MiscellaneousRecord> miscellaneousRecords;
-		final MiscellaneousRecord miscellaneousRecord;
-
-		super.authenticate("handyWorker1");
-
-		handyWorker = this.handyWorkerService.findOne(super.getEntityId("handyWorker1"));
-
-		saved1 = this.handyWorkerService.save(handyWorker);
-
-		curriculum = this.curriculumService.create();
-
-		curriculum.setTicker("241118-RAUL");
-
-		curriculum.setHandyWorker(saved1);
-
-		saved = this.curriculumService.save(curriculum);
-
-		personalRecord = saved.getPersonalRecord();
-		personalRecord.setFullName("Gustavo Adolfo González");
-		personalRecord.setPhone("658456721");
-		saved.setPersonalRecord(personalRecord);
-
-		educationRecords = saved.getEducationRecords();
-		educationRecord = this.educationRecordService.create();
-		educationRecord.setTitle("Ingeniería del software");
-		educationRecord.setPeriod("2006-2010");
-		educationRecord.setInstitution("etsic");
-		educationRecords.add(educationRecord);
-		saved.setEducationRecords(educationRecords);
-
-		professionalRecords = saved.getProfessionalRecords();
-		professionalRecord = this.professinalRecordService.create();
-		professionalRecord.setCompanyName("Microsoft");
-		professionalRecord.setPeriod("2010-2012");
-		professionalRecord.setRole("ProjectManager");
-		saved.setProfessionalRecords(professionalRecords);
-
-		endorserRecords = saved.getEndorserRecords();
-		endorserRecord = this.endorserRecordService.create();
-		endorserRecord.setFullName("Gustavo Adolfo González");
-		endorserRecord.setPhone("674567809");
-		saved.setEndorserRecords(endorserRecords);
-
-		miscellaneousRecords = saved.getMiscellaneousRecords();
-		miscellaneousRecord = this.miscellaneousRecordService.create();
-		miscellaneousRecord.setTitle("Java7");
-		saved.setMiscellaneousRecords(miscellaneousRecords);
-
-		saved2 = this.curriculumService.save(saved);
-		curriculums = this.curriculumService.findAll();
-
-		Assert.isTrue(curriculums.contains(saved2));
+		super.authenticate("handyworker1");
+		
+		Curriculum cv = this.curriculumService.create();
+		cv.setTicker("120218-ASRB");
+		cv.setHandyWorker(this.handyWorkerService.findByUserAccount(LoginService.getPrincipal()));
+		
+		PersonalRecord personalRecord = this.personalRecordService.create();
+		personalRecord.setPhone("679237785");
+		personalRecord.setFullName("Manolito Gafotas");
+		cv.setPersonalRecord(personalRecord);
+		
+		EducationRecord educationRecord = this.educationRecordService.create();
+		educationRecord.setTitle("Educacion Basica");
+		educationRecord.setInstitution("Universidad de la calle");
+		educationRecord.setPeriod("To la vida");
+		cv.addEducationRecord(educationRecord);
+		
+		ProfessionalRecord profesionalRecord = this.professinalRecordService.create();
+		profesionalRecord.setCompanyName("Desguace Totos");
+		profesionalRecord.setPeriod("3 años");
+		profesionalRecord.setRole("Chatarrero");
+		profesionalRecord.setComments(new ArrayList<String>());
+		cv.addProfessionalRecord(profesionalRecord);
+		
+		EndorserRecord endorserRecord = this.endorserRecordService.create();
+		endorserRecord.setFullName("Manolito Gafotas");
+		endorserRecord.setPhone("679237785");
+		endorserRecord.setComments(new ArrayList<String>());
+		cv.addEndorserRecord(endorserRecord);
+		
+		MiscellaneousRecord miscellaneousRecord = this.miscellaneousRecordService.create();
+		miscellaneousRecord.setTitle("Diploma al mejor chatarrero del año");
+		miscellaneousRecord.setComments(new ArrayList<String>());
+		cv.addMiscellaneousRecord(miscellaneousRecord);
+		
+		Curriculum cvSaved = this.curriculumService.save(cv);
+		Assert.notNull(cvSaved);
+		Assert.notNull(cvSaved.getEducationRecords());
+		Assert.isTrue(cvSaved.getPersonalRecord().getId()!=0);
+		
 
 	}
 }
