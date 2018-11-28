@@ -1568,7 +1568,6 @@
 			<value>http://www.dropbox.com</value>
 			</list>
 		</property>
-		<property name="tutorial" ref="tutorial1" />
 	</bean>
 	
 	<!-- Money -->

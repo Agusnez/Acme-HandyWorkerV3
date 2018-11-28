@@ -74,8 +74,6 @@ public class SectionService {
 		authority.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
-		/* TODO: HAY QUE MIRARLO, NO HAY FORMA DE ENCONTRAR EL TUTORIAL ESPECÍFICO DE LA SECTION */
-
 		Assert.notNull(section);
 
 		Section s;
@@ -91,8 +89,10 @@ public class SectionService {
 
 		/* reordeno las secciones reasignando el valor correcto de 'numero' */
 		for (final Section s : sections)
-			if (s.getNumero() > section.getNumero())
+			if (s.getNumero() > section.getNumero()) {
 				s.setNumero(s.getNumero() - 1);
+				this.save(s);
+			}
 		this.sectionRepository.delete(section);
 
 	}

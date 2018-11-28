@@ -7,9 +7,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -17,21 +14,17 @@ import org.hibernate.validator.constraints.NotBlank;
 @Access(AccessType.PROPERTY)
 public class Section extends DomainEntity {
 
-	private int 				numero;
+	private int					numero;
 	private String				title;
 	private String				text;
 	private Collection<String>	pictures;
-	//relationship -----------------------
-	private Tutorial			tutorial;
 
 
-	
-	
 	public int getNumero() {
-		return numero;
+		return this.numero;
 	}
 
-	public void setNumero(int numero) {
+	public void setNumero(final int numero) {
 		this.numero = numero;
 	}
 
@@ -60,21 +53,6 @@ public class Section extends DomainEntity {
 
 	public void setPictures(final Collection<String> pictures) {
 		this.pictures = pictures;
-	}
-
-	
-	
-	//relationship -----------------------
-	
-	@ManyToOne(optional=false)
-	@NotNull
-	@Valid
-	public Tutorial getTutorial() {
-		return tutorial;
-	}
-
-	public void setTutorial(Tutorial tutorial) {
-		this.tutorial = tutorial;
 	}
 
 }

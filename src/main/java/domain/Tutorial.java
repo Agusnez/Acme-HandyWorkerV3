@@ -72,7 +72,7 @@ public class Tutorial extends DomainEntity {
 	private Collection<Section>	sections;
 
 
-	@OneToMany(mappedBy="tutorial" ,cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	@Valid
 	@NotEmpty
 	public Collection<Section> getSections() {
