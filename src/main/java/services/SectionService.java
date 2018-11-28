@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.transaction.Transactional;
 
@@ -40,8 +41,10 @@ public class SectionService {
 		Section s;
 
 		s = new Section();
+		final Collection<String> pictures = new HashSet<>();
 		final int size = this.findAll().size();
-		s.setNumero(size + 1);
+		s.setPictures(pictures);
+		s.setNumber(size + 1);
 
 		return s;
 	}
@@ -84,13 +87,15 @@ public class SectionService {
 	}
 
 	public void delete(final Section section) {
-
+		Assert.notNull(section);
+		Assert.isTrue(section.getId() != 0);
 		final Collection<Section> sections = this.findAll();
+		Assert.notNull(sections);
 
 		/* reordeno las secciones reasignando el valor correcto de 'numero' */
 		for (final Section s : sections)
-			if (s.getNumero() > section.getNumero()) {
-				s.setNumero(s.getNumero() - 1);
+			if (s.getNumber() > section.getNumber()) {
+				s.setNumber(s.getNumber() - 1);
 				this.save(s);
 			}
 		this.sectionRepository.delete(section);

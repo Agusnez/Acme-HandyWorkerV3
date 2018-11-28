@@ -11,8 +11,8 @@ import domain.Section;
 
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Integer> {
-	
-	@Query("select s from Section s order by s.numero")
+
+	@Query("select s from Section s order by s.number")
 	public Collection<Section> findSectionsOrdered();
 
 }
