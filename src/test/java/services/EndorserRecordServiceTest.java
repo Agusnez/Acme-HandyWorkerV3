@@ -1,6 +1,9 @@
 
 package services;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +47,44 @@ public class EndorserRecordServiceTest extends AbstractTest {
 	@Test
 	public void EndorserRecordSaveTest() {
 
+		super.authenticate("handyWorker1");
+
+		final EndorserRecord endorserRecord = this.endorserRecordService.create();
+		endorserRecord.setEmail("example@gmail.com");
+		final Collection<String> comments = new HashSet<>();
+		final String c = "example";
+		comments.add(c);
+		endorserRecord.setComments(comments);
+		endorserRecord.setFullName("Example full name");
+		endorserRecord.setLinkedInProfile("http://www.example.com");
+		endorserRecord.setPhone("954678915");
+
+		final EndorserRecord saved = this.endorserRecordService.save(endorserRecord);
+
+		final Collection<EndorserRecord> find = this.endorserRecordService.findAll();
+
+		Assert.isTrue(find.contains(saved));
+
+	}
+
+	@Test
+	public void EndorserRecordFindOneTest() {
+		super.authenticate("handyWorker1");
+
+		final EndorserRecord endorserRecord = this.endorserRecordService.create();
+		endorserRecord.setEmail("example@gmail.com");
+		final Collection<String> comments = new HashSet<>();
+		final String c = "example";
+		comments.add(c);
+		endorserRecord.setComments(comments);
+		endorserRecord.setFullName("Example full name");
+		endorserRecord.setLinkedInProfile("http://www.example.com");
+		endorserRecord.setPhone("954678915");
+
+		final EndorserRecord saved = this.endorserRecordService.save(endorserRecord);
+
+		final EndorserRecord find = this.endorserRecordService.findOne(saved.getId());
+
+		Assert.isTrue(saved.equals(find));
 	}
 }
