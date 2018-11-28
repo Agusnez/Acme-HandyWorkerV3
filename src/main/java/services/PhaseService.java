@@ -77,18 +77,6 @@ public class PhaseService {
 		authority.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(actor.getUserAccount().getAuthorities().contains(authority));
 
-		//		final HandyWorker hw1 = (HandyWorker) actor;
-		//		final FixUpTask f1 = phase.getFixUpTask();
-		//
-		//		final Collection<Application> applicationsFixUpPhase1 = f1.getApplications();
-		//		final Collection<Application> applicationHandyWorker1 = hw1.getApplications();
-		//		Application appAccepted1 = null;
-		//		for (final Application application : applicationsFixUpPhase1)
-		//			if (application.getStatus().equals("ACCEPTED"))
-		//				appAccepted1 = application;
-		//		Assert.isTrue(applicationHandyWorker1.contains(appAccepted1));
-
-		//if (phase.getId() != 0) {
 		final HandyWorker hw = (HandyWorker) actor;
 		final FixUpTask f = phase.getFixUpTask();
 
@@ -100,26 +88,18 @@ public class PhaseService {
 				appAccepted = application;
 		Assert.isTrue(applicationHandyWorker.contains(appAccepted));
 
-		//}
 		final Date phaseStart = phase.getStartMoment();
 		final Date phaseEnd = phase.getEndMoment();
 		final Date taskStart = phase.getFixUpTask().getStartDate();
 		final Date taskEnd = phase.getFixUpTask().getEndDate();
-		System.out.println("----------------------------------------------");
-		System.out.println(phaseStart);
-		System.out.println(phaseEnd);
-		System.out.println(taskStart);
-		System.out.println(taskEnd);
 
 		Assert.notNull(phase);
 
-		Assert.isTrue(!phase.getEndMoment().before(phase.getStartMoment()));
-		Assert.isTrue(!phase.getStartMoment().before(phase.getFixUpTask().getStartDate()));
-		//Assert.isTrue(!phase.getStartMoment().after(phase.getFixUpTask().getEndDate()));
-		Assert.isTrue(phaseStart.before(taskEnd));
-		Assert.isTrue(!phase.getEndMoment().before(phase.getFixUpTask().getStartDate()));
-		//Assert.isTrue(!phase.getEndMoment().after(phase.getFixUpTask().getEndDate()));
-		Assert.isTrue(phaseEnd.before(taskEnd));
+		Assert.isTrue(phaseStart.before(phaseEnd) || phaseStart.equals(phaseEnd));
+		Assert.isTrue(taskStart.before(phaseStart) || taskStart.equals(phaseStart));
+		Assert.isTrue(phaseStart.before(taskEnd) || phaseStart.equals(taskEnd));
+		Assert.isTrue(taskStart.before(phaseEnd) || taskStart.equals(phaseEnd));
+		Assert.isTrue(phaseEnd.before(taskEnd) || phaseEnd.equals(taskEnd));
 
 		Phase result;
 

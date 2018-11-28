@@ -1090,6 +1090,7 @@
 		<property name="offeredPrice" ref="money2" />
 		<property name="comment" value="Comment 3" />
 		<property name="fixUpTask" ref="fixUpTask1" />
+		<property name="creditCard" ref="creditCard1"/>
 	</bean>
 	
 	<bean id="application2" class="domain.Application">
@@ -1098,6 +1099,7 @@
 		<property name="offeredPrice" ref="money9" />
 		<property name="comment" value="Comment ap2" />
 		<property name="fixUpTask" ref="fixUpTask5" />
+		<property name="creditCard" ref="creditCard2"/>
 	</bean>
 	
 	<bean id="application3" class="domain.Application">
@@ -1114,6 +1116,7 @@
 		<property name="offeredPrice" ref="money11" />
 		<property name="comment" value="Comment ap4" />
 		<property name="fixUpTask" ref="fixUpTask3" />
+		<property name="creditCard" ref="creditCard2"/>
 	</bean>
 	
 	<bean id="application5" class="domain.Application">
@@ -1138,6 +1141,7 @@
 		<property name="offeredPrice" ref="money14" />
 		<property name="comment" value="Comment ap7" />
 		<property name="fixUpTask" ref="fixUpTask6" />
+		<property name="creditCard" ref="creditCard1"/>
 	</bean>
 	
 	<bean id="application8" class="domain.Application">
@@ -1162,6 +1166,7 @@
 		<property name="offeredPrice" ref="money17" />
 		<property name="comment" value="Comment ap10" />
 		<property name="fixUpTask" ref="fixUpTask2" />
+		<property name="creditCard" ref="creditCard3"/>
 	</bean>
 	
 	<bean id="application11" class="domain.Application">
@@ -1390,23 +1395,23 @@
 	<bean id="phase1" class="domain.Phase">
 		<property name="title" value="title2" />
 		<property name="description" value="DescriptionY" />
-		<property name="startMoment" value="2019/05/16" />
-		<property name="endMoment" value="2019/05/26" />
+		<property name="startMoment" value="2019/05/17" />
+		<property name="endMoment" value="2019/05/25" />
 		<property name="fixUpTask" ref="fixUpTask1" />
 	</bean>
 	
 	<bean id="phase2" class="domain.Phase">
 		<property name="title" value="titlepPh2" />
 		<property name="description" value="DescriptionPh2" />
-		<property name="startMoment" value="2019/04/16" />
-		<property name="endMoment" value="2019/04/21" />
+		<property name="startMoment" value="2019/04/17" />
+		<property name="endMoment" value="2019/04/20" />
 		<property name="fixUpTask" ref="fixUpTask2" />
 	</bean>
 	
 	<bean id="phase3" class="domain.Phase">
 		<property name="title" value="titlePH3" />
 		<property name="description" value="DescriptionPH3" />
-		<property name="startMoment" value="2019/06/11" />
+		<property name="startMoment" value="2019/06/12" />
 		<property name="endMoment" value="2019/06/15" />
 		<property name="fixUpTask" ref="fixUpTask3" />
 	</bean>
@@ -1422,16 +1427,16 @@
 	<bean id="phase5" class="domain.Phase">
 		<property name="title" value="titlePH5" />
 		<property name="description" value="DescriptionPH5" />
-		<property name="startMoment" value="2019/02/16" />
-		<property name="endMoment" value="2019/02/21" />
+		<property name="startMoment" value="2018/02/16" />
+		<property name="endMoment" value="2018/02/21" />
 		<property name="fixUpTask" ref="fixUpTask4" />
 	</bean>
 	
 	<bean id="phase6" class="domain.Phase">
 		<property name="title" value="titlePH6" />
 		<property name="description" value="DescriptionPH6" />
-		<property name="startMoment" value="2019/09/16" />
-		<property name="endMoment" value="2019/09/21" />
+		<property name="startMoment" value="2018/08/16" />
+		<property name="endMoment" value="2018/09/21" />
 		<property name="fixUpTask" ref="fixUpTask5" />
 	</bean>
 	
