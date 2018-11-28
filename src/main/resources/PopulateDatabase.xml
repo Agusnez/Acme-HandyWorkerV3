@@ -1542,7 +1542,7 @@
 		<property name="title" value="war2" />
 		<property name="terms" value="temrs2" />
 		<property name="law" value="law2" />
-		<property name="finalMode" value="True" />
+		<property name="finalMode" value="False" />
 	</bean>
 	
 	<bean id="warranty3" class="domain.Warranty">
