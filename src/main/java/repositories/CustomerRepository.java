@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import domain.Customer;
-import domain.FixUpTask;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
@@ -26,6 +25,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	Customer findByUserAccountId(int userAccountId);
 
 	@Query("select c from Customer c join c.fixUpTasks f where f.id = ?1")
-	Customer findByTask(FixUpTask fixUpTask);
+	Customer findByTask(int fixUpTaskId);
 
 }
