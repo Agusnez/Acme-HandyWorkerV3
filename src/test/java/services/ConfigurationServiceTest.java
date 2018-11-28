@@ -41,5 +41,6 @@ public class ConfigurationServiceTest extends AbstractTest {
 		final Collection<Configuration> config = this.configurationService.findAll();
 		Assert.isTrue(config.contains(saved), "----- Fallo metodo save -----");
 
+		super.authenticate(null);
 	}
 }

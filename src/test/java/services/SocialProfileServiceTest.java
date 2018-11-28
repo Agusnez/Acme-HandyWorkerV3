@@ -129,6 +129,8 @@ public class SocialProfileServiceTest extends AbstractTest {
 		Assert.isTrue(socialProfiles.contains(saved1));
 		Assert.isTrue(socialProfiles.contains(saved2));
 
+		super.authenticate(null);
+
 	}
 
 	private void createNewActorAndLogIn() {

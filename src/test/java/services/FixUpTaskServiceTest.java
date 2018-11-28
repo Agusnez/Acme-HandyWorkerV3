@@ -80,6 +80,8 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		Assert.isNull(fixUpTask.getStartDate());
 		Assert.isNull(fixUpTask.getEndDate());
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -130,6 +132,8 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		final Collection<FixUpTask> fixUpTasks = this.fixUpTaskService.findAll();
 
 		Assert.isTrue(fixUpTasks.contains(saved));
+
+		super.authenticate(null);
 	}
 
 	@Test
@@ -180,6 +184,8 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		find = this.fixUpTaskService.findOne(saved.getId());
 
 		Assert.isTrue(find.equals(saved));
+
+		super.authenticate(null);
 	}
 
 	@Test
@@ -233,5 +239,7 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		fixUpTasks = this.fixUpTaskService.findAll();
 
 		Assert.isTrue(!fixUpTasks.contains(saved));
+
+		super.authenticate(null);
 	}
 }

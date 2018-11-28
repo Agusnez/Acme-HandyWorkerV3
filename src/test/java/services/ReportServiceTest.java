@@ -61,6 +61,8 @@ public class ReportServiceTest extends AbstractTest {
 		Assert.isTrue(report.getAttachments().isEmpty());
 		Assert.isTrue(report.getNotes().isEmpty());
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -87,6 +89,8 @@ public class ReportServiceTest extends AbstractTest {
 		reports = this.reportSevice.findAll();
 		Assert.isTrue(reports.contains(saved));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -111,6 +115,8 @@ public class ReportServiceTest extends AbstractTest {
 		saved = this.reportSevice.save(report);
 		finded = this.reportSevice.findOne(saved.getId());
 		Assert.isTrue(finded.equals(saved));
+
+		super.authenticate(null);
 
 	}
 

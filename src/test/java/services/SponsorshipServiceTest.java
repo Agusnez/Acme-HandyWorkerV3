@@ -48,6 +48,8 @@ public class SponsorshipServiceTest extends AbstractTest {
 		final Collection<Sponsorship> ss = this.sponsorshipService.findAll();
 		Assert.isTrue(ss.contains(saved), "##### Error create #####");
 
+		super.authenticate(null);
+
 	}
 
 	@Test

@@ -42,6 +42,8 @@ public class PersonalRecordServiceTest extends AbstractTest {
 		Assert.isNull(personalRecord.getLinkedInProfile());
 		Assert.isNull(personalRecord.getPhone());
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -65,6 +67,8 @@ public class PersonalRecordServiceTest extends AbstractTest {
 
 		Assert.isTrue(find.contains(saved));
 
+		super.authenticate(null);
+
 	}
 	@Test
 	public void testPersonalRecordSave() {
@@ -86,6 +90,8 @@ public class PersonalRecordServiceTest extends AbstractTest {
 		final PersonalRecord find = this.personalRecordService.findOne(saved.getId());
 
 		Assert.isTrue(find.equals(saved));
+
+		super.authenticate(null);
 
 	}
 }

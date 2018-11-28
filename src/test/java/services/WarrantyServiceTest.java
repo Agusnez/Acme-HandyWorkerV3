@@ -40,6 +40,8 @@ public class WarrantyServiceTest extends AbstractTest {
 		Assert.isNull(warranty.getLaw());
 		Assert.isNull(warranty.getFinalMode());
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -57,6 +59,8 @@ public class WarrantyServiceTest extends AbstractTest {
 		warranties = this.warrantyService.findAll();
 		Assert.isTrue(warranties.contains(saved1));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -72,6 +76,8 @@ public class WarrantyServiceTest extends AbstractTest {
 		this.warrantyService.delete(warranty);
 		warranties = this.warrantyService.findAll();
 		Assert.isTrue(!(warranties.contains(warranty)));
+
+		super.authenticate(null);
 
 	}
 }

@@ -68,6 +68,8 @@ public class ProfessionalRecordServiceTest extends AbstractTest {
 
 		Assert.isTrue(find.contains(saved));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -92,5 +94,6 @@ public class ProfessionalRecordServiceTest extends AbstractTest {
 
 		Assert.isTrue(saved.equals(find));
 
+		super.authenticate(null);
 	}
 }

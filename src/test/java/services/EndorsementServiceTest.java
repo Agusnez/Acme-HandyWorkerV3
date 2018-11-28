@@ -65,6 +65,8 @@ public class EndorsementServiceTest extends AbstractTest {
 		endorsements = this.endorsementService.findAll();
 		Assert.isTrue(endorsements.contains(saved));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -86,6 +88,8 @@ public class EndorsementServiceTest extends AbstractTest {
 		finded = this.endorsementService.findOne(saved.getId());
 
 		Assert.isTrue(finded.equals(saved));
+
+		super.authenticate(null);
 	}
 
 	@Test
@@ -111,6 +115,8 @@ public class EndorsementServiceTest extends AbstractTest {
 		this.endorsementService.delete(saved);
 		endorsements = this.endorsementService.findAll();
 		Assert.isTrue(!endorsements.contains(saved));
+
+		super.authenticate(null);
 
 	}
 }

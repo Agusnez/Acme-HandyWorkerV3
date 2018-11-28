@@ -60,6 +60,8 @@ public class CurriculumServiceTest extends AbstractTest {
 		super.authenticate("handyworker1");
 		final Curriculum c = this.curriculumService.create();
 		Assert.isNull(c.getTicker());
+
+		super.authenticate(null);
 	}
 
 	@Test
@@ -74,6 +76,7 @@ public class CurriculumServiceTest extends AbstractTest {
 		final int cvid = super.getEntityId("curriculum1");
 		final Curriculum cv = this.curriculumService.findOne(cvid);
 		Assert.notNull(cv);
+		super.authenticate(null);
 	}
 
 	@Test
@@ -119,5 +122,6 @@ public class CurriculumServiceTest extends AbstractTest {
 		Assert.notNull(cvSaved.getEducationRecords());
 		Assert.isTrue(cvSaved.getPersonalRecord().getId() != 0);
 
+		super.authenticate(null);
 	}
 }

@@ -44,6 +44,8 @@ public class NoteServiceTest extends AbstractTest {
 		Assert.isTrue(note.getCommentReferee().equals(compare));
 		Assert.isTrue(note.getCommentHandyWorker().equals(compare));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -66,6 +68,8 @@ public class NoteServiceTest extends AbstractTest {
 		final Note find = this.noteService.findOne(saved2.getId());
 
 		Assert.isTrue(find.equals(saved));
+
+		super.authenticate(null);
 	}
 
 	@Test
@@ -83,5 +87,7 @@ public class NoteServiceTest extends AbstractTest {
 		final Collection<Note> find = this.noteService.findAll();
 
 		Assert.isTrue(find.contains(saved));
+
+		super.authenticate(null);
 	}
 }

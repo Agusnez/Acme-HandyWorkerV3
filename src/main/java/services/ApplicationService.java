@@ -80,7 +80,7 @@ public class ApplicationService {
 			Assert.isTrue((actor.getUserAccount().getAuthorities().contains(authority)));
 
 			application.setStatus("PENDING");
-			final Date now = new Date();
+			final Date now = new Date(System.currentTimeMillis() - 1000);
 			application.setMoment(now);
 
 			app = this.applicationRepository.save(application);

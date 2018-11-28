@@ -51,6 +51,8 @@ public class AdministratorServiceTest extends AbstractTest {
 		final Authority authority = new Authority();
 		authority.setAuthority(Authority.ADMIN);
 		Assert.isTrue(administrator.getUserAccount().getAuthorities().contains(authority));
+
+		super.authenticate(null);
 	}
 
 	@Test
@@ -60,6 +62,7 @@ public class AdministratorServiceTest extends AbstractTest {
 
 		this.createNewActorAndLogIn();
 
+		super.authenticate(null);
 	}
 
 	@Test
@@ -72,6 +75,8 @@ public class AdministratorServiceTest extends AbstractTest {
 		final Administrator finded = this.administratorService.findOne(administrator.getId());
 
 		Assert.isTrue(finded.equals(administrator));
+
+		super.authenticate(null);
 
 	}
 

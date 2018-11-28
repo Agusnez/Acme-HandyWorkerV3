@@ -70,6 +70,7 @@ public class ApplicationServiceTest extends AbstractTest {
 		Assert.isNull(a.getOfferedPrice());
 		Assert.isNull(a.getStatus());
 
+		super.authenticate(null);
 	}
 
 	@Test
@@ -137,21 +138,5 @@ public class ApplicationServiceTest extends AbstractTest {
 
 		super.authenticate(null);
 	}
-
-	//	@Test
-	//	public void testUpdateApplicationNoCustomer() {
-	//
-	//	}
-	//	
-	//	@Test
-	//	public void testUpdateApplicationNoCustomerOwn() {
-	//	}
-	//	@Test
-	//	public void testUpdateWrongAttributeApplication() {
-	//	}
-	//	@Test
-	//	public void testUpdateApplicationNoPending() {
-	//	}
-	//	
 
 }

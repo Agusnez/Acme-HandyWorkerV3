@@ -39,6 +39,8 @@ public class MiscellaneousRecordServiceTest extends AbstractTest {
 		Assert.isNull(miscellaneousRecord.getComments());
 		Assert.isNull(miscellaneousRecord.getTitle());
 		Assert.isNull(miscellaneousRecord.getAttachment());
+
+		super.authenticate(null);
 	}
 
 	@Test
@@ -59,6 +61,7 @@ public class MiscellaneousRecordServiceTest extends AbstractTest {
 		final Collection<MiscellaneousRecord> find = this.miscellaneousRecordService.findAll();
 
 		Assert.isTrue(find.contains(saved));
+		super.authenticate(null);
 
 	}
 
@@ -80,5 +83,7 @@ public class MiscellaneousRecordServiceTest extends AbstractTest {
 		final MiscellaneousRecord find = this.miscellaneousRecordService.findOne(saved.getId());
 
 		Assert.isTrue(find.equals(saved));
+
+		super.authenticate(null);
 	}
 }

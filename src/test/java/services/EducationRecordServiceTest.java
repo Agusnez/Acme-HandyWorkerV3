@@ -43,6 +43,8 @@ public class EducationRecordServiceTest extends AbstractTest {
 		Assert.isNull(educationRecord.getPeriod());
 		Assert.isNull(educationRecord.getTitle());
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -67,6 +69,8 @@ public class EducationRecordServiceTest extends AbstractTest {
 
 		Assert.isTrue(find.contains(saved));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -90,6 +94,8 @@ public class EducationRecordServiceTest extends AbstractTest {
 		final EducationRecord find = this.educationRecordService.findOne(saved.getId());
 
 		Assert.isTrue(saved.equals(find));
+
+		super.authenticate(null);
 
 	}
 }

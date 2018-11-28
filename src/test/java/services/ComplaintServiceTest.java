@@ -49,6 +49,8 @@ public class ComplaintServiceTest extends AbstractTest {
 		Assert.isNull(complaint.getReferee());
 		Assert.isNull(complaint.getTicker());
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -78,6 +80,8 @@ public class ComplaintServiceTest extends AbstractTest {
 		complaints = this.complaintService.findAll();
 		Assert.isTrue(complaints.contains(saved));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -95,6 +99,8 @@ public class ComplaintServiceTest extends AbstractTest {
 
 		finded = this.complaintService.findOne(saved.getId());
 		Assert.isTrue(saved.equals(finded));
+
+		super.authenticate(null);
 
 	}
 

@@ -54,6 +54,8 @@ public class RefereeServiceTest extends AbstractTest {
 		authority.setAuthority(Authority.REFEREE);
 		Assert.isTrue(referee.getUserAccount().getAuthorities().contains(authority));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -62,6 +64,8 @@ public class RefereeServiceTest extends AbstractTest {
 		this.authenticate("admin");
 
 		this.createNewActorAndLogIn();
+
+		super.authenticate(null);
 
 	}
 
@@ -75,6 +79,8 @@ public class RefereeServiceTest extends AbstractTest {
 		final Referee finded = this.refereeService.findOne(referee.getId());
 
 		Assert.isTrue(finded.equals(referee));
+
+		super.authenticate(null);
 
 	}
 

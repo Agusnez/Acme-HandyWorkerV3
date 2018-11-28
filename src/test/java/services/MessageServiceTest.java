@@ -11,9 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import domain.Message;
-
 import utilities.AbstractTest;
+import domain.Message;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -24,16 +23,17 @@ public class MessageServiceTest extends AbstractTest {
 
 	//Service under test ------------------------------------------
 	@Autowired
-	MessageService messageService;
+	MessageService	messageService;
+
 
 	//Tests -------------------------------------------------------
 	@Test
 	public void testCreate() {
-		Message m = this.messageService.create();
+		final Message m = this.messageService.create();
 		Assert.notNull(m);
 		Assert.isTrue(m.getBoxes().isEmpty());
 	}
-	
+
 	@Test
 	public void testFindAll() {
 		Collection<Message> messages;
@@ -41,25 +41,27 @@ public class MessageServiceTest extends AbstractTest {
 		Assert.notNull(messages);
 		Assert.isTrue(messages.size() == 5);
 	}
-	
+
 	@Test
 	public void testFindOne() {
-		int messageId = super.getEntityId("message5");
-		Message m = this.messageService.findOne(messageId);
+		final int messageId = super.getEntityId("message5");
+		final Message m = this.messageService.findOne(messageId);
 		Assert.notNull(m);
 		Assert.isTrue(m.getSubject().equals("subject5"));
 	}
-	
+
 	@Test
 	public void testSave() {
 		super.authenticate("handyworker1");
-		int messageId = super.getEntityId("message4");
-		Message m = this.messageService.findOne(messageId);
+		final int messageId = super.getEntityId("message4");
+		final Message m = this.messageService.findOne(messageId);
 		m.setBody("This is a new body");
-		Message savedMessage = this.messageService.save(m);
+		final Message savedMessage = this.messageService.save(m);
 		Assert.isTrue(savedMessage.getBody().equals("This is a new body"));
-		Assert.isTrue(m.getId()==savedMessage.getId());
-		
+		Assert.isTrue(m.getId() == savedMessage.getId());
+
+		super.authenticate(null);
+
 	}
-	
+
 }

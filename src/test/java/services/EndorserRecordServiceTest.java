@@ -42,6 +42,8 @@ public class EndorserRecordServiceTest extends AbstractTest {
 		Assert.isNull(endorserRecord.getLinkedInProfile());
 		Assert.isNull(endorserRecord.getPhone());
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -65,6 +67,8 @@ public class EndorserRecordServiceTest extends AbstractTest {
 
 		Assert.isTrue(find.contains(saved));
 
+		super.authenticate(null);
+
 	}
 
 	@Test
@@ -86,5 +90,7 @@ public class EndorserRecordServiceTest extends AbstractTest {
 		final EndorserRecord find = this.endorserRecordService.findOne(saved.getId());
 
 		Assert.isTrue(saved.equals(find));
+
+		super.authenticate(null);
 	}
 }

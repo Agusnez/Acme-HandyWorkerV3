@@ -44,7 +44,7 @@ public class ActorServiceTest extends AbstractTest {
 		super.authenticate("customer2");
 
 		final Message msg = this.messageService.create();
-		final Actor recipient = this.actorService.findOne(2508);
+		final Actor recipient = this.actorService.findOne(this.getEntityId("handyWorker3"));
 
 		msg.setSender(this.actorService.findByUserAccount(LoginService.getPrincipal()));
 		msg.setRecipient(recipient);
