@@ -32,7 +32,7 @@ public class FinderServiceTest extends AbstractTest {
 
 
 	//Tests -------------------------------------------------------
-	// TODO Finder testing
+
 	@Test
 	public void saveFinder() {
 		final HandyWorker hw = this.handyWorkerService.create();

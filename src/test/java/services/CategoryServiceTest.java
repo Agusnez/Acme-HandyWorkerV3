@@ -157,7 +157,6 @@ public class CategoryServiceTest extends AbstractTest {
 
 	}
 
-	/* TODO: Da error, los id's son de la BBDD y se corresponden bien... */
 	@Test
 	public void testDeleteCategoryWithChildrenAndFixUpAssociated() {
 		super.authenticate("admin");

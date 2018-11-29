@@ -30,7 +30,6 @@ public class RefereeServiceTest extends AbstractTest {
 
 
 	//Tests -------------------------------------------------------
-	// TODO Referee testing
 
 	@Test
 	public void testCreate() {

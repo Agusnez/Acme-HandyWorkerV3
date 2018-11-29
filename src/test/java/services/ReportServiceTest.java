@@ -43,7 +43,6 @@ public class ReportServiceTest extends AbstractTest {
 
 
 	//Tests -------------------------------------------------------
-	// TODO Report testing
 
 	@Test
 	public void testCreate() {

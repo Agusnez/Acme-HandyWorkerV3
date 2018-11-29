@@ -31,7 +31,6 @@ public class EndorsementServiceTest extends AbstractTest {
 
 
 	//Tests -------------------------------------------------------
-	// TODO Endorsement testing
 
 	@Test
 	public void testCreate() {

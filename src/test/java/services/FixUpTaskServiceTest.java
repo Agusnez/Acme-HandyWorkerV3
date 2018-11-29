@@ -44,7 +44,7 @@ public class FixUpTaskServiceTest extends AbstractTest {
 
 
 	//Tests -------------------------------------------------------
-	// TODO FixUpTask testing
+
 	@Test
 	public void CustomerCreateTest() {
 

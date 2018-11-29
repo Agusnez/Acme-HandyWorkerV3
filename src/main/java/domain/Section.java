@@ -24,8 +24,8 @@ public class Section extends DomainEntity {
 		return this.number;
 	}
 
-	public void setNumber(final int numero) {
-		this.number = this.number;
+	public void setNumber(final int number) {
+		this.number = number;
 	}
 
 	@NotBlank

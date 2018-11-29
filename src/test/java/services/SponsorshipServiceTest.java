@@ -32,7 +32,12 @@ public class SponsorshipServiceTest extends AbstractTest {
 	public void testCreate() {
 		this.authenticate("sponsor1");
 		final Sponsorship s = this.sponsorshipService.create();
-		Assert.notNull(s);
+
+		Assert.isNull(s.getBanner());
+		Assert.isNull(s.getCreditCard());
+		Assert.isNull(s.getTargetPage());
+		Assert.isNull(s.getSponsor());
+
 		this.authenticate(null);
 	}
 
