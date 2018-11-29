@@ -67,5 +67,7 @@ public class ActorServiceTest extends AbstractTest {
 
 		Assert.isTrue(boxesOfTheMessage.containsAll(supposedBoxes));
 
+		super.authenticate(null);
+
 	}
 }
